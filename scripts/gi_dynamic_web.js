@@ -1,5 +1,6 @@
 var linked_services_global = {};
 var textareas = [];
+var synchronous = false;
 
 function populateService(service_name) {
     selected_service_name = service_name;
@@ -125,8 +126,7 @@ function produce_one_parameter_form(parameter) {
 
         }
         // textarea
-        // todo need to add dragable zone
-        else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
+        else if (grassroots_type == "params:large_string" || grassroots_type == "params:json" || grassroots_type == "params:fasta") {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" rows="3">' + default_value + '</textarea>');
@@ -230,19 +230,48 @@ function submit_form() {
         success: function (json) {
             // response = json;
             console.info(JSON.stringify(json));
-            if (selected_service_name == 'BlastN service') {
-                Utils.ui.reenableButton('submit_button', 'Submit');
-                $('#status').html('');
-                // $('#result').html("Getting BLAST result...");
-                display_blast_result_grassroots_markup(json);
-            } else {
-                $('#status').html('');
-                $('#result').html("Done");
-                downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
-            }
+            checkResult(json)
         }
     });
 }
+
+function checkResult(uuid) {
+    $.ajax({
+           url: server_url,
+           data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
+           type: "POST",
+           dataType: "json",
+           success: function (json) {
+                var status_text_key = json[0]['status_text'];
+//                jQuery('#' + uuid).html(json.html);
+                if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+                     if (selected_service_name == 'BlastN service') {
+                           Utils.ui.reenableButton('submit_button', 'Submit');
+                           $('#status').html('');
+                            // $('#result').html("Getting BLAST result...");
+                            display_blast_result_grassroots_markup(json);
+                      } else {
+                         $('#status').html('');
+                         $('#result').html("Done");
+                          downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
+                      }
+                }
+                else if (status_text_key == 'Idle' || status_text_key == '' || json.status == 2 || json.status == 3) {
+                    jQuery('#' + uuid).html(json.html);
+                    var timer;
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        checkBlastResult(uuid);
+                    }, 6500);
+                }
+                else {
+                    Utils.ui.reenableButton('submit_button', 'Submit');
+                }
+            }
+        }
+    );
+}
+
 
 // deprecated
 function display_blast_result_jsonout(json) {
