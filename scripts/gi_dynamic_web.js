@@ -230,21 +230,7 @@ function submit_form() {
         success: function (json) {
             // response = json;
             console.info(JSON.stringify(json));
-            checkResult(json)
-        }
-    });
-}
-
-function checkResult(uuid) {
-    $.ajax({
-           url: server_url,
-           data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
-           type: "POST",
-           dataType: "json",
-           success: function (json) {
-                var status_text_key = json[0]['status_text'];
-//                jQuery('#' + uuid).html(json.html);
-                if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+            if (synchronous){
                      if (selected_service_name == 'BlastN service') {
                            Utils.ui.reenableButton('submit_button', 'Submit');
                            $('#status').html('');
@@ -255,13 +241,49 @@ function checkResult(uuid) {
                          $('#result').html("Done");
                           downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
                       }
+
+            } else {
+                         $('#status').html('');
+                // get each job and place html
+                for (var i = 0; i < json['results'].length; i++) {
+                    var each_result = json['results'][i];
+                                  var uuid = each_result['job_uuid'];
+                                  var dbname = each_result['name'];
+                $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
+                checkResult(each_result);
                 }
-                else if (status_text_key == 'Idle' || status_text_key == '' || json.status == 2 || json.status == 3) {
+            }
+        }
+    });
+}
+
+function checkResult(each_result) {
+    var uuid = each_result['job_uuid'];
+    $.ajax({
+           url: server_url,
+           data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
+           type: "POST",
+           dataType: "json",
+           success: function (json) {
+                console.info(JSON.stringify(json));
+                var status_text_key = json[0]['status_text'];
+
+                if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+                     if (selected_service_name == 'BlastN service') {
+                           Utils.ui.reenableButton('submit_button', 'Submit');
+                           $('#'+ uuid).html(display_each_blast_result_grasroots_markup(json[0]));
+                      } else {
+                         $('#status').html('');
+                         $('#result').html("Done");
+                          downloadFile(json[0]['results'][0]['data'], selected_service_name);
+                      }
+                }
+                else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
                     jQuery('#' + uuid).html(json.html);
                     var timer;
                     clearTimeout(timer);
                     timer = setTimeout(function () {
-                        checkBlastResult(uuid);
+                        checkResult(each_result);
                     }, 6500);
                 }
                 else {
@@ -350,7 +372,17 @@ function display_blast_result_grassroots_markup(json) {
     result_html.push('<br/><br/><hr/><br/>');
 
     for (var i = 0; i < json['results'].length; i++) {
-        if (json['results'][i]['service_name'] == 'BlastN service') {
+        result_html.push(display_each_blast_result_grasroots_markup(json['results'][i]));
+    }
+    $('#form').html('');
+    window.scrollTo(0, 0);
+    $('#result').html(result_html.join(' '));
+}
+
+function display_each_blast_result_grasroots_markup(each_db_result){
+
+    var result_html = [];
+        if (each_db_result['service_name'] == 'BlastN service') {
             var each_db_result = json['results'][i];
             var uuid = each_db_result['job_uuid'];
             if (each_db_result['status_text'] == 'Succeeded') {
@@ -422,11 +454,7 @@ function display_blast_result_grassroots_markup(json) {
                 result_html.push('<p>Status: ' + each_db_result['status_text'] + '</p>');
             }
         }
-
-    }
-    $('#form').html('');
-    window.scrollTo(0, 0);
-    $('#result').html(result_html.join(' '));
+        return result_html.join(' ');
 }
 
 function get_faldo_strand(faldo_type) {
