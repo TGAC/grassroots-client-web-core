@@ -279,7 +279,7 @@ function checkResult(each_result) {
                       }
                 }
                 else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
-                    jQuery('#' + uuid).html(json.html);
+                    jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"images/ajax-loader.gif\"/>');
                     var timer;
                     clearTimeout(timer);
                     timer = setTimeout(function () {
@@ -287,6 +287,7 @@ function checkResult(each_result) {
                     }, 6500);
                 }
                 else {
+                    jQuery('#' + uuid).html('Job ' + status_text_key);
                     Utils.ui.reenableButton('submit_button', 'Submit');
                 }
             }
