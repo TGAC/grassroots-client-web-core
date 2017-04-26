@@ -16,6 +16,8 @@ function populateService(service_name) {
             $('#description').html(response['services'][0]['description']);
             parameters = response['services'][0]['operations']['parameter_set']['parameters'];
             groups = response['services'][0]['operations']['parameter_set']['groups'];
+            synchronous = response['services'][0]['operations']['synchronous'];
+            console.info(synchronous);
             produce_form('form', parameters, groups);
             for (var i = 0; i < textareas.length; i++) {
                 document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
@@ -244,6 +246,7 @@ function submit_form() {
 
             } else {
                          $('#status').html('');
+                          $('#result').html('');
                 // get each job and place html
                 for (var i = 0; i < json['results'].length; i++) {
                     var each_result = json['results'][i];
@@ -286,10 +289,10 @@ function checkResult(each_result) {
                         checkResult(each_result);
                     }, 6500);
                 }
-                else {
-                    jQuery('#' + uuid).html('Job ' + status_text_key);
-                    Utils.ui.reenableButton('submit_button', 'Submit');
-                }
+//                else {
+//                    jQuery('#' + uuid).html('Job ' + status_text_key);
+//                    Utils.ui.reenableButton('submit_button', 'Submit');
+//                }
             }
         }
     );
@@ -384,7 +387,7 @@ function display_each_blast_result_grasroots_markup(each_db_result){
 
     var result_html = [];
         if (each_db_result['service_name'] == 'BlastN service') {
-            var each_db_result = json['results'][i];
+//            var each_db_result = json['results'][i];
             var uuid = each_db_result['job_uuid'];
             if (each_db_result['status_text'] == 'Succeeded') {
 
