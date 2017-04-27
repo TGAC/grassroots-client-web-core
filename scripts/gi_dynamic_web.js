@@ -43,9 +43,9 @@ function produce_form(div, parameters, groups) {
             } else {
                 var random_id = generate_random_id();
                 form_html.push('<fieldset>');
-                form_html.push('<legend><a href="#'+random_id+'"  data-toggle="collapse">' + groups[j]['group'] + '</a></legend>');
+                form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['group'] + '</a></legend>');
 
-                form_html.push('<div id="'+random_id+'"  class="collapse">');
+                form_html.push('<div id="' + random_id + '"  class="collapse">');
                 for (var i = 0; i < parameters.length; i++) {
                     if (groups[j]['group'] == parameters[i]['group']) {
                         form_html.push(produce_one_parameter_form(parameters[i]));
@@ -232,54 +232,58 @@ function submit_form() {
         success: function (json) {
             // response = json;
             console.info(JSON.stringify(json));
-            if (synchronous){
-                     if (selected_service_name == 'BlastN service') {
-                           Utils.ui.reenableButton('submit_button', 'Submit');
-                           $('#status').html('');
-                            // $('#result').html("Getting BLAST result...");
-                            display_blast_result_grassroots_markup(json);
-                      } else {
-                         $('#status').html('');
-                         $('#result').html("Done");
-                          downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
-                      }
-
-            } else {
-                         $('#status').html('');
-                          $('#result').html('');
+            //            if (synchronous){
+            if (selected_service_name == 'BlastN service') {
+                $('#status').html('');
+                $('#result').html('');
+                $('#output_format_div').show();
                 // get each job and place html
                 for (var i = 0; i < json['results'].length; i++) {
                     var each_result = json['results'][i];
-                                  var uuid = each_result['job_uuid'];
-                                  var dbname = each_result['name'];
-                $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
-                checkResult(each_result);
+                    var uuid = each_result['job_uuid'];
+                    var dbname = each_result['name'];
+                    $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
+
+                    checkResult(each_result);
                 }
+            } else {
+                $('#status').html('');
+                $('#result').html("Done");
+                downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
             }
+
+            //            } else {
+
+
+            //            }
         }
     });
 }
 
 function checkResult(each_result) {
     var uuid = each_result['job_uuid'];
-    $.ajax({
-           url: server_url,
-           data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
-           type: "POST",
-           dataType: "json",
-           success: function (json) {
+    var status_text_key = each_result['status_text'];
+    if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+        Utils.ui.reenableButton('submit_button', 'Submit');
+        $('#' + uuid).html(display_each_blast_result_grasroots_markup(each_result));
+    } else {
+        $.ajax({
+            url: server_url,
+            data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
+            type: "POST",
+            dataType: "json",
+            success: function (json) {
                 console.info(JSON.stringify(json));
-                var status_text_key = json[0]['status_text'];
 
                 if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
-                     if (selected_service_name == 'BlastN service') {
-                           Utils.ui.reenableButton('submit_button', 'Submit');
-                           $('#'+ uuid).html(display_each_blast_result_grasroots_markup(json[0]));
-                      } else {
-                         $('#status').html('');
-                         $('#result').html("Done");
-                          downloadFile(json[0]['results'][0]['data'], selected_service_name);
-                      }
+                    if (selected_service_name == 'BlastN service') {
+                        Utils.ui.reenableButton('submit_button', 'Submit');
+                        $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
+                    } else {
+                        $('#status').html('');
+                        $('#result').html("Done");
+                        downloadFile(json[0]['results'][0]['data'], selected_service_name);
+                    }
                 }
                 else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
                     jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"images/ajax-loader.gif\"/>');
@@ -289,85 +293,18 @@ function checkResult(each_result) {
                         checkResult(each_result);
                     }, 6500);
                 }
-//                else {
-//                    jQuery('#' + uuid).html('Job ' + status_text_key);
-//                    Utils.ui.reenableButton('submit_button', 'Submit');
-//                }
-            }
-        }
-    );
-}
-
-
-// deprecated
-function display_blast_result_jsonout(json) {
-    var result_html = [];
-    result_html.push('<br/><br/><hr/><br/>');
-
-    for (var i = 0; i < json['results'].length; i++) {
-        var blast_result_string = json['results'][i]['results'][0]['data'];
-        var uuid = json['job_uuid'];
-        var description = json['results'][i]['description'];
-        var db = json['name'];
-
-        blast_result_string = blast_result_string.replace(/\\n/g, "\\n")
-            .replace(/\\'/g, "\\'")
-            .replace(/\\"/g, '\\"')
-            .replace(/\\&/g, "\\&")
-            .replace(/\\r/g, "\\r")
-            .replace(/\\t/g, "\\t")
-            .replace(/\\b/g, "\\b")
-            .replace(/\\\\/g, "\\")
-            .replace(/\\f/g, "\\f");
-        blast_result_string = blast_result_string.replace(/[\u0000-\u0019]+/g, "");
-
-        var blast_result_json = JSON.parse(blast_result_string);
-        console.log(blast_result_json['BlastOutput2'].length);
-        console.log(JSON.stringify(blast_result_json));
-
-        result_html.push('<fieldset>');
-        result_html.push('<legend>' + description + '</legend>');
-        for (var j = 0; j < blast_result_json['BlastOutput2'].length; j++) {
-            var query_result = blast_result_json['BlastOutput2'][j]['report']['results']
-            var query_line = query_result['search']['query_id'] + ': ' + query_result['search']['query_title'];
-            result_html.push('<p><b>' + query_line + '</b></p>');
-
-            if (query_result['search']['hits'].length > 0) {
-                for (var x = 0; x < query_result['search']['hits'].length; x++) {
-                    result_html.push('<div class="blastResultBox ui-corner-all">')
-                    var hit = query_result['search']['hits'][x];
-
-                    result_html.push('<p>' + hit['num'] + ': ' + hit['description'][0]['id'] + '</p>');
-
-                    for (var y = 0; y < hit['hsps'].length; y++) {
-                        var hsp = hit['hsps'][y];
-                        result_html.push('<p>Hsp: ' + hsp['num'] + '</p>');
-                        result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Hit Length: </b>' + hit['len'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
-                        result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
-                        //result_html.push('<p>'+  +'</p>');
-                        result_html.push('<hr/>');
-
-                        result_html.push('<div class="note">');
-                        result_html.push('<p class="blastPosition">Query from: ' + hsp['hit_from'] + ' to: ' + hsp['hit_to'] + ' Strand: ' + hsp['hit_strand'] + '</p>');
-                        result_html.push(alignment_formatter(hsp['qseq'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hseq'].match(/.{1,100}/g)));
-                        result_html.push('</div>');
-                    }
-                    result_html.push('</div>')
+                else {
+                    jQuery('#' + uuid).html('Job ' + status_text_key);
+                    Utils.ui.reenableButton('submit_button', 'Submit');
                 }
-            } else {
-                result_html.push('<p>No hits found</p>')
             }
-
-
         }
-
-
-        result_html.push('</fieldset>');
-
+        );
     }
-    //$('#form').html('');
-    $('#result').html(result_html.join(' '));
 }
+
+
+
 
 function display_blast_result_grassroots_markup(json) {
 
@@ -383,82 +320,82 @@ function display_blast_result_grassroots_markup(json) {
     $('#result').html(result_html.join(' '));
 }
 
-function display_each_blast_result_grasroots_markup(each_db_result){
+function display_each_blast_result_grasroots_markup(each_db_result) {
 
     var result_html = [];
-        if (each_db_result['service_name'] == 'BlastN service') {
-//            var each_db_result = json['results'][i];
-            var uuid = each_db_result['job_uuid'];
-            if (each_db_result['status_text'] == 'Succeeded') {
+    if (each_db_result['service_name'] == 'BlastN service') {
+        //            var each_db_result = json['results'][i];
+        var uuid = each_db_result['job_uuid'];
+        if (each_db_result['status_text'] == 'Succeeded') {
 
-                var db_name = each_db_result['name'];
-                // var db = each_db_result['results'][0]['database'];
+            var db_name = each_db_result['name'];
+            // var db = each_db_result['results'][0]['database'];
 
 
-                result_html.push('<fieldset>');
-                result_html.push('<legend>' + db_name + '</legend>');
+            //                result_html.push('<fieldset>');
+            //                result_html.push('<legend>' + db_name + '</legend>');
 
-                result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat">Pairwise</span> format <span id=\"' + uuid + 'status\"></span><br/>');
+            result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat">Pairwise</span> format <span id=\"' + uuid + 'status\"></span><br/>');
 
-                for (var dbi = 0; dbi < each_db_result['results'][0]['data']['blast_search_results']['reports'].length; dbi++) {
+            for (var dbi = 0; dbi < each_db_result['results'][0]['data']['blast_search_results']['reports'].length; dbi++) {
 
-                    var query_result = each_db_result['results'][0]['data']['blast_search_results']['reports'][dbi];
-                    var query_line = query_result['query_id'] + ': ' + query_result['query_title'];
-                    result_html.push('<p><b>' + query_line + '</b></p>');
+                var query_result = each_db_result['results'][0]['data']['blast_search_results']['reports'][dbi];
+                var query_line = query_result['query_id'] + ': ' + query_result['query_title'];
+                result_html.push('<p><b>' + query_line + '</b></p>');
 
-                    if (query_result['hits'].length > 0) {
-                        for (var j = 0; j < query_result['hits'].length; j++) {
-                            var hit = query_result['hits'][j];
-                            var scaffold_name = hit['scaffolds'][0]['scaffold'];
+                if (query_result['hits'].length > 0) {
+                    for (var j = 0; j < query_result['hits'].length; j++) {
+                        var hit = query_result['hits'][j];
+                        var scaffold_name = hit['scaffolds'][0]['scaffold'];
 
-                            result_html.push('<div class="blastResultBox ui-corner-all">')
+                        result_html.push('<div class="blastResultBox ui-corner-all">')
 
-                            result_html.push('<p>Hit ' + hit['hit_num'] + ' : ' + scaffold_name + ' | <b>Hit Sequence Length: </b>' + hit['sequence_length']);
+                        result_html.push('<p>Hit ' + hit['hit_num'] + ' : ' + scaffold_name + ' | <b>Hit Sequence Length: </b>' + hit['sequence_length']);
+                        result_html.push('</p>');
+
+                        if (hit['linked_services'] != null) {
+                            result_html.push('<p>Linked Services: ');
+                            for (var linki = 0; linki < hit['linked_services'].length; linki++) {
+                                var link_service_json = hit['linked_services'][linki];
+                                var link_service_id = generate_random_id();
+                                linked_services_global[link_service_id] = link_service_json;
+                                result_html.push(' | <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['services']['service_name'] + '</a><span id="' + link_service_id + 'status"></span> |');
+
+                            }
                             result_html.push('</p>');
-
-                            if (hit['linked_services'] != null) {
-                                result_html.push('<p>Linked Services: ');
-                                for (var linki = 0; linki < hit['linked_services'].length; linki++) {
-                                    var link_service_json = hit['linked_services'][linki];
-                                    var link_service_id = generate_random_id();
-                                    linked_services_global[link_service_id] = link_service_json;
-                                    result_html.push(' | <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['services']['service_name'] + '</a><span id="' + link_service_id + 'status"></span> |');
-
-                                }
-                                result_html.push('</p>');
-                            }
+                        }
 
 
-                            for (var y = 0; y < hit['hsps'].length; y++) {
-                                var hsp = hit['hsps'][y];
-                                result_html.push('<p>Hsp: ' + hsp['hsp_num'] + '</p>');
-                                // result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
-                                result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + '</p>');
-                                result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
-                                //result_html.push('<p>'+  +'</p>');
-                                result_html.push('<hr/>');
+                        for (var y = 0; y < hit['hsps'].length; y++) {
+                            var hsp = hit['hsps'][y];
+                            result_html.push('<p>Hsp: ' + hsp['hsp_num'] + '</p>');
+                            // result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
+                            result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + '</p>');
+                            result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
+                            //result_html.push('<p>'+  +'</p>');
+                            result_html.push('<hr/>');
 
-                                result_html.push('<div class="note">');
-                                result_html.push('<p class="blastPosition">Query from: ' + hsp['query_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['query_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['query_location']['faldo:begin']['@type']) + '</p>');
-                                result_html.push(alignment_formatter(hsp['query_sequence'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hit_sequence'].match(/.{1,100}/g)));
-                                result_html.push('<p class="blastPosition">Hit from: ' + hsp['hit_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['hit_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['hit_location']['faldo:begin']['@type']) + '</p>');
-                                result_html.push('</div>');
-                            }
+                            result_html.push('<div class="note">');
+                            result_html.push('<p class="blastPosition">Query from: ' + hsp['query_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['query_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['query_location']['faldo:begin']['@type']) + '</p>');
+                            result_html.push(alignment_formatter(hsp['query_sequence'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hit_sequence'].match(/.{1,100}/g)));
+                            result_html.push('<p class="blastPosition">Hit from: ' + hsp['hit_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['hit_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['hit_location']['faldo:begin']['@type']) + '</p>');
                             result_html.push('</div>');
                         }
-                    } else {
-                        result_html.push('<p>No hits found</p>')
+                        result_html.push('</div>');
                     }
+                } else {
+                    result_html.push('<p>No hits found</p>')
                 }
-
-                result_html.push('</fieldset>');
-
-            } else {
-                result_html.push('<p>Job id: ' + uuid + '</p>');
-                result_html.push('<p>Status: ' + each_db_result['status_text'] + '</p>');
             }
+
+            //                result_html.push('</fieldset>');
+
+        } else {
+            result_html.push('<p>Job id: ' + uuid + '</p>');
+            result_html.push('<p>Status: ' + each_db_result['status_text'] + '</p>');
         }
-        return result_html.join(' ');
+    }
+    return result_html.join(' ');
 }
 
 function get_faldo_strand(faldo_type) {
@@ -518,7 +455,7 @@ function downloadJobFromServer(id) {
                     "param": "job_id",
                     "grassroots_type": "xsd:string",
                     "current_value": id
-                }, {"param": "outfmt", "grassroots_type": "xsd:string", "current_value": outfmt}]
+                }, { "param": "outfmt", "grassroots_type": "xsd:string", "current_value": outfmt }]
             }
         }]
     };
@@ -571,7 +508,7 @@ function run_linked_service(id) {
 }
 
 function downloadFile(text, filename) {
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     saveAs(blob, filename + ".txt");
 }
 
@@ -649,4 +586,74 @@ function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+}
+
+// deprecated
+function display_blast_result_jsonout(json) {
+    var result_html = [];
+    result_html.push('<br/><br/><hr/><br/>');
+
+    for (var i = 0; i < json['results'].length; i++) {
+        var blast_result_string = json['results'][i]['results'][0]['data'];
+        var uuid = json['job_uuid'];
+        var description = json['results'][i]['description'];
+        var db = json['name'];
+
+        blast_result_string = blast_result_string.replace(/\\n/g, "\\n")
+            .replace(/\\'/g, "\\'")
+            .replace(/\\"/g, '\\"')
+            .replace(/\\&/g, "\\&")
+            .replace(/\\r/g, "\\r")
+            .replace(/\\t/g, "\\t")
+            .replace(/\\b/g, "\\b")
+            .replace(/\\\\/g, "\\")
+            .replace(/\\f/g, "\\f");
+        blast_result_string = blast_result_string.replace(/[\u0000-\u0019]+/g, "");
+
+        var blast_result_json = JSON.parse(blast_result_string);
+        console.log(blast_result_json['BlastOutput2'].length);
+        console.log(JSON.stringify(blast_result_json));
+
+        result_html.push('<fieldset>');
+        result_html.push('<legend>' + description + '</legend>');
+        for (var j = 0; j < blast_result_json['BlastOutput2'].length; j++) {
+            var query_result = blast_result_json['BlastOutput2'][j]['report']['results']
+            var query_line = query_result['search']['query_id'] + ': ' + query_result['search']['query_title'];
+            result_html.push('<p><b>' + query_line + '</b></p>');
+
+            if (query_result['search']['hits'].length > 0) {
+                for (var x = 0; x < query_result['search']['hits'].length; x++) {
+                    result_html.push('<div class="blastResultBox ui-corner-all">')
+                    var hit = query_result['search']['hits'][x];
+
+                    result_html.push('<p>' + hit['num'] + ': ' + hit['description'][0]['id'] + '</p>');
+
+                    for (var y = 0; y < hit['hsps'].length; y++) {
+                        var hsp = hit['hsps'][y];
+                        result_html.push('<p>Hsp: ' + hsp['num'] + '</p>');
+                        result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Hit Length: </b>' + hit['len'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
+                        result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
+                        //result_html.push('<p>'+  +'</p>');
+                        result_html.push('<hr/>');
+
+                        result_html.push('<div class="note">');
+                        result_html.push('<p class="blastPosition">Query from: ' + hsp['hit_from'] + ' to: ' + hsp['hit_to'] + ' Strand: ' + hsp['hit_strand'] + '</p>');
+                        result_html.push(alignment_formatter(hsp['qseq'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hseq'].match(/.{1,100}/g)));
+                        result_html.push('</div>');
+                    }
+                    result_html.push('</div>')
+                }
+            } else {
+                result_html.push('<p>No hits found</p>')
+            }
+
+
+        }
+
+
+        result_html.push('</fieldset>');
+
+    }
+    //$('#form').html('');
+    $('#result').html(result_html.join(' '));
 }
