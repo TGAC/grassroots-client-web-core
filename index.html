@@ -120,13 +120,14 @@
                 type: "POST",
                 dataType: "json",
                 success: function (json) {
-//                    console.info(json);
+                    console.info(JSON.stringify(json));
                     var list_html = [];
                     list_html.push('<h3>Click any of the service to load the form</h3>');
                     list_html.push('<ul>');
                     for (var j = 0; j < json['services'].length; j++) {
                         var service_name = json['services'][j]['service_name'];
-                        list_html.push('<li onclick="populateService(\'' + service_name + '\')"><u>' + service_name + '</u></li>');
+                        var icon_uri = json['services'][j]['operations']['icon_uri'];
+                        list_html.push('<li onclick="populateService(\'' + service_name + '\')"><img src="'+icon_uri+'"/><u>' + service_name + '</u></li>');
                     }
                     list_html.push('</ul>');
                     $('#form').html(list_html.join(' '));
