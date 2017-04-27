@@ -213,7 +213,7 @@ function submit_form() {
     }
 
     submit_job['start_service'] = true;
-    submit_job['service_name'] = 'BlastN service';
+    submit_job['service_name'] = selected_service_name;
 
     parameter_set['parameters'] = parameters;
     submit_job['parameter_set'] = parameter_set;
@@ -233,7 +233,7 @@ function submit_form() {
             // response = json;
             console.info(JSON.stringify(json));
             //            if (synchronous){
-            if (selected_service_name == 'BlastN service') {
+            if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service'  || selected_service_name == 'BlastX service' ) {
                 $('#status').html('');
                 $('#result').html('');
                 $('#output_format_div').show();
@@ -276,7 +276,7 @@ function checkResult(each_result) {
                 console.info(JSON.stringify(json));
 
                 if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
-                    if (selected_service_name == 'BlastN service') {
+                    if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service'  || selected_service_name == 'BlastX service' ) {
                         Utils.ui.reenableButton('submit_button', 'Submit');
                         $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
                     } else {
