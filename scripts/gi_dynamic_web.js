@@ -274,7 +274,7 @@ function checkResult(each_result) {
             dataType: "json",
             success: function (json) {
                 console.info(JSON.stringify(json));
-
+                status_text_key = json[0]['status_text'];
                 if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
                     if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service'  || selected_service_name == 'BlastX service' ) {
                         Utils.ui.reenableButton('submit_button', 'Submit');
