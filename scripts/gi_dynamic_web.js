@@ -136,7 +136,7 @@ function produce_one_parameter_form(parameter) {
 
         }
         // input form text
-        else if (grassroots_type == "xsd:string" || grassroots_type == "params:directory"
+        else if (grassroots_type == "xsd:string" 
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
 
             form_html.push('<div class="form-group">');
