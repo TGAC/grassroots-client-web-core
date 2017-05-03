@@ -61,9 +61,18 @@ function produce_form(div, parameters, groups) {
         }
     }
 
-    form_html.push('<input id="submit_button" class="btn btn-default" type="button" onclick="submit_form();" value="Submit">');
+    form_html.push('<input id="submit_button" class="btn btn-default" type="submit" onclick="submit_form();" value="Submit">');
 
     $('#' + div).html(form_html.join(' '));
+    $('#' + div).validator({
+                               custom: {
+                                   "fasta": function($el) {
+                                        if (!validateFasta($el.val())){
+                                              return "Please insert valid FASTA format";
+                                              }
+                                              }
+                               }
+                           });
 }
 
 function selected_option(default_value, current_value, select_bool) {
@@ -128,10 +137,20 @@ function produce_one_parameter_form(parameter) {
 
         }
         // textarea
-        else if (grassroots_type == "params:large_string" || grassroots_type == "params:json" || grassroots_type == "params:fasta") {
+        else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" rows="3">' + default_value + '</textarea>');
+            form_html.push('</div>');
+            textareas.push(param + '^' + grassroots_type);
+
+        }
+        //fasta
+        else if (grassroots_type == "params:fasta") {
+            form_html.push('<div class="form-group">');
+            form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" rows="6" data-fasta required>' + default_value + '</textarea>');
+            form_html.push('<div class="help-block with-errors">FASTA format required</div>');
             form_html.push('</div>');
             textareas.push(param + '^' + grassroots_type);
 
@@ -524,35 +543,37 @@ function generate_random_id() {
 
 
 function validateFasta(fasta) {
+	if (!fasta) { // check there is something first of all
+		return false;
+	}
 
-    if (!fasta) { // check there is something first of all
-        return false;
-    }
+	// immediately remove trailing spaces
+	fasta = fasta.trim();
 
-    // immediately remove trailing spaces
-    fasta = fasta.trim();
+	// split on newlines...
+	var lines = fasta.split('\n');
 
-    // split on newlines...
-    var lines = fasta.split('\n');
+	// check for header
+	for(var i=0; i < lines.length; i++){
+	if (lines[i][0] == '>') {
+		// remove one line, starting at the first position
+		lines.splice(i, 1);
+	}
+	}
 
-    // check for header
-    if (fasta[0] == '>') {
-        // remove one line, starting at the first position
-        lines.splice(0, 1);
-    }
+	// join the array back into a single string without newlines and
+	// trailing or leading spaces
+	fasta = lines.join('').trim();
 
-    // join the array back into a single string without newlines and
-    // trailing or leading spaces
-    fasta = lines.join('').trim();
+	if (!fasta) { // is it empty whatever we collected ? re-check not efficient
+		return false;
+	}
 
-    if (!fasta) { // is it empty whatever we collected ? re-check not efficient
-        return false;
-    }
+	// note that the empty string is caught above
+	// allow for Selenocysteine (U)
+	return /^[ACDEFGHIKLMNPQRSTUVWY\s]+$/i.test(fasta);
 
-    // note that the empty string is caught above
-    // allow for Selenocysteine (U)
-    return /^[ACDEFGHIKLMNPQRSTUVWY\s]+$/i.test(fasta);
-}
+ }
 
 function handleFileSelect(evt) {
     evt.stopPropagation();
