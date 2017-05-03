@@ -61,7 +61,7 @@ function produce_form(div, parameters, groups) {
         }
     }
 
-    form_html.push('<input id="submit_button" class="btn btn-default" type="submit" onclick="submit_form();" value="Submit">');
+    form_html.push('<input id="submit_button" class="btn btn-default" type="button" onclick="submit_form();" value="Submit">');
 
     $('#' + div).html(form_html.join(' '));
     $('#' + div).validator({
@@ -136,7 +136,7 @@ function produce_one_parameter_form(parameter) {
 
         }
         // input form text
-        else if (grassroots_type == "xsd:string" 
+        else if (grassroots_type == "xsd:string"
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
 
             form_html.push('<div class="form-group">');
@@ -191,6 +191,7 @@ function produce_one_parameter_form(parameter) {
     }
     //select with options
     else {
+        var outfmt_html = [];
         var enums = parameter['enum'];
         form_html.push('<div class="form-group">');
         form_html.push('<label title="' + description + '">' + display_name + '</label>');
@@ -202,7 +203,15 @@ function produce_one_parameter_form(parameter) {
                 option_text = this_enum['value']
             }
             form_html.push('<option value="' + this_enum['value'] + '" ' + selected_option(default_value, this_enum['value'], true) + '>' + option_text + '</option>');
+            outfmt_html.push('<option value="' + this_enum['value'] + '">' + option_text + '</option>');
         }
+
+
+            if ((selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service'  || selected_service_name == 'BlastX service') && param == 'outfmt') {
+
+             $('#output_format').html(outfmt_html.join(' '));
+
+            }
         form_html.push('</select>');
         form_html.push('</div>');
 
