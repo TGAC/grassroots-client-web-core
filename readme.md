@@ -1,6 +1,6 @@
 # Grassroots Infrastructure Dynamic Web-UI
 
-This is to work with the Grassroots Infrastructure's backend to produce a web UI, all services of the backend server are listed with each of the parameters is added as a form object dynamically.
+This is to work with the Grassroots Infrastructure's backend to produce a web UI, all services of the backend server are listed with each of the parameters added as a form object dynamically.
 
 
 ## Install
