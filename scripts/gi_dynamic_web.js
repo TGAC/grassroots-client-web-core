@@ -65,14 +65,14 @@ function produce_form(div, parameters, groups) {
 
     $('#' + div).html(form_html.join(' '));
     $('#' + div).validator({
-                               custom: {
-                                   "fasta": function($el) {
-                                        if (!validateFasta($el.val())){
-                                              return "Please insert valid FASTA format";
-                                              }
-                                              }
-                               }
-                           });
+        custom: {
+            "fasta": function ($el) {
+                if (!validateFasta($el.val())) {
+                    return "Please insert valid FASTA format";
+                }
+            }
+        }
+    });
 }
 
 function selected_option(default_value, current_value, select_bool) {
@@ -115,10 +115,10 @@ function produce_one_parameter_form(parameter) {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<label class="radio-inline">');
-            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + 'true" value="true" ' + selected_option(default_value, true, false) + '> True');
+            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> True');
             form_html.push('</label>');
             form_html.push('<label class="radio-inline">');
-            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
+            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param  + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
             form_html.push('</label>');
             form_html.push('</div>');
 
@@ -131,7 +131,7 @@ function produce_one_parameter_form(parameter) {
 
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</div>');
 
         }
@@ -141,7 +141,7 @@ function produce_one_parameter_form(parameter) {
 
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</div>');
 
         }
@@ -149,19 +149,19 @@ function produce_one_parameter_form(parameter) {
         else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" rows="3">' + default_value + '</textarea>');
+            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '" rows="3">' + default_value + '</textarea>');
             form_html.push('</div>');
-            textareas.push(param + '^' + grassroots_type);
+            textareas.push(param );
 
         }
         //fasta (textarea)
         else if (grassroots_type == "params:fasta") {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" rows="6" data-fasta required>' + default_value + '</textarea>');
+            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param  + '" rows="6" data-fasta required>' + default_value + '</textarea>');
             form_html.push('<div class="help-block with-errors">FASTA format required</div>');
             form_html.push('</div>');
-            textareas.push(param + '^' + grassroots_type);
+            textareas.push(param );
 
         }
         //file
@@ -207,11 +207,11 @@ function produce_one_parameter_form(parameter) {
         }
 
 
-            if ((selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service'  || selected_service_name == 'BlastX service') && param == 'outfmt') {
+        if ((selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') && param == 'outfmt') {
 
-             $('#output_format').html(outfmt_html.join(' '));
+            $('#output_format').html(outfmt_html.join(' '));
 
-            }
+        }
         form_html.push('</select>');
         form_html.push('</div>');
 
@@ -270,7 +270,7 @@ function submit_form() {
             // response = json;
             console.info(JSON.stringify(json));
             //            if (synchronous){
-            if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service'  || selected_service_name == 'BlastX service' ) {
+            if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
                 $('#status').html('');
                 $('#result').html('');
                 $('#output_format_div').show();
@@ -288,11 +288,6 @@ function submit_form() {
                 $('#result').html("Done");
                 downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
             }
-
-            //            } else {
-
-
-            //            }
         }
     });
 }
@@ -313,7 +308,7 @@ function checkResult(each_result) {
                 console.info(JSON.stringify(json));
                 status_text_key = json[0]['status_text'];
                 if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
-                    if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service'  || selected_service_name == 'BlastX service' ) {
+                    if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
                         Utils.ui.reenableButton('submit_button', 'Submit');
                         $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
                     } else {
@@ -366,11 +361,6 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
         if (each_db_result['status_text'] == 'Succeeded') {
 
             var db_name = each_db_result['name'];
-            // var db = each_db_result['results'][0]['database'];
-
-
-            //                result_html.push('<fieldset>');
-            //                result_html.push('<legend>' + db_name + '</legend>');
 
             result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat">Pairwise</span> format <span id=\"' + uuid + 'status\"></span><br/>');
 
@@ -424,8 +414,6 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                     result_html.push('<p>No hits found</p>')
                 }
             }
-
-            //                result_html.push('</fieldset>');
 
         } else {
             result_html.push('<p>Job id: ' + uuid + '</p>');
@@ -561,37 +549,37 @@ function generate_random_id() {
 
 
 function validateFasta(fasta) {
-	if (!fasta) { // check there is something first of all
-		return false;
-	}
+    if (!fasta) { // check there is something first of all
+        return false;
+    }
 
-	// immediately remove trailing spaces
-	fasta = fasta.trim();
+    // immediately remove trailing spaces
+    fasta = fasta.trim();
 
-	// split on newlines...
-	var lines = fasta.split('\n');
+    // split on newlines...
+    var lines = fasta.split('\n');
 
-	// check for header
-	for(var i=0; i < lines.length; i++){
-	if (lines[i][0] == '>') {
-		// remove one line, starting at the first position
-		lines.splice(i, 1);
-	}
-	}
+    // check for header
+    for (var i = 0; i < lines.length; i++) {
+        if (lines[i][0] == '>') {
+            // remove one line, starting at the first position
+            lines.splice(i, 1);
+        }
+    }
 
-	// join the array back into a single string without newlines and
-	// trailing or leading spaces
-	fasta = lines.join('').trim();
+    // join the array back into a single string without newlines and
+    // trailing or leading spaces
+    fasta = lines.join('').trim();
 
-	if (!fasta) { // is it empty whatever we collected ? re-check not efficient
-		return false;
-	}
+    if (!fasta) { // is it empty whatever we collected ? re-check not efficient
+        return false;
+    }
 
-	// note that the empty string is caught above
-	// allow for Selenocysteine (U)
-	return /^[ACDEFGHIKLMNPQRSTUVWY\s]+$/i.test(fasta);
+    // note that the empty string is caught above
+    // allow for Selenocysteine (U)
+    return /^[ACDEFGHIKLMNPQRSTUVWY\s]+$/i.test(fasta);
 
- }
+}
 
 function handleFileSelect(evt) {
     evt.stopPropagation();
@@ -613,6 +601,8 @@ function handleFileSelect(evt) {
         r.onload = function (e) {
             var contents = e.target.result;
             document.getElementById(evt.target.id).value = contents;
+//            console.info(evt.target.id);
+            $('#' + String(evt.target.id)).trigger("change");
         }
         r.readAsText(f);
     }
