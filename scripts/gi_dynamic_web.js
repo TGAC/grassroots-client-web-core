@@ -124,11 +124,20 @@ function produce_one_parameter_form(parameter) {
 
 
         }
-        // input form
+        // input form numbers
         else if (grassroots_type == "params:signed_integer" || grassroots_type == "params:unsigned_integer" || grassroots_type == "xsd:double"
-            || grassroots_type == "params:unsigned_number" || grassroots_type == "xsd:string" || grassroots_type == "params:directory"
-            || grassroots_type == "params:character" || grassroots_type == "params:keyword"
+            || grassroots_type == "params:unsigned_number"
             || grassroots_type == "params:negative_integer") {
+
+            form_html.push('<div class="form-group">');
+            form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('</div>');
+
+        }
+        // input form text
+        else if (grassroots_type == "xsd:string" || grassroots_type == "params:directory"
+            || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
 
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
@@ -145,7 +154,7 @@ function produce_one_parameter_form(parameter) {
             textareas.push(param + '^' + grassroots_type);
 
         }
-        //fasta
+        //fasta (textarea)
         else if (grassroots_type == "params:fasta") {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
