@@ -2,6 +2,29 @@ var linked_services_global = {};
 var textareas = [];
 var synchronous = false;
 
+function get_all_services() {
+    $('#form').html("Getting service...");
+    $.ajax({
+        url: server_url,
+        data: services,
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            console.info(JSON.stringify(json));
+            var list_html = [];
+            list_html.push('<h3>Click any of the service to load the form</h3>');
+            list_html.push('<ul>');
+            for (var j = 0; j < json['services'].length; j++) {
+                var service_name = json['services'][j]['service_name'];
+                var icon_uri = json['services'][j]['operations']['icon_uri'];
+                list_html.push('<li onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
+            }
+            list_html.push('</ul>');
+            $('#form').html(list_html.join(' '));
+        }
+    });
+}
+
 function populateService(service_name) {
     selected_service_name = service_name;
     $.ajax({
@@ -118,7 +141,7 @@ function produce_one_parameter_form(parameter) {
             form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> True');
             form_html.push('</label>');
             form_html.push('<label class="radio-inline">');
-            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param  + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
+            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
             form_html.push('</label>');
             form_html.push('</div>');
 
@@ -151,17 +174,17 @@ function produce_one_parameter_form(parameter) {
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '" rows="3">' + default_value + '</textarea>');
             form_html.push('</div>');
-            textareas.push(param );
+            textareas.push(param);
 
         }
         //fasta (textarea)
         else if (grassroots_type == "params:fasta") {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param  + '" rows="6" data-fasta required>' + default_value + '</textarea>');
+            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '" id="' + param + '" rows="6" data-fasta required>' + default_value + '</textarea>');
             form_html.push('<div class="help-block with-errors">FASTA format required</div>');
             form_html.push('</div>');
-            textareas.push(param );
+            textareas.push(param);
 
         }
         //file
@@ -296,7 +319,7 @@ function checkResult(each_result) {
         Utils.ui.reenableButton('submit_button', 'Submit');
         $('#' + uuid).html(display_each_blast_result_grasroots_markup(each_result));
     } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
-        $('#' + uuid).html('Job ' + status_text_key + ': <br/>' + (each_result['errors']['error']));
+        $('#' + uuid).html('Job ' + status_text_key + ': <br/>' + each_result['errors']['error']);
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
@@ -326,7 +349,7 @@ function checkResult(each_result) {
                     }, 6500);
                 }
                 else {
-                    jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['error']);
+                    jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['errors']['error']);
                     Utils.ui.reenableButton('submit_button', 'Submit');
                 }
             }
@@ -601,7 +624,7 @@ function handleFileSelect(evt) {
         r.onload = function (e) {
             var contents = e.target.result;
             document.getElementById(evt.target.id).value = contents;
-//            console.info(evt.target.id);
+            //            console.info(evt.target.id);
             $('#' + String(evt.target.id)).trigger("change");
         }
         r.readAsText(f);
