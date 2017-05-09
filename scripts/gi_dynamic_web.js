@@ -206,11 +206,8 @@ function produce_one_parameter_form(parameter) {
             outfmt_html.push('<option value="' + this_enum['value'] + '">' + option_text + '</option>');
         }
 
-
         if ((selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') && param == 'outfmt') {
-
             $('#output_format').html(outfmt_html.join(' '));
-
         }
         form_html.push('</select>');
         form_html.push('</div>');
@@ -298,6 +295,9 @@ function checkResult(each_result) {
     if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
         Utils.ui.reenableButton('submit_button', 'Submit');
         $('#' + uuid).html(display_each_blast_result_grasroots_markup(each_result));
+    } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
+        $('#' + uuid).html('Job ' + status_text_key + ': <br/>' + (each_result['errors']['error']));
+        Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
             url: server_url,
@@ -326,7 +326,7 @@ function checkResult(each_result) {
                     }, 6500);
                 }
                 else {
-                    jQuery('#' + uuid).html('Job ' + status_text_key);
+                    jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['error']);
                     Utils.ui.reenableButton('submit_button', 'Submit');
                 }
             }
