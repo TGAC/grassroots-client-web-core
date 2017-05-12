@@ -323,42 +323,40 @@ function checkResult(each_result) {
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
-            url: server_url,
-            data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
-            type: "POST",
-            dataType: "json",
-            success: function (json) {
-                console.info(JSON.stringify(json));
-                status_text_key = json[0]['status_text'];
-                if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
-                    if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
+                url: server_url,
+                data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    console.info(JSON.stringify(json));
+                    status_text_key = json[0]['status_text'];
+                    if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+                        if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
+                            Utils.ui.reenableButton('submit_button', 'Submit');
+                            $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
+                        } else {
+                            $('#status').html('');
+                            $('#result').html("Done");
+                            downloadFile(json[0]['results'][0]['data'], selected_service_name);
+                        }
+                    }
+                    else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
+                        jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"images/ajax-loader.gif\"/>');
+                        var timer;
+                        clearTimeout(timer);
+                        timer = setTimeout(function () {
+                            checkResult(each_result);
+                        }, 6500);
+                    }
+                    else {
+                        jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['errors']['error']);
                         Utils.ui.reenableButton('submit_button', 'Submit');
-                        $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
-                    } else {
-                        $('#status').html('');
-                        $('#result').html("Done");
-                        downloadFile(json[0]['results'][0]['data'], selected_service_name);
                     }
                 }
-                else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
-                    jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"images/ajax-loader.gif\"/>');
-                    var timer;
-                    clearTimeout(timer);
-                    timer = setTimeout(function () {
-                        checkResult(each_result);
-                    }, 6500);
-                }
-                else {
-                    jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['errors']['error']);
-                    Utils.ui.reenableButton('submit_button', 'Submit');
-                }
             }
-        }
         );
     }
 }
-
-
 
 
 function display_blast_result_grassroots_markup(json) {
@@ -503,7 +501,7 @@ function downloadJobFromServer(id) {
                     "param": "job_id",
                     "grassroots_type": "xsd:string",
                     "current_value": id
-                }, { "param": "outfmt", "grassroots_type": "xsd:string", "current_value": outfmt }]
+                }, {"param": "outfmt", "grassroots_type": "xsd:string", "current_value": outfmt}]
             }
         }]
     };
@@ -556,7 +554,7 @@ function run_linked_service(id) {
 }
 
 function downloadFile(text, filename) {
-    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
     saveAs(blob, filename + ".txt");
 }
 
