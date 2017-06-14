@@ -43,6 +43,8 @@
     this.options    = options
     this.validators = $.extend({}, Validator.VALIDATORS, options.custom)
     this.$element   = $(element)
+
+      // customised for different button type
     this.$btn       = $('button[type="button"], input[type="button"]')
                         .filter('[form="' + this.$element.attr('id') + '"]')
                         .add(this.$element.find('input[type="button"], button[type="button"]'))
