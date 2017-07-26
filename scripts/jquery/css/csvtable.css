@@ -1,6 +1,7 @@
 /* CSV Table Classes */
 TABLE.CSVTable {
-	font: 0.5em "Courier New", Courier, monospace;
+	margin-left: -20px;
+	font: 0.8em "Courier New", Courier, monospace;
 	border-collapse: collapse;
 	width: 450px;
     word-break: keep-all ;

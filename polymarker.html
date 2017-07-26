@@ -95,7 +95,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var csv_table_selector = $('#CSVTable');
-            var table = csv_table_selector.CSVToTable('primers.csv', {headers: ["ID",	"SNP", "Chr","CTotal", 	"Contig regions", 	"SNP type", "A", "B","Common", "Primer type", "Product size", "Error"], startLine: 1});
+            var table = csv_table_selector.CSVToTable(csv_file_with_newline, {headers: ["ID",	"SNP", "Chr","CTotal", 	"Contig regions", 	"SNP type", "A", "B","Common", "Primer type", "Product size", "Error"], startLine: 1});
             table.bind("loadComplete",function() {
 
                 csv_table_selector.jExpand();
