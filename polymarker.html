@@ -99,20 +99,20 @@
             table.bind("loadComplete",function() {
 
                 csv_table_selector.jExpand();
-                csv_table_selector.load_msa('${sf.id}:${sf.hash}');
+                csv_table_selector.load_msa('primers.fa');
             });
-//            $('#statusTable').jExpand();
-//
-//            $( "#show_list").click(function() {
-//                $("#statusTable" ).toggle();
-//            });
-//            $("#statusTable").hide();
-//            $( "#show_mask").click(function() {
-//                csv_table_selector.show_all();
-//            });
-//            $( "#hide_mask").click(function() {
-//                csv_table_selector.hide_all();
-//            });
+            $('#statusTable').jExpand();
+
+            $( "#show_list").click(function() {
+                $("#statusTable" ).toggle();
+            });
+            $("#statusTable").hide();
+            $( "#show_mask").click(function() {
+                csv_table_selector.show_all();
+            });
+            $( "#hide_mask").click(function() {
+                csv_table_selector.hide_all();
+            });
 
         });
 

@@ -292,6 +292,134 @@ function reverse_complement(s) {
 }
 
 
+var fa_file = ">BS00167765:T51C3D-B\n" +
+    "-----------------------------------------------------------------------------------------------------TTGGAGGCTTCCGAAGTGAATACAACATAGTCTTGCAGGATAGTACAAACGCAGTCTGATTATATGCCATGGAATGCTTTTCACCAAGAGGTGTATTAAC----------------------------------------------------------------------------------------------------\n" +
+    ">BS00167765:T51C3D-A\n" +
+    "-----------------------------------------------------------------------------------------------------TTGGAGGCTTCCGAAGTGAATACAACATAGTCTTGCAGGATAGTACAAATGCAGTCTGATTATATGCCATGGAATGCTTTTCACCAAGAGGTGTATTAAC----------------------------------------------------------------------------------------------------\n" +
+    ">BS00167765:T51C3D-3B\n" +
+    "CAATTTTGTAACCATGGCAACTGAGAATCTTCTTTTAGGCCATGAGGAGTAACCAAGACATCTTTTTACCATGGCAAGAAATGAGGGTTCTGTAATTACCTTTGGAGGCTTCCGAAGTGAATACAACATAGTCTTGCAGGATAGTACAAACGCAGTCTGATTATATGCCATGGAATGCTTTTCACCAAGAGGTGTATTAACCGTGTTTTTGTAGCCTGGCTCATTAAAGTATGGTTTATCATTCAACACAAGGCCCTGGATGGAGATCAACACCTGAAGCATGGTGGAATTCGACTTGCTC\n" +
+    ">BS00167765:T51C3D-3A\n" +
+    "CAATTTTGTAACCATGTCAACTGAGAATCTTCTTTTACGCCATGAAGAGTAACCAAGACATCTATTTACGATGGCAAGAAATGAGGGTTCTGTAATTACCATTGGAGGCTTCCGAAGTGAATACAACATAGTCTTGCAGGATAGTACAAATGCAGTCTGATTATATGCCATGGAATGCTTTTCACCAAGAGGTGTATTAACCGTGTTTTTGTAGCCTGGCTCATTAAAATATGGTTTATCATTCAACACAAGGCCCTGGATGGAGATCAACACCTGCAGCATGGTGGAATTCGACTTGCTC\n" +
+    ">BS00167765:T51C3D-3D\n" +
+    "CAATTTTGTAACCATGGCAACTGAGAATCTTCTTTTACGCCATGAAGAGTAATCAGGACATCTTTTTACCATGGCAAGAAATGAGGGTTCTGTAATTACCTTTGGAGGGTTCCGAAGTGAATACAACATAGTCTTGCAGGATAGTACAAACGCAGTCTGATTATATGCCATGGAATGCTTTTCACCAACAGGTGTATTAACTGTGTTTTTGTAGCCTGGCTCATTAAAGTATGGTTTATCATTCAACACAAGGCCCTGAATGGAGATCAACACCTGCAACATGGTGGAATTTGACTTGCTC\n" +
+    ">MASK 3D\n" +
+    "----------------g--------------------c-------a------T--G-------t-----c------------------------------t-------G-----------------------------------------:-------------------------------------C------------T--------------------------g-----------------------------A-----------------c-A------------T---------\n" +
+    ">Primer_150_[]_[]_[52, 55, 201, 258, 278, 291]_[16, 37, 45, 63, 69, 100, 228, 276]\n" +
+    "caattttgtaaccatggcaactgagaatcttcttttacgccatgaagagtaaTcaGgacatctttttaccatggcaagaaatgagggttctgtaattacctttggaggcttccgaagtgaatacaacatagtcttgcaggatagtacaaacgcagtctgattatatgccatggaatgcttttcaccaagaggtgtattaacTgtgtttttgtagcctggctcattaaagtatggtttatcattcaacacaaggccctgAatggagatcaacacctgcaAcatggtggaattTgacttgctc\n" +
+    ">BS00068396_51:T51C2A-B\n" +
+    "----------------------------------------------------------------------------------------------------CGAAGCGATCCTACTACATTGCGTTCCTTTCCCACTCCCAGGTCCCCCTACATGCAGGATCTTGATTAG-TCGTGTGAACAACTGAAATTTGAGCGCCACAA-----------------------------------------------------------------------------------------------------\n" +
+    ">BS00068396_51:T51C2A-A\n" +
+    "----------------------------------------------------------------------------------------------------CGAAGCGATCCTACTACATTGCGTTCCTTTCCCACTCCCAGGTCCCCCTATATGCAGGATCTTGATTAG-TCGTGTGAACAACTGAAATTTGAGCGCCACAA-----------------------------------------------------------------------------------------------------\n" +
+    ">BS00068396_51:T51C2A-2A\n" +
+    "TCAGAGGATCAAACGGAAAGAAGAATTACCCATGATCAGTGCCAGAAGCTATTTCATTCCGTAGAAGGTCACCAGCACTCACATGAGCAAATCCAAAATCCGAAGCGATCCTACTACATTGCGTTCCTTTCCCACTCCCAGGTCCCCCTATATGCAGGATCTTGATTAG-TCGTGTGAACAACTGAAATTTGAGCGCCACAACACAATCCAACTTGAAACAGCACTGGTTATCAT-TGATAGAAGTGATCCTCAATTTACTCTACACAGGTTATGCATGGAGTATGTAAATGTGAAACCAACC\n" +
+    ">BS00068396_51:T51C2A-2D\n" +
+    "TCAGAGGATTGAACGGAAAGAAGTATTACCCTTGATCAGTGCCAGCAGATATTTCATTCCGCAGAAGGTCACCAGCACTCACATGAGAAAATCCAAAATCCGAAGCGATCCTACTACATTGCGTTCCTTTCCCACTCCCAGGTCCCCCTACATGCAGGATCTTGATTAG-TCGTGTGAACAACTGAAATTTGAGCGCCACAACACAATCCAACTTGAAACAGCACTGATTATCAT-TGATAGAAGTGATCCTCAATTTACTCTACACAGGTTATGCATGGAGTATGTAAATGTGAAACCAACC\n" +
+    ">BS00068396_51:T51C2A-2B\n" +
+    "TCAGAGGATTGAACGGAAAGAGGTATTACCCATGATCAGTGCCCGAAGATATTTCATTGCGCAGAAGGTCACCAGCACTCACATGAGAAAATCCAAAATCCGAAGCGATCCTACTACATTGCGTTCCTTTCCCACTCCCAGGTCCCCCTACATGCAGGATCTTGATTAGATCATGTGAACATTTGAAATTTGAGCGCCACAACACAATCCAACTTGAAACAGCACTTATTGTCATGGGAGGGAAGGGATCCACAGTTTACTCTACACAGGATATGCATGGAATTTATAAATGTGAAACCAA--\n" +
+    ">MASK 2A\n" +
+    "---------CA----------a-A-------a-----------a-a--C---------c--T-------------------------C--------------------------------------------------------------:---------------------g--------ac-------------------------------------------gG--a-----t--ta----t-----t--a---------------t----------g-a-g-----------------\n" +
+    ">Primer_150_[]_[171, 180, 181]_[9, 10, 23, 48, 61, 87, 226]_[21, 31, 43, 45, 58, 225, 229, 234, 237, 238, 243, 249, 252, 268, 279, 281, 283]\n" +
+    "tcagaggatCAaacggaaagaagAattacccatgatcagtgccagaagCtatttcattccgTagaaggtcaccagcactcacatgagCaaatccaaaatccgaagcgatcctactacattgcgttcctttcccactcccaggtccccctacatgcaggatcttgattagtcGtgtgaacaACtgaaatttgagcgccacaacacaatccaacttgaaacagcactgGttatcattgatagaagtgatcctcaatttactctacacaggttatgcatggagtatgtaaatgtgaaaccaacc\n" +
+    ">Excalibur_c25234_143:A51G2B-B\n" +
+    "----------------------------------------------------------------------------------------------------GTGGTGATGAAGATGGATGTGGAGGGGACTGAGTTTGACTTGATCCCGAGGCTCTTCGACACGGGCGCAATCTGCTTGGTCGACGAGGTGTTCCTCGAGTG----------------------------------------------------------------------------------------------------\n" +
+    ">Excalibur_c25234_143:A51G2B-A\n" +
+    "----------------------------------------------------------------------------------------------------GTGGTGATGAAGATGGATGTGGAGGGGACTGAGTTTGACTTGATCCCGAGACTCTTCGACACGGGCGCAATCTGCTTGGTCGACGAGGTGTTCCTCGAGTG----------------------------------------------------------------------------------------------------\n" +
+    ">Excalibur_c25234_143:A51G2B-2B\n" +
+    "CCGCCCCACGGCCGGTAAGAAGATGTCCGGCAAGGTGCGCAGTGTGCAGGCATTTGATTTCGCCGAGTGGCTGAAGCAGACGGTGTCGGAGCAGGACTACGTGGTGATGAAGATGGATGTGGAGGGGACTGAGTTTGACTTGATCCCGAGACTCTTCGACACGGGCGCAATCTGCTTGGTCGACGAGGTGTTCCTCGAGTGCCATTACAACCGGTGGCAAAGGTGCTGCCCTGGCGAGCGGTCGCCCAAGTATCAGAACACATACGAGGAGTGCCTGGAGCTCTTCAGCTCGCTCCGGGAG\n" +
+    ">Excalibur_c25234_143:A51G2B-2A\n" +
+    "CCGCCCCACGGCCGGCAAGAAGATGTCCGGCAAGGTGCGCAGCGTGCAGGCATTTGATTTCGCCGAGTGGCTGAAGCAGACGGTATCGGAGCAGGACTACGTGGTGATGAAGATGGATGTGGAGGGGACTGAGTTTGACTTGATCCCGAGGCTCTTCGACACGGGCGCGATCTGCTTGGTCGACGAGGTGTTCCTCGAGTGCCATTACAACCGGTGGCAAAGGTGCTGCCCTGGCGAGCGGTCGCCCAAGTATCAGAACACATACGAGGAGTGCCTGGAGCTCTTCAGCTCGCTCCGGGAG\n" +
+    ">Excalibur_c25234_143:A51G2B-2D\n" +
+    "---------------------------------------------------------------------------------------------------------------------------------------------------GAGGCTCTTCGACACGGGCGCGATCTGCTTGGTCGACGAGGTGTTCCTCGAGTGCCATTACAACCGGTGGCAAAGGTGCTGCCCTGGCGAGCGGTCGCCTAAGTATCAGAACACATACGAGGAGTGCCTCGAGCTCTTCAGCTCGCTCCGGGAG\n" +
+    ">MASK 2B\n" +
+    "---------------t--------------------------t-----------------------------------------g-----------------------------------------------------------------:-----------------A-----------------------------------------------------------------------------c-----------------------------g------------------------\n" +
+    ">Primer_150_[168]_[]_[]_[15, 42, 84, 246, 276]\n" +
+    "ccgccccacggccggtaagaagatgtccggcaaggtgcgcagtgtgcaggcatttgatttcgccgagtggctgaagcagacggtgtcggagcaggactacgtggtgatgaagatggatgtggaggggactgagtttgacttgatcccgaggctcttcgacacgggcgcAatctgcttggtcgacgaggtgttcctcgagtgccattacaaccggtggcaaaggtgctgccctggcgagcggtcgcccaagtatcagaacacatacgaggagtgcctggagctcttcagctcgctccgggag\n" +
+    ">BS00183592:A101C3B-B\n" +
+    "----------------------------------------------------------------------------------------------------GTGCCCCGTCTTCACTGTTTGGTGTGGCGAAAGTTATCATCTGTTGATTTTCTAGCCAAGTGTCCTGCTGTTGAG----------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+    ">BS00183592:A101C3B-A\n" +
+    "----------------------------------------------------------------------------------------------------GTGCCCCGTCTTCACTGTTTGGTGTGGCGAAAGTTATCATCTGTTGATTTTCTAGCAAAGTGTCCTGCTGTTGAG----------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+    ">BS00183592:A101C3B-3A\n" +
+    "GGGTGCATAGTGCTTGATTTCATGCGTGACACAGAAACTTGAATTTCTATGCATATTTTAATATTTGCCCTGACCTCTA------AAACTGTTTGCATAGGTGCCCCGTCTTCACTGTTTGGTGTGGCGAAAGTTATCATCTGTTGATTTTCTAGCAAAGTGTCCTGCTGTTGAGGTGAATTTATAACTTTGAACTCAGAAATGGACTTGCTGGTTTTACCATGTAATTCATTTCCTCGTGCTAATATACACATCTCTTGACCATTGCTTTATTGACATATTTTTGTTTTGATTATGCAGCCTTCAC----------------\n" +
+    ">BS00183592:A101C3B-3D\n" +
+    "------ATAGTGCTTGATTTCATGCGTGACATAGAAACTTGAATTTCTATGCATATTTTAATATTTGCCCTAACCTCTAGCCTTGAAACTGTTTGTATAGGTGCCCCGTCTTCACTGTTTGGTGTGGCGAAAATTATCATCTGTTGATTTTCTAGCAAAGCATCCTGCTGTTGAGGTGAATTTATGACCTTGAACTGAAAAATGGGCCTGTTGGTTTAACCAATGTATTCATTTCCTCCTAGTAACATACAGAACTCTTAACCACTGTTT----------------TTTTTATCATGCAGCCTTTGCCAAGTCTACTAAAAGG\n" +
+    ">BS00183592:A101C3B-3B\n" +
+    "------ATAGTGCTTGATTTCATGCGTGACACAGGAACTTGAATTTCTATGCATATATTAATATTTGCCCTAACCTCTAGCCTTGAAACTGTTTGTATAGGTGCCCCGTCTTCACTGTTTGGTGTGGCGAAAATTATCATCTGTTGATTTTCTAGCAAAGCATCCTGCTGTTGAGGTGAATTTATGACCTTGAACTGGAAAAACGGCTTGTTGGTTTAACCAATGTATTCATTTCCTCCTAGTAACATACAGAACACTTAACCACTGTTT----------------TTTTTATCATGCAGCCTTCGCCAAGTCTACTAAAAGG\n" +
+    ">MASK 3B\n" +
+    "-------------------------------c--G---------------------A--------------a-----------------------t------------------------------------a-----------------------&---ca-----------------------g--c-------gGa---AC-g-t--t------a----atgt------------c-ag---c-----g-a-A---a----c--t----------------------t--c----------cg-----------------\n" +
+    ">Primer_150_[]_[]_[28, 50, 191, 196, 197, 249]_[25, 65, 89, 179, 182, 190, 192, 199, 201, 204, 211, 216, 217, 218, 219, 232, 234, 235, 239, 245, 247, 253, 258, 261, 268, 271, 282, 283]\n" +
+    "atagtgcttgatttcatgcgtgacacagGaacttgaatttctatgcatatAttaatatttgccctaacctctagccttgaaactgtttgtataggtgccccgtcttcactgtttggtgtggcgaaagttatcatctgttgattttctagccaagtgtcctgctgttgaggtgaatttatgaccttgaactgGaaaaACggcttgttggtttaaccaatgtattcatttcctcctagtaacatacagaacActtaaccactgttttttttatcatgcagccttcgccaagtctactaaaagg\n" +
+    ">BobWhite_c10578_272:A51G2B-B\n" +
+    "---------------------------------------------------------------------------------------------------------CAAGACGAAGTTGATCCTATGGTATCTGTGATGAAAGTTGAGAAAGCTCCGCTGGAATCATATGCGGACATTGGTGGGTTGGATGCTCAGATTCAAGAAAT----------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c10578_272:A51G2B-A\n" +
+    "---------------------------------------------------------------------------------------------------------CAAGACGAAGTTGATCCTATGGTATCTGTGATGAAAGTTGAGAAAGCTCCACTGGAATCATATGCGGACATTGGTGGGTTGGATGCTCAGATTCAAGAAAT----------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c10578_272:A51G2B-2B\n" +
+    "-----CATTTCTATTTATAACTGTCATGCAATTTGTATGTAGATGTTGAAGTTCGATGGCTAACAAAAATATGATTTCCAGGTTCTCTCCGTGGTTGGAATTCTGCAAGACGAAGTTGATCCTATGGTATCTGTGATGAAAGTTGAGAAAGCTCCGCTGGAATCATATGCGGACATTGGTGGGTTAGATGCTCAGATTCAAGAAATAAAAGAGGCGGTTGAGCTTCCACTAACCCACCCCGAGTTATATGAAGACATTGGAATAAGGCCACCCAAGGGGGTCATATTATATGGAGAACCGGGAACA\n" +
+    ">BobWhite_c10578_272:A51G2B-2D\n" +
+    "ATACTGCCCATTGCACATAACTGTCATGCAGCCTGTAAATAGATGTTA-----TGATGGCTCACAAGATACAATTTTCCAGGTTCTTTCTGTGGTTGGAATTCTGCAAGACGAAGTTGACCCTATGGTATCTGTGATGAAAGTTGAGAAAGCTCCGCTGGAATCATATGCGGACATTGGTGGGTTAGATGCTCAGATTCAAGAAATAAAAGAGGCAGTTGAGCTTCCACTAACCCACCCCGAGTTATATGAAGACATTGGAATAAGGCCACCCAAGGGGGTCATATTATATGGAGAACCGGGAACA\n" +
+    ">BobWhite_c10578_272:A51G2B-2A\n" +
+    "ATACTGTCCATTGCACATAACTTTCATGCAGCCTGTAAATATTTGTTA-----TGATGGCTCACAAGATACAATTTTCCAGGTTCTTTCTGTGGTTGGAATTCTGCAAGACGAAGTTGACCCTATGGTATCTGTGATGAAAGTTGAGAAAGCTCCACTAGAATCATATGCAGACATTGGAGGGTTAGATGCTCAGATTCAAGAAATAAAGGAGGCGGTTGAGCTTCCGCTGACCCACCCTGAGCTATATGAAGACATTGGAATAAGGCCACCCAAGGGGGTCATATTATATGGAGAACCTGGAACA\n" +
+    ">MASK 2B\n" +
+    "-----CATTTC-ATTT------g-------ATT----TG--ga----G-----C-------A----A-ATATGA------------C--C-----------------------------T-----------------------------------:--g-----------g--------t-----------------------------a-----g-----------a--a--------c---t-------------------------------------------------------g------\n" +
+    ">Primer_150_[114]_[153, 165, 174]_[0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 25, 26, 27, 32, 33, 42, 48, 56, 61, 63, 64, 65, 66, 67, 68, 81, 84]_[17, 36, 37, 204, 210, 222, 225, 234, 238, 294]\n" +
+    "CATTTCtATTTataactgtcatgcaATTtgtaTGtagatgttGaagttCgatggctAacaaAaATATGAtttccaggttctCtcCgtggttggaattctgcaagacgaagttgaTcctatggtatctgtgatgaaagttgagaaagctccgctGgaatcatatgcGgacattggTgggttggatgctcagattcaagaaataaaagaggcggttgagcttccactaacccaccccgagttatatgaagacattggaataaggccacccaagggggtcatattatatggagaaccgggaaca\n" +
+    ">D_comp3873_c0_seq1:967:G501C2D-B\n" +
+    "TTAGAGGTGGAAGTTCATCGCGGAAGGACTGAGACATGAGGAACATAAGACCAGCGAATACTATATGTACATAATCGAAATGCCAGTTACATTAACTGAACATATTTTCGCCTTAATTTTTTAAAGTCAAAGGACATTCTTTTATCCTCGCTAGAATGCTGCAAAGATACAAAATCATCACCACCTGGCATCTGATAATCTGGGC------------------------------------------------------------------------------------------------\n" +
+    ">D_comp3873_c0_seq1:967:G501C2D-A\n" +
+    "TTAGAGGTGGAAGTTCATCGCGGAAGGACTGAGACATGAGGAACATAAGACCAGCGAATACTATATGTACATAATCGAAATGCCAGTTACATTAACTGAACATATTTTCGCCTTAATTTTTTAAAGTCAAAGGACATTCTTTTATCCTCGGTAGAATGCTGCAAAGATACAAAATCATCACCACCTGGCATCTGATAATCTGGGC------------------------------------------------------------------------------------------------\n" +
+    ">D_comp3873_c0_seq1:967:G501C2D-2B\n" +
+    "TTAGAGGTGGAAGTTCATCGTGGAAGGACTGTGACATGACGAAGATAAGACCAGCGAATACTATATGTACATAATCGAAATGTCAGTTACATGAACTGAACATATTTTTGCCTCAATTTTCTAAAGTCAAAGGACATTCGTTTATCCTCGGTAGAATGCTGCAAAGATACAAAATCATCACCACCTGGCATCTGATAATCTGGGCCAGTTCCCGCCCGTTTTTATAGCCAGTGCGGACCAAGAAGACCAAGATATGCTATCTGAACTGGCTATCTACAGTACTGATTCAACATCGTTTTCG\n" +
+    ">MASK 2D\n" +
+    "------------------------------------------------------------------------------------------------------------------------------------------------------&------------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+    ">Primer_150_[]_[]_[]_[]\n" +
+    "ttagaggtggaagttcatcgcggaaggactgagacatgaggaacataagaccagcgaatactatatgtacataatcgaaatgccagttacattaactgaacatattttcgccttaattttttaaagtcaaaggacattcttttatcctcgctagaatgctgcaaagatacaaaatcatcaccacctggcatctgataatctgggc\n" +
+    ">BobWhite_c11739_325:A51G2B-B\n" +
+    "----------------------------------------------------------------------------------------------------GGATCAAGACTTTCAATGCGATTCGTAGCTAGAATAACTTTAACATCTCCGCGTGAGTCAAAACCATCTAGCTGGTTCAGCAACTCCAACATAGTTCTTTG----------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c11739_325:A51G2B-A\n" +
+    "----------------------------------------------------------------------------------------------------GGATCAAGACTTTCAATGCGATTCGTAGCTAGAATAACTTTAACATCTCCACGTGAGTCAAAACCATCTAGCTGGTTCAGCAACTCCAACATAGTTCTTTG----------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c11739_325:A51G2B-2B\n" +
+    "GACTGATTTAAAAGGTACCTGGAAGATGCGCCGCCTAGTCTTAATGTCTGGAAGAGGGAATTCTATCTTTCGGTCTATTCGGCCAGGGCGAAGCAAGGCTGGATCAAGACTTTCAATGCGATTCGTAGCTAGAATAACTTTAACATCTCCGCGTGAGTCAAAACCATCTAGCTGGTTCAGCAACTCCAACATAGTTCTTTGAATCTCACGCTCCCCTCCTGAATGAGCATCATACCTCTTTGTTCCAACTGCATCGATCTCATCGATGAAGACTATCGAGGGGGAAAGCTCATCCGCCACT\n" +
+    ">BobWhite_c11739_325:A51G2B-2D\n" +
+    "GACTGATTTAAAAGGTACCTGGAAGATCCGCCGCCTAGTCTTAATGTCCGGAAGAGGGAATTCTATCTTTCGGTCTATTCGGCCAGGGCGAAGCAAGGCTGGATCAAGACTTTCAATGCGATTTGTAGCTAGAATAACTTTAACATCTCCACGCGAGTCAAAACCATCTAGCTGGTTCAGCAGCTCCAACATAGTTCTCTGAATCTCACGCTCCCCTCCTGAATGAGCATCATACCTCTTTGTTCCAACTGCATCGATTTCATCGATGAAGACTATCGAGGGGGAAAGCTCATCCGCCACT\n" +
+    ">BobWhite_c11739_325:A51G2B-2A\n" +
+    "GACTGATTAAAAAGGTACCTGGAAGATGCGCCGCCTAGTCTTAATGTCTGGAAGAGGGAATTCTATCTTTCGGTCTATTCGGCCAGGGCGAAGCAAGGCTGGATCAAGACTTTCAATGCGATTTGTAGCTAGAATAACTTTAACATCTCCACGCGAATCAAAACCATCTAGCTGGTTCAGCAGCTCCAACATAGTTCTCTGAATCTCACGCTCCCCTCCTGAATGAGCGTCATACCTCTTTGTTCCAACTGCATCGATCTCGTCGATGAAGACTATCGAGGGGGAAAGCTCGTCCGCCACT\n" +
+    ">MASK 2B\n" +
+    "--------t------------------g--------------------t--------------------------------------------------------------------------C--------------------------:--T--g-------------------------A---------------T-----------------------------a-----------------------------c--a-----------------------------a---------\n" +
+    ">Primer_150_[123, 153, 182, 198]_[156]_[]_[8, 27, 48, 228, 258, 261, 291]\n" +
+    "gactgatttaaaaggtacctggaagatgcgccgcctagtcttaatgtctggaagagggaattctatctttcggtctattcggccagggcgaagcaaggctggatcaagactttcaatgcgattCgtagctagaataactttaacatctccgcgTgaGtcaaaaccatctagctggttcagcaActccaacatagttctTtgaatctcacgctcccctcctgaatgagcatcatacctctttgttccaactgcatcgatctcatcgatgaagactatcgagggggaaagctcatccgccact\n" +
+    ">BobWhite_c10287_421:T51C1B-B\n" +
+    "--------------------------------------------------------------------------------------------------------CTCGTGGCAGCTCTGAAGGTGTCCGGTTTCCCTGAGTTGCTCTTCACCAACGCAGGGAAGATACTGCACCGAGAGAAAG--------------------------------------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c10287_421:T51C1B-A\n" +
+    "--------------------------------------------------------------------------------------------------------CTCGTGGCAGCTCTGAAGGTGTCCGGTTTCCCTGAGTTGCTCTTCACCAATGCAGGGAAGATACTGCACCGAGAGAAAG--------------------------------------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c10287_421:T51C1B-1B\n" +
+    "TGTAAATATAAATTCGGCGCTTCAGAGAGTCACAT---TCTGAACTTCCAACCGTTGTTGTTCA-NCGCAGTGTGTTGCGGTCGACGCCTGCGCGGAGCCAGACCTCGTGGCAGCTCTGAAGGTGTCCGGTTTCCCTGAGTTGCTCTTCACCAATGCAGGGAAGATACTGCACCGAGAGAAAGGTATGCCTTGTCCGTT------ATTTACACGAATTCTCCTTCAAGACAGCTCTCATTCGATCATCAGGTTTGCTGATCCAAGATTCACTTGTACTAATAGCTGTCCGGTCGGCCGAGGTGTTGGCGAG\n" +
+    ">BobWhite_c10287_421:T51C1B-1D\n" +
+    "CCG----TCGCAGTCGGCGCCTCAGTGAATCACTCACGTTCTGACCTCTGACCATTCTTGTTCACCCGCAGTGTGTTGCGGTCGATGCCTGCGCGGAGCCAGACCTCGTGGCCGCTCTGAAGGTGTCCGGTTTCCCTGAGTTGCTCTTCACCAACGCAGGGAAGATACTGCACCGAGAGAAAGGTATACCTTGTCCGTTCTGTAGATGTAGATGAATACTCCTCCAATGTAACTCTCGTCCGGTCATCAGTTTTCCTGATCTGTAATCC-CTTGTTCTGATAGCTGTCCGGTCGGCCGAGGTGTTG-----\n" +
+    ">MASK 1B\n" +
+    "tgt----ataa-t-------t----a--g----at----ctga--t--ca---g--g--------n-------------------c--------------------------a-----------------------------------------:--------------------------------g-------------------t--c-c----t-----t---gac-g-----a-t--a-------g---g------caag--t-------a--a--------------------------------\n" +
+    ">Primer_150_[]_[108]_[]_[0, 1, 2, 7, 8, 9, 10, 12, 20, 25, 28, 33, 34, 36, 37, 38, 39, 42, 45, 46, 50, 53, 61, 81, 183, 197, 200, 202, 207, 213, 217, 218, 219, 221, 227, 229, 232, 240, 244, 251, 252, 253, 254, 257, 265, 268]\n" +
+    "tgtaaatataaattcggcgcttcagagagtcacattctgaacttccaaccgttgttgttcancgcagtgtgttgcggtcgacgcctgcgcggagccagacctcgtggcAgctctgaaggtgtccggtttccctgagttgctcttcaccaacgcagggaagatactgcaccgagagaaaggtatgccttgtccgttatttacacgaattctccttcaagacagctctcattcgatcatcaggtttgctgatccaagattcacttgtactaatagctgtccggtcggccgaggtgttggcgag\n" +
+    ">BobWhite_c23388_471:A51G6A-B\n" +
+    "-----------------------------------------------------------------------------------------------------------AGGGTARCCGTCCTT-GTCCTGGGCAGCGGGTAGGCTACAACTTCCATCTCGCCGTCCTCAACCACTTTCCTCATGACCACCGCGCCCATGACGACGAGCAG-----------------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c23388_471:A51G6A-A\n" +
+    "-----------------------------------------------------------------------------------------------------------AGGGTARCCGTCCTT-GTCCTGGGCAGCGGGTAGGCTACAACTTCCATCTCACCGTCCTCAACCACTTTCCTCATGACCACCGCGCCCATGACGACGAGCAG-----------------------------------------------------------------------------------------------------------\n" +
+    ">BobWhite_c23388_471:A51G6A-6A\n" +
+    "-AGGTCACCTGTGGCGATGTGGATAAGGCCGAGGAGTGCAGAAGAAA------ACAGTGGCCACCCCCTCCTCTCCCAGCGCGAGATTGTGAAGAAGGGGGAGCGTCAGGGTAGCCGTCCTT-GTCCTGGGCAGCGGGTAGGCTACAACTTCCATCTCGCCGTCCTCAACCACTTTCCTCATGACCACCGCGCCCATGACGACGAGCAGGGGGCTGCCCTTGACATAGATCTAGGAGCGCCGCTATGGCCG-------CCCCATCGCGGAACGGAGGAGGCTACACAGGGGGAGCCGGAGAGGGTGGGGGTGGTGA\n" +
+    ">BobWhite_c23388_471:A51G6A-7D\n" +
+    "GAGGTCACCTGTGG-AATGTGGATAAGGCCGAGGAGTACCGAAGAAA------ACAATGGCCACCCCCTCCTCTCCCAGCGCGAGATTGTGAAGAAGGGGGAGCGTCAGGGCAGCCGTCCTT-GTCCTGGGCAGCGGGTAGGCTACAACTTCCATCTCATCGTCCTCAACCACTTTCCTCATGACCACCGTGCCCATGACGACGAGCAGGGGGCTGCCCTTGACATAGAACTAGGAGCGCCGCTAAGGCCG-------CCCCATCGCGGAATGCAGGAGGCTACACAGGGGGGGGAGACGGGGGGGNNNNNNNNNN\n" +
+    ">BobWhite_c23388_471:A51G6A-2A\n" +
+    "-AGGTCACCTATGGCGATGTGGATAAGGCCTAGGTGTGCCGAAGAAA------ACAGTGGCCACCACCTCCTCTCCCAGCGCGAGATTGTGAAGAAGGGGGAGCGTCAGGGCATCCATCCTT-GTCCTGGGCAGCGGGTAGGCTACAACTTCCATCTCGCCGTCCTCAACCACTTTCCTCATGACCACCGCGCCCATGACGATGAGCAGGGGGCTGCCCTTGACATAGATCTAGGAGGGCCGCTACGGCCG-------CCCCATCGCGGAACGGAGGAGGCTACACATGGGGAGGGGGAGCCGGAGAGGGTGGGGG\n" +
+    ">BobWhite_c23388_471:A51G6A-6B\n" +
+    "------ATTAATAG-AGAGTGAAAGGGGTTATCACCTTCACAGCAAGTGGTCTGGCGAGGTCACCCCCTCCTCTCCGAGCGCGAGATTGTGAAGAAGGGGGAGCGTCAGGGCAGCCGTCCTT-GCCCTGGGCAGCGGGTAGGCTACAACTTCCATCTCGCCGTCCTCAACCACTTTCATCATGACCACCGCGCCCATGACAACGAGCAGGGGGCTGCCCTTGACATAGATCTAGGAGTGCTGCTACGGCAG-------CCCCATCACGAAATGGAGGAGGCTACACAGGGGGGG----------------------\n" +
+    ">BobWhite_c23388_471:A51G6A-3A\n" +
+    "-AGGTCACCTGTGGCGATGTGGATAAGGCCGAGGAGTGCCGAAGAAA------ACAGTGGCCACCACCTCCTCTCCCAGCGCAAGATTGTGAAGAAGGGGGAGCGTCAGGGCATCCATCCTT-GTCCTGGGCAGCGGGTAGGCTTCAACTTCCATCTAGCCGTCCTAAACCACTTTCCTCATGACCACCGCGCCCATGACGACGAGCAGGGGGCTTCCCTTGACATAGATCTAGGAGCGCCGCTACGGCCG-------CCCCATCGCGGAACGGAGGAGGCTACACAGGGGGAGGGGGAGCCGGAGAGAGTGGAGG\n" +
+    ">BobWhite_c23388_471:A51G6A-3B\n" +
+    "GAGGTCACTTGTGGCGATGCGAATAAGGCCAAGCAGTGCTGAATAAA------ACAGTGGTCAACCCCTCCTCTCCTAGACCGAGATTGTGAAGA--CCGGAGCGTCGGGGCAGCCGTCCTTGGTCCTGGGCAGCGGGTAGGCGACAACGTCCATCTCGCCGACTTCAACCACCTTCCTCATGACCACCGCGCCCATGACGACGAACAGGGGGCTGACCTTGACGCGGATGCGGGACCGCCGCTACGGCCGCGTGTGCCCCCATCGCGGATCTGAGCAGGCTGCATAGGGGAGAGTGTGGGGGCGGTGG-------\n" +
+    ">BobWhite_c23388_471:A51G6A-5A\n" +
+    "-AGGTCACCTGTGGCGATGTGGATAAGGCCGAGGAGTGCCGAAGAAA------ACAGTGGCCACCACCTCCTCTCCCAGCGCGAGATTGTGAAGAAGGGGGAGCGTCAGGGCATCCATCCTT-GTCCTGGGCAGCGGGTAGGCTACAACTTCCATCTCGCCGTCCTCAACCAC-----------------------------------------------------------------------------------------------------------------------------------------------\n" +
+    ">MASK 6A\n" +
+    "-------cctg-g--gat-t-g-taa--ccgaggag-g-ag-ag--a------acagt--c--c-c----------c--cg-g--------------gg--------a---t-g--g-------t------------------ta----t-------c:c--t-c-c------t---c------------c---------g-c--g---------gc-------ata--tcta---gc--c----t---c---------------g--g-acgg--g-----a--c-g---gagcc-ga-ag-gt-ggggtggtga\n" +
+    ">Primer_150_[]_[100, 104, 106, 109, 116, 135, 136, 141, 149, 151, 154, 156, 158, 165, 169, 182, 192, 194, 197]_[]_[6, 7, 8, 9, 11, 14, 15, 16, 18, 20, 22, 23, 24, 27, 28, 29, 30, 31, 32, 33, 34, 36, 38, 39, 41, 42, 45, 46, 47, 48, 49, 50, 53, 56, 58, 69, 72, 73, 75, 90, 91, 207, 208, 216, 217, 218, 221, 222, 223, 224, 228, 229, 232, 237, 241, 250, 253, 255, 256, 257, 258, 261, 267, 270, 272, 276, 277, 278, 279, 280, 282, 283, 285, 286, 288, 289, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300]\n" +
+    "aggtcacctgtggcgatgtggataaggccgaggagtgcagaagaaaacagtggccaccccctcctctcccagcgcgagattgtgaagaagggggagcgtcAgggTaGccGtccttgTcctgggcagcgggtaggcTAcaacTtccatctCgCcgTcCtCaaccacTttcCtcatgaccaccgCgcccatgacGaCgaGcagggggctgcccttgacatagatctaggagcgccgctatggccgccccatcgcggaacggaggaggctacacagggggagccggagagggtgggggtggtga\n";
 
 
 var csv_file_with_newline = "Marker,SNP,RegionSize,chromosome,total_contigs,contig_regions,SNP_type,A,B,common,primer_type,orientation,A_TM,B_TM,common_TM,selected_from,product_size,errors\n" +
