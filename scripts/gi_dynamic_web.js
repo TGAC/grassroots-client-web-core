@@ -53,6 +53,7 @@ function populateService(service_name) {
 function produce_form(div, parameters, groups) {
     var form_html = [];
     if (groups.length > 0) {
+        var parameters_added = [];
         for (var j = 0; j < groups.length; j++) {
             if (groups[j]['visible'] || groups[j]['visible'] == undefined) {
                 form_html.push('<fieldset>');
@@ -60,6 +61,7 @@ function produce_form(div, parameters, groups) {
                 for (var i = 0; i < parameters.length; i++) {
                     if (groups[j]['group'] == parameters[i]['group']) {
                         form_html.push(produce_one_parameter_form(parameters[i]));
+                        parameters_added.push(parameters[i]['param']);
                     }
                 }
                 form_html.push('</fieldset>');
@@ -72,10 +74,19 @@ function produce_form(div, parameters, groups) {
                 for (var i = 0; i < parameters.length; i++) {
                     if (groups[j]['group'] == parameters[i]['group']) {
                         form_html.push(produce_one_parameter_form(parameters[i]));
+                        parameters_added.push(parameters[i]['param']);
                     }
                 }
                 form_html.push('</div>');
                 form_html.push('</fieldset>');
+            }
+        }
+        console.log(parameters_added);
+        // add parameters not in the group
+        for (var ip = 0; ip < parameters.length; ip++) {
+            if (!isInArray(parameters[ip]['param'], parameters_added)) {
+                console.log(parameters[ip]['param']);
+                form_html.push(produce_one_parameter_form(parameters[ip]));
             }
         }
     } else {
@@ -706,4 +717,8 @@ function display_blast_result_jsonout(json) {
     }
     //$('#form').html('');
     $('#result').html(result_html.join(' '));
+}
+
+function isInArray(value, array) {
+    return array.indexOf(value) > -1;
 }
