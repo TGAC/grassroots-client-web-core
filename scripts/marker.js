@@ -29,10 +29,9 @@
         $.each($(element).find("tr.odd"),  function( key, value ) {
 
             var msa_div = "msa-" + value.id;
-            var url = 'primers.fa';
             // var url = "get_mask?id="+id+"&marker="+value.id;
 
-            biojs.io.fasta.parse.read(exons_genes_and_contigs, function(seqs){
+            biojs.io.fasta.parse(exons_genes_and_contigs, function(seqs){
                 if(seqs){
                     div_obj = document.getElementById(msa_div);
 
