@@ -1,6 +1,7 @@
 var linked_services_global = {};
 var textareas = [];
 var synchronous = false;
+var groups = [];
 
 function get_all_services() {
     $('#form').html("Getting service...");
@@ -55,9 +56,10 @@ function produce_form(div, parameters, groups) {
     if (groups.length > 0) {
         var parameters_added = [];
         for (var j = 0; j < groups.length; j++) {
-            if (groups[j]['visible'] || groups[j]['visible'] == undefined) {
+            if (groups[j]['repeatable']) {
+                // repeatable stuff here
                 form_html.push('<fieldset>');
-                form_html.push('<legend>' + groups[j]['group'] + '</legend>');
+                form_html.push('<legend>' + groups[j]['group'] + ' repeatable</legend>');
                 for (var i = 0; i < parameters.length; i++) {
                     if (groups[j]['group'] == parameters[i]['group']) {
                         form_html.push(produce_one_parameter_form(parameters[i]));
@@ -66,19 +68,31 @@ function produce_form(div, parameters, groups) {
                 }
                 form_html.push('</fieldset>');
             } else {
-                var random_id = generate_random_id();
-                form_html.push('<fieldset>');
-                form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['group'] + '</a></legend>');
-
-                form_html.push('<div id="' + random_id + '"  class="collapse">');
-                for (var i = 0; i < parameters.length; i++) {
-                    if (groups[j]['group'] == parameters[i]['group']) {
-                        form_html.push(produce_one_parameter_form(parameters[i]));
-                        parameters_added.push(parameters[i]['param']);
+                if (groups[j]['visible'] || groups[j]['visible'] == undefined) {
+                    form_html.push('<fieldset>');
+                    form_html.push('<legend>' + groups[j]['group'] + '</legend>');
+                    for (var i = 0; i < parameters.length; i++) {
+                        if (groups[j]['group'] == parameters[i]['group']) {
+                            form_html.push(produce_one_parameter_form(parameters[i]));
+                            parameters_added.push(parameters[i]['param']);
+                        }
                     }
+                    form_html.push('</fieldset>');
+                } else {
+                    var random_id = generate_random_id();
+                    form_html.push('<fieldset>');
+                    form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['group'] + '</a></legend>');
+
+                    form_html.push('<div id="' + random_id + '"  class="collapse">');
+                    for (var i = 0; i < parameters.length; i++) {
+                        if (groups[j]['group'] == parameters[i]['group']) {
+                            form_html.push(produce_one_parameter_form(parameters[i]));
+                            parameters_added.push(parameters[i]['param']);
+                        }
+                    }
+                    form_html.push('</div>');
+                    form_html.push('</fieldset>');
                 }
-                form_html.push('</div>');
-                form_html.push('</fieldset>');
             }
         }
         console.log(parameters_added);
@@ -314,6 +328,18 @@ function submit_form() {
 
                     checkResult(each_result);
                 }
+            } else if (selected_service_name == 'Polymarker service'){
+                $('#status').html('');
+                $('#result').html('');
+                for (var i = 0; i < json['results'].length; i++) {
+                    var each_result = json['results'][i];
+                    var uuid = each_result['job_uuid'];
+                    var dbname = each_result['name'];
+                    $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
+
+                    checkResult(each_result);
+                }
+
             } else {
                 $('#status').html('');
                 $('#result').html("Done");
@@ -328,7 +354,15 @@ function checkResult(each_result) {
     var status_text_key = each_result['status_text'];
     if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
         Utils.ui.reenableButton('submit_button', 'Submit');
-        $('#' + uuid).html(display_each_blast_result_grasroots_markup(each_result));
+        if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
+            $('#' + uuid).html(display_each_blast_result_grasroots_markup(each_result));
+        } else if (selected_service_name == 'Polymarker service') {
+            $('#' + uuid).html(display_polymarker_table(each_result));
+        } else {
+            $('#status').html('');
+            $('#result').html("Done");
+            downloadFile(each_result['results'][0]['data'], selected_service_name);
+        }
     } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
         $('#' + uuid).html('Job ' + status_text_key + ': <br/>' + each_result['errors']['error']);
         Utils.ui.reenableButton('submit_button', 'Submit');
@@ -345,6 +379,9 @@ function checkResult(each_result) {
                         if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
                             Utils.ui.reenableButton('submit_button', 'Submit');
                             $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
+                        } else if (selected_service_name == 'Polymarker service') {
+                            $('#' + uuid).html(display_polymarker_table(json[0]));
+
                         } else {
                             $('#status').html('');
                             $('#result').html("Done");
@@ -453,6 +490,31 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
         }
     }
     return result_html.join(' ');
+}
+
+function display_polymarker_table(jsonResult){
+    console.log('>>>' + JSON.stringify(jsonResult));
+    var uuid = jsonResult['job_uuid'];
+    var csv_values = jsonResult['results'][0]['data']['primers'];
+    var csv_table_selector = $('#' + uuid);
+    var table = csv_table_selector.CSVToTable(csv_values, {headers: ["ID",	"SNP", "Chr","CTotal", 	"Contig regions", 	"SNP type", "A", "B","Common", "Primer type", "Product size", "Error"], startLine: 1});
+    table.bind("loadComplete",function() {
+
+        csv_table_selector.jExpand();
+        csv_table_selector.load_msa('primers.fa');
+    });
+    $('#statusTable').jExpand();
+
+    $( "#show_list").click(function() {
+        $("#statusTable" ).toggle();
+    });
+    $("#statusTable").hide();
+    $( "#show_mask").click(function() {
+        csv_table_selector.show_all();
+    });
+    $( "#hide_mask").click(function() {
+        csv_table_selector.hide_all();
+    });
 }
 
 function get_faldo_strand(faldo_type) {
