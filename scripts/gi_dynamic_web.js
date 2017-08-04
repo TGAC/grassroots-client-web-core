@@ -497,11 +497,12 @@ function display_polymarker_table(jsonResult){
     var uuid = jsonResult['job_uuid'];
     var csv_values = jsonResult['results'][0]['data']['primers'];
     var csv_table_selector = $('#' + uuid);
+    var exons_genes_and_contigs = jsonResult['results'][0]['data']['exons_genes_and_contigs'];
     var table = csv_table_selector.CSVToTable(csv_values, {headers: ["ID",	"SNP", "Chr","CTotal", 	"Contig regions", 	"SNP type", "A", "B","Common", "Primer type", "Product size", "Error"], startLine: 1});
     table.bind("loadComplete",function() {
 
         csv_table_selector.jExpand();
-        csv_table_selector.load_msa('primers.fa');
+        csv_table_selector.load_msa(exons_genes_and_contigs);
     });
     $('#statusTable').jExpand();
 

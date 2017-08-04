@@ -24,7 +24,7 @@
 })(jQuery);
 
 (function($){
-    $.fn.load_msa = function(id){
+    $.fn.load_msa = function(exons_genes_and_contigs){
         var element = this;
         $.each($(element).find("tr.odd"),  function( key, value ) {
 
@@ -32,7 +32,7 @@
             var url = 'primers.fa';
             // var url = "get_mask?id="+id+"&marker="+value.id;
 
-            biojs.io.fasta.parse.read(url, function(seqs){
+            biojs.io.fasta.parse.read(exons_genes_and_contigs, function(seqs){
                 if(seqs){
                     div_obj = document.getElementById(msa_div);
 
