@@ -66,7 +66,7 @@ function produce_form(div, parameters, groups) {
                 var this_group = {};
 
                 this_group['group'] = groups[j]['group'];
-                this_group['counter'] = 1;
+                this_group['counter'] = 0;
 
                 console.log(JSON.stringify(this_group));
                 repeatable_groups[group_random_id] = this_group;
@@ -139,7 +139,11 @@ function produce_form(div, parameters, groups) {
 }
 
 function add_group_parameter(group_id) {
-    repeatable_groups[group_id]['counter'] = (repeatable_groups[group_id]['counter'])++;
+    console.log(JSON.stringify(repeatable_groups));
+    // var counter = repeatable_groups[group_id]['counter']++;
+    ++repeatable_groups[group_id]['counter'];
+
+    console.log(JSON.stringify(repeatable_groups));
     var group_parameters = repeatable_groups[group_id]['parameters'];
     for (var i = 0; i < group_parameters.length; i++) {
         $('#' + group_id).append(produce_one_parameter_form(group_parameters[i], true, group_id));
@@ -319,7 +323,11 @@ function submit_form() {
         parameter['param'] = param;
         parameter['grassroots_type'] = grassroots_type;
         if (group != 'none') {
-            parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+            if (name[4] == 0){
+                parameter['group'] = repeatable_groups[group]['group'];
+            } else {
+                parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+            }
         }
 
         if (type == 'boolean') {
