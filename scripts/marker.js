@@ -32,8 +32,9 @@
             // var url = "get_mask?id="+id+"&marker="+value.id;
 
             biojs.io.fasta.parse(exons_genes_and_contigs, function(seqs){
+                console.log("parsed seq: " + seqs);
                 if(seqs){
-                    div_obj = document.getElementById(msa_div);
+                    var div_obj = document.getElementById(msa_div);
 
                     var primers = div_obj.getAttribute("data-primers").toUpperCase();
                     var  primers_arr = primers.split(",");
@@ -68,6 +69,7 @@
                     }
 
                     var msa = new biojs.vis.msa.msa({
+                    // var msa = new biojs.vis.msa({
                         el: div_obj,
                         seqs: seqs,
                         zoomer: {
@@ -164,7 +166,9 @@
                         msa.g.selcol.add(se2);
                         msa.g.selcol.add(se3);
                     }
-                    msa.g.zoomer.setLeftOffset(left_most);
+                    // msa.g.zoomer.setLeftOffset(left_most);
+                    // msa.g.zoomer.offsetLeft(left_most);
+                    console.log("before render");
                     msa.render();
                 }
             });

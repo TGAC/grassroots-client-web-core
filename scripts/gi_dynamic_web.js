@@ -68,7 +68,7 @@ function produce_form(div, parameters, groups) {
                 this_group['group'] = groups[j]['group'];
                 this_group['counter'] = 0;
 
-                console.log(JSON.stringify(this_group));
+                // console.log(JSON.stringify(this_group));
                 repeatable_groups[group_random_id] = this_group;
                 var this_group_parameters = [];
                 for (var i = 0; i < parameters.length; i++) {
@@ -79,7 +79,7 @@ function produce_form(div, parameters, groups) {
                     }
                 }
                 repeatable_groups[group_random_id]['parameters'] = this_group_parameters;
-                console.log(JSON.stringify(repeatable_groups));
+                // console.log(JSON.stringify(repeatable_groups));
                 form_html.push('</div>');
                 form_html.push('</fieldset>');
             } else {
@@ -114,7 +114,7 @@ function produce_form(div, parameters, groups) {
         // add parameters not in the group
         for (var ip = 0; ip < parameters.length; ip++) {
             if (!isInArray(parameters[ip]['param'], parameters_added)) {
-                console.log(parameters[ip]['param']);
+                // console.log(parameters[ip]['param']);
                 form_html.push(produce_one_parameter_form(parameters[ip]));
             }
         }
@@ -139,11 +139,11 @@ function produce_form(div, parameters, groups) {
 }
 
 function add_group_parameter(group_id) {
-    console.log(JSON.stringify(repeatable_groups));
+    // console.log(JSON.stringify(repeatable_groups));
     // var counter = repeatable_groups[group_id]['counter']++;
     ++repeatable_groups[group_id]['counter'];
 
-    console.log(JSON.stringify(repeatable_groups));
+    // console.log(JSON.stringify(repeatable_groups));
     var group_parameters = repeatable_groups[group_id]['parameters'];
     for (var i = 0; i < group_parameters.length; i++) {
         $('#' + group_id).append(produce_one_parameter_form(group_parameters[i], true, group_id));
@@ -539,7 +539,7 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
 }
 
 function display_polymarker_table(jsonResult) {
-    console.log('>>>' + JSON.stringify(jsonResult));
+    // console.log('>>>' + JSON.stringify(jsonResult));
     var uuid = jsonResult['job_uuid'];
     var csv_values = jsonResult['results'][0]['data']['primers'];
     var csv_table_selector = $('#' + uuid);
@@ -548,6 +548,7 @@ function display_polymarker_table(jsonResult) {
         headers: ["ID", "SNP", "Chr", "CTotal", "Contig regions", "SNP type", "A", "B", "Common", "Primer type", "Product size", "Error"],
         startLine: 1
     });
+    console.log(biojs.io.fasta.parse(exons_genes_and_contigs));
     table.bind("loadComplete", function () {
 
         csv_table_selector.jExpand();
@@ -555,16 +556,16 @@ function display_polymarker_table(jsonResult) {
     });
     $('#statusTable').jExpand();
 
-    $("#show_list").click(function () {
-        $("#statusTable").toggle();
-    });
-    $("#statusTable").hide();
-    $("#show_mask").click(function () {
-        csv_table_selector.show_all();
-    });
-    $("#hide_mask").click(function () {
-        csv_table_selector.hide_all();
-    });
+    // $("#show_list").click(function () {
+    //     $("#statusTable").toggle();
+    // });
+    // $("#statusTable").hide();
+    // $("#show_mask").click(function () {
+    //     csv_table_selector.show_all();
+    // });
+    // $("#hide_mask").click(function () {
+    //     csv_table_selector.hide_all();
+    // });
 }
 
 function get_faldo_strand(faldo_type) {

@@ -102,7 +102,7 @@
 				var headerCount = 0;
 				var headers = new Array();
                 var to_print = options.print;
-                console.log(to_print);
+                // console.log(to_print);
 
 				$.each(lines, function(lineCount, line) {
 					if ((lineCount == 0) && (typeof(options.headers) != 'undefined')) {
@@ -135,7 +135,7 @@
 							tableHTML += '<tr id="' + items[to_print[0]] + '"class="' + options.trClass + ' ' + oddOrEven + '">';
                             for(var i = 0; i < to_print.length; i++){
                                 var item = items[to_print[i]];
-                                console.log(item + " " + to_print[i]);
+                                // console.log(item + " " + to_print[i]);
                                 if( typeof(item) == 'undefined' ){
                                     item = "";
                                 }

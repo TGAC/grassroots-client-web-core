@@ -1,0 +1,1004 @@
+.biojs_msa_div {
+    text-align: left
+}
+
+.biojs_msa_stage {
+    cursor: default;
+    line-height: normal
+}
+
+.biojs_msa_labels {
+    color: #000;
+    display: inline-block;
+    white-space: nowrap;
+    cursor: pointer;
+    vertical-align: top
+}
+
+.biojs_msa_seqblock span {
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    height: inherit
+}
+
+.biojs_msa_seqblock {
+    color: #000;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-family: monospace
+}
+
+.shadowed {
+    box-shadow: 7px 7px 8px #818181;
+    -webkit-box-shadow: 7px 7px 8px #818181;
+    -moz-box-shadow: 7px 7px 8px #818181
+}
+
+.biojs_msa_layer {
+    display: block;
+    white-space: nowrap
+}
+
+.biojs-rectangular-select {
+    border: 1px dotted #000;
+    position: absolute
+}
+
+.biojs-msa-feature, .biojs-msa-feature-row {
+    display: block
+}
+
+.biojs-msa-feature-row span {
+    display: inline-block
+}
+
+.biojs_msa_marker {
+    color: grey;
+    font-size: 10px;
+    white-space: nowrap;
+    cursor: pointer
+}
+
+.biojs_msa_marker span {
+    text-align: center
+}
+
+.biojs_msa_marker-special {
+    color: red;
+    font-weight: 700
+}
+
+.biojs_msa_menubar .biojs_msa_menubar_alink {
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    font-family: Arial;
+    color: #fff;
+    font-size: 20px;
+    padding: 3px 10px;
+    margin-left: 10px;
+    text-decoration: none
+}
+
+.biojs_msa_menubar .biojs_msa_menubar_alink:hover {
+    cursor: pointer
+}
+
+.biojs-msa-stage-level1 span {
+    height: 6px;
+    width: 1px
+}
+
+.biojs-msa-stage-level2 span {
+    height: 7px;
+    width: 2px
+}
+
+.biojs-msa-stage-level3 span {
+    height: 8px;
+    width: 3px
+}
+
+.biojs-msa-stage-level4 span {
+    height: 9px;
+    width: 4px
+}
+
+.biojs-msa-stage-level5 span {
+    height: 10px;
+    width: 5px
+}
+
+.biojs-msa-stage-level6 span {
+    height: 11px;
+    width: 6px
+}
+
+.biojs-msa-stage-level7 span {
+    height: 12px;
+    width: 7px
+}
+
+.biojs-msa-stage-level8 span {
+    height: 13px;
+    width: 8px
+}
+
+.biojs-msa-stage-level9 span {
+    height: 14px;
+    width: 9px
+}
+
+.biojs-msa-stage-level10 span {
+    height: 15px;
+    width: 10px
+}
+
+.biojs-msa-stage-level11 span {
+    height: 16px;
+    width: 11px
+}
+
+.biojs-msa-stage-level12 span {
+    height: 17px;
+    width: 12px
+}
+
+.biojs-msa-stage-level13 span {
+    height: 18px;
+    width: 13px
+}
+
+.biojs-msa-stage-level14 span {
+    height: 19px;
+    width: 14px
+}
+
+.biojs-msa-stage-level15 span {
+    height: 20px;
+    width: 15px
+}
+
+.biojs-msa-stage-level16 span {
+    height: 21px;
+    width: 16px
+}
+
+.biojs-msa-stage-level17 span {
+    height: 22px;
+    width: 17px
+}
+
+.biojs-msa-stage-level18 span {
+    height: 23px;
+    width: 18px
+}
+
+.biojs-msa-stage-level19 span {
+    height: 24px;
+    width: 19px
+}
+
+.biojs-msa-stage-level20 span {
+    height: 25px;
+    width: 20px
+}
+
+.biojs-msa-stage-level21 span {
+    height: 26px;
+    width: 21px
+}
+
+.biojs-msa-stage-level22 span {
+    height: 27px;
+    width: 22px
+}
+
+.biojs-msa-stage-level23 span {
+    height: 28px;
+    width: 23px
+}
+
+.biojs-msa-stage-level24 span {
+    height: 29px;
+    width: 24px
+}
+
+.biojs-msa-stage-level25 span {
+    height: 30px;
+    width: 25px
+}
+
+.biojs-msa-stage-level26 span {
+    height: 31px;
+    width: 26px
+}
+
+.biojs-msa-stage-level27 span {
+    height: 32px;
+    width: 27px
+}
+
+.biojs-msa-stage-level28 span {
+    height: 33px;
+    width: 28px
+}
+
+.biojs-msa-stage-level29 span {
+    height: 34px;
+    width: 29px
+}
+
+.biojs-msa-stage-level30 span {
+    height: 35px;
+    width: 30px
+}
+
+.biojs-msa-stage-level31 span {
+    height: 36px;
+    width: 31px
+}
+
+.biojs-msa-stage-level32 span {
+    height: 37px;
+    width: 32px
+}
+
+.biojs-msa-stage-level33 span {
+    height: 38px;
+    width: 33px
+}
+
+.biojs-msa-stage-level34 span {
+    height: 39px;
+    width: 34px
+}
+
+.biojs-msa-stage-level35 span {
+    height: 40px;
+    width: 35px
+}
+
+.biojs-msa-stage-level36 span {
+    height: 41px;
+    width: 36px
+}
+
+.biojs-msa-stage-level37 span {
+    height: 42px;
+    width: 37px
+}
+
+.biojs-msa-stage-level38 span {
+    height: 43px;
+    width: 38px
+}
+
+.biojs-msa-stage-level39 span {
+    height: 44px;
+    width: 39px
+}
+
+.biojs-msa-stage-level40 span {
+    height: 45px;
+    width: 40px
+}
+
+.biojs-msa-stage-level41 span {
+    height: 46px;
+    width: 41px
+}
+
+.biojs-msa-stage-level42 span {
+    height: 47px;
+    width: 42px
+}
+
+.biojs-msa-stage-level43 span {
+    height: 48px;
+    width: 43px
+}
+
+.biojs-msa-stage-level44 span {
+    height: 49px;
+    width: 44px
+}
+
+.biojs-msa-stage-level45 span {
+    height: 50px;
+    width: 45px
+}
+
+.biojs-msa-stage-level46 span {
+    height: 51px;
+    width: 46px
+}
+
+.biojs-msa-stage-level47 span {
+    height: 52px;
+    width: 47px
+}
+
+.biojs-msa-stage-level48 span {
+    height: 53px;
+    width: 48px
+}
+
+.biojs-msa-stage-level49 span {
+    height: 54px;
+    width: 49px
+}
+
+.biojs-msa-stage-level50 span {
+    height: 55px;
+    width: 50px
+}
+
+.biojs-msa-stage-level51 span {
+    height: 56px;
+    width: 51px
+}
+
+.biojs-msa-stage-level52 span {
+    height: 57px;
+    width: 52px
+}
+
+.biojs-msa-stage-level53 span {
+    height: 58px;
+    width: 53px
+}
+
+.biojs-msa-stage-level54 span {
+    height: 59px;
+    width: 54px
+}
+
+.biojs-msa-stage-level55 span {
+    height: 60px;
+    width: 55px
+}
+
+.biojs-msa-stage-level56 span {
+    height: 61px;
+    width: 56px
+}
+
+.biojs-msa-stage-level57 span {
+    height: 62px;
+    width: 57px
+}
+
+.biojs-msa-stage-level58 span {
+    height: 63px;
+    width: 58px
+}
+
+.biojs-msa-stage-level59 span {
+    height: 64px;
+    width: 59px
+}
+
+.biojs-msa-stage-level60 span {
+    height: 65px;
+    width: 60px
+}
+
+.biojs-msa-schemes-nucleic    .biojs-msa-aa-A{
+    background-color: rgba(255, 255, 102, 0.3)
+}
+
+.biojs-msa-schemes-nucleic    .biojs-msa-aa-C{
+    background-color: rgba(71, 209, 71, 0.3)
+}
+
+.biojs-msa-schemes-nucleic   .biojs-msa-aa-G{
+    background-color: rgba(51, 153, 255, 0.3)
+}
+
+.biojs-msa-schemes-nucleic    .biojs-msa-aa-T{
+    background-color: rgba(255, 112, 77, 0.3)
+}
+
+.biojs-msa-schemes-nucleic    .biojs-msa-aa-Gap{
+    background-color: rgba(255, 255, 255, 0.3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-A, .biojs-msa-schemes-taylor .biojs-msa-aa-B {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-C {
+    background-color: rgba(255, 255, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-D {
+    background-color: rgba(255, 0, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-E {
+    background-color: rgba(255, 0, 102, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-F {
+    background-color: rgba(0, 255, 102, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-G {
+    background-color: rgba(255, 153, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-H {
+    background-color: rgba(0, 102, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-I {
+    background-color: rgba(102, 255, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-J {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-K {
+    background-color: rgba(102, 0, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-L {
+    background-color: rgba(51, 255, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-M {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-N {
+    background-color: rgba(204, 0, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-O {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-P {
+    background-color: rgba(255, 204, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-Q {
+    background-color: rgba(255, 0, 204, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-R {
+    background-color: rgba(0, 0, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-S {
+    background-color: rgba(255, 51, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-T {
+    background-color: rgba(255, 102, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-U {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-V {
+    background-color: rgba(153, 255, 0, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-W {
+    background-color: rgba(0, 204, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-X {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-Y {
+    background-color: rgba(0, 255, 204, .3)
+}
+
+.biojs-msa-schemes-taylor .biojs-msa-aa-Gap, .biojs-msa-schemes-taylor .biojs-msa-aa-Z {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-A, .biojs-msa-schemes-taylor-bl .biojs-msa-aa-B {
+    color: #000
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-C {
+    color: #ff0
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-D {
+    color: red
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-E {
+    color: #f06
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-F {
+    color: #0f6
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-G {
+    color: #f90
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-H {
+    color: #06f
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-I {
+    color: #6f0
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-J {
+    color: #000
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-K {
+    color: #60f
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-L {
+    color: #3f0
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-M {
+    color: #000
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-N {
+    color: #c0f
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-O {
+    color: #000
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-P {
+    color: #fc0
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-Q {
+    color: #f0c
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-R {
+    color: #00f
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-S {
+    color: #f30
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-T {
+    color: #f60
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-U {
+    color: #000
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-V {
+    color: #9f0
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-W {
+    color: #0cf
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-X {
+    color: #000
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-Y {
+    color: #0fc
+}
+
+.biojs-msa-schemes-taylor-bl .biojs-msa-aa-Gap, .biojs-msa-schemes-taylor-bl .biojs-msa-aa-Z {
+    color: #000
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-A {
+    background-color: rgba(255, 102, 102, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-B {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-C {
+    background-color: rgba(255, 255, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-D, .biojs-msa-schemes-zappo .biojs-msa-aa-E {
+    background-color: rgba(51, 204, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-F {
+    background-color: rgba(255, 153, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-G {
+    background-color: rgba(204, 51, 204, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-H {
+    background-color: rgba(204, 0, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-I {
+    background-color: rgba(255, 102, 102, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-J {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-K {
+    background-color: rgba(204, 0, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-L, .biojs-msa-schemes-zappo .biojs-msa-aa-M {
+    background-color: rgba(255, 102, 102, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-N {
+    background-color: rgba(51, 102, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-O {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-P {
+    background-color: rgba(204, 51, 204, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-Q {
+    background-color: rgba(51, 102, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-R {
+    background-color: rgba(204, 0, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-S, .biojs-msa-schemes-zappo .biojs-msa-aa-T {
+    background-color: rgba(51, 102, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-U {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-V {
+    background-color: rgba(255, 102, 102, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-W {
+    background-color: rgba(255, 153, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-X {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-Y {
+    background-color: rgba(255, 153, 0, .3)
+}
+
+.biojs-msa-schemes-zappo .biojs-msa-aa-Gap, .biojs-msa-schemes-zappo .biojs-msa-aa-Z {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-A {
+    color: #f66
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-B {
+    color: #000
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-C {
+    color: #ff0
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-D, .biojs-msa-schemes-zappo-bl .biojs-msa-aa-E {
+    color: #3c0
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-F {
+    color: #f90
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-G {
+    color: #c3c
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-H {
+    color: #c00
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-I {
+    color: #f66
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-J {
+    color: #000
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-K {
+    color: #c00
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-L, .biojs-msa-schemes-zappo-bl .biojs-msa-aa-M {
+    color: #f66
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-N {
+    color: #36f
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-O {
+    color: #000
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-P {
+    color: #c3c
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-Q {
+    color: #36f
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-R {
+    color: #c00
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-S, .biojs-msa-schemes-zappo-bl .biojs-msa-aa-T {
+    color: #36f
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-U {
+    color: #000
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-V {
+    color: #f66
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-W {
+    color: #f90
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-X {
+    color: #000
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-Y {
+    color: #f90
+}
+
+.biojs-msa-schemes-zappo-bl .biojs-msa-aa-Gap, .biojs-msa-schemes-zappo-bl .biojs-msa-aa-Z {
+    color: #000
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-A {
+    background-color: rgba(173, 0, 82, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-B {
+    background-color: rgba(12, 0, 243, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-C {
+    background-color: rgba(194, 0, 61, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-D, .biojs-msa-schemes-hydrophobicity .biojs-msa-aa-E {
+    background-color: rgba(12, 0, 243, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-F {
+    background-color: rgba(203, 0, 52, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-G {
+    background-color: rgba(106, 0, 149, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-H {
+    background-color: rgba(21, 0, 234, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-I {
+    background-color: rgba(255, 0, 0, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-J {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-K {
+    background-color: rgba(0, 0, 255, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-L {
+    background-color: rgba(234, 0, 21, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-M {
+    background-color: rgba(176, 0, 79, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-N {
+    background-color: rgba(12, 0, 243, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-O {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-P {
+    background-color: rgba(70, 0, 185, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-Q {
+    background-color: rgba(12, 0, 243, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-R {
+    background-color: rgba(0, 0, 255, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-S {
+    background-color: rgba(94, 0, 161, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-T {
+    background-color: rgba(97, 0, 158, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-U {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-V {
+    background-color: rgba(246, 0, 9, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-W {
+    background-color: rgba(91, 0, 164, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-X {
+    background-color: rgba(104, 0, 151, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-Y {
+    background-color: rgba(79, 0, 176, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-Z {
+    background-color: rgba(12, 0, 243, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity .biojs-msa-aa-Gap {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-A {
+    color: #ad0052
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-B {
+    color: #0c00f3
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-C {
+    color: #c2003d
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-D, .biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-E {
+    color: #0c00f3
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-F {
+    color: #cb0034
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-G {
+    color: #6a0095
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-H {
+    color: #1500ea
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-I {
+    color: red
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-J {
+    color: #000
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-K {
+    color: #00f
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-L {
+    color: #ea0015
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-M {
+    color: #b0004f
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-N {
+    color: #0c00f3
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-O {
+    color: #000
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-P {
+    color: #4600b9
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-Q {
+    color: #0c00f3
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-R {
+    color: #00f
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-S {
+    color: #5e00a1
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-T {
+    color: #61009e
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-U {
+    color: #000
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-V {
+    color: #f60009
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-W {
+    color: #5b00a4
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-X {
+    color: #680097
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-Y {
+    color: #4f00b0
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-Z {
+    color: #0c00f3
+}
+
+.biojs-msa-schemes-hydrophobicity-bl .biojs-msa-aa-Gap {
+    color: #000
+}
