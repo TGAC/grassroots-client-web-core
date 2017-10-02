@@ -1,16 +1,27 @@
-body {
-    min-height: 2000px;
+/*body {*/
+    /*min-height: 2000px;*/
+/*}*/
+
+/*.navbar-static-top {*/
+    /*margin-bottom: 19px;*/
+/*}*/
+
+/*#footer {*/
+    /*clear: both;*/
+    /*font-size: 0.7em;*/
+    /*text-align: center;*/
+/*}*/
+
+a, a.active, a:active, a:focus, a:hover {
+    color: #18bc9c;
+    text-decoration: underline;
+    -webkit-text-underline-position: under;
+    -ms-text-underline-position: below;
+    text-underline-position: under;
+    /*text-underline-position: under;*/
+    outline: 0
 }
 
-.navbar-static-top {
-    margin-bottom: 19px;
-}
-
-#footer {
-    clear: both;
-    font-size: 0.7em;
-    text-align: center;
-}
 
 #map {
     height: 600px;
@@ -129,6 +140,16 @@ div.sectionDivider a {
 
 #form {
     width: 80%;
+}
+
+.newstyle_link {
+    color: #18bc9c;
+    text-decoration: underline;
+    -webkit-text-underline-position: under;
+    -ms-text-underline-position: below;
+    text-underline-position: under;
+    /*text-underline-position: under;*/
+    outline: 0
 }
 /*fieldset {*/
     /*border: 1px groove #ddd !important;*/

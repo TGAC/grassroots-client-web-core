@@ -18,7 +18,7 @@ function get_all_services() {
             for (var j = 0; j < json['services'].length; j++) {
                 var service_name = json['services'][j]['service_name'];
                 var icon_uri = json['services'][j]['operations']['icon_uri'];
-                list_html.push('<li onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
+                list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
             }
             list_html.push('</ul>');
             $('#form').html(list_html.join(' '));
@@ -27,6 +27,7 @@ function get_all_services() {
 }
 
 function populateService(service_name) {
+    $('#back_link').css('visibility', 'visible');
     selected_service_name = service_name;
     $.ajax({
         url: server_url,
@@ -835,3 +836,4 @@ function display_blast_result_jsonout(json) {
 function isInArray(value, array) {
     return array.indexOf(value) > -1;
 }
+
