@@ -1,6 +1,7 @@
 (function($){
     $.fn.jExpand = function(){
         var element = this;
+        console.log("jexpand");
 
         $(element).find("tr:odd").addClass("odd");
         $(element).find("tr:not(.odd)").hide();
@@ -30,7 +31,7 @@
 
             var msa_div = "msa-" + value.id;
             // var url = "get_mask?id="+id+"&marker="+value.id;
-
+            console.log("load_msa");
             biojs.io.fasta.parse(exons_genes_and_contigs, function(seqs){
                 console.log("parsed seq: " + seqs);
                 if(seqs){
