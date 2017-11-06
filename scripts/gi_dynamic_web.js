@@ -502,7 +502,7 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                                 var link_service_json = hit['linked_services'][linki];
                                 var link_service_id = generate_random_id();
                                 linked_services_global[link_service_id] = link_service_json;
-                                result_html.push(' | <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['services']['service_name'] + '</a><span id="' + link_service_id + 'status"></span> |');
+                                result_html.push(' | <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['service_name'] + '</a><span id="' + link_service_id + 'status"></span> |');
 
                             }
                             result_html.push('</p>');
