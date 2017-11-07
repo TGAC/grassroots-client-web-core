@@ -668,7 +668,7 @@ function run_linked_service(id) {
 
             downloadFile(json['results'][0]['results'][0]['data'], id);
             jQuery('#' + id + 'status').html('');
-            jQuery('#' + id).attr('onclick', 'run_lined_service(\'' + id + '\')');
+            jQuery('#' + id).attr('onclick', 'run_linked_service(\'' + id + '\')');
         }
 
 
