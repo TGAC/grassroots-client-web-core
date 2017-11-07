@@ -659,8 +659,8 @@ function run_linked_service(id) {
 
     $.ajax({
         url: server_url,
-        // data: JSON.stringify({"services":[lined_service_request_json]}),
-        data: JSON.stringify(lined_service_request_json),
+        data: JSON.stringify({"services":[lined_service_request_json]}),
+        // data: JSON.stringify(lined_service_request_json),
         type: "POST",
         dataType: "json",
         success: function (json) {
