@@ -208,10 +208,10 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             // form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
             // form_html.push('</label>');
             // form_html.push('</div>');
-            form_html.push('<div class="form-group">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<label class="checkbox">');
+            form_html.push('<div class="form-check">');
+            form_html.push('<label class="form-check-label">');
             form_html.push(' <input type="checkbox" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> ');
+            form_html.push(display_name + ' <small>' + description + '</small>');
             form_html.push('</label>');
             form_html.push('</div>');
 
