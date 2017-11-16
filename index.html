@@ -21,6 +21,12 @@
     <link rel="stylesheet" href="scripts/jquery/colorbox/colorbox.css"
           type="text/css"/>
 
+    <!-- datatables -->
+    <script type="text/javascript" src="scripts/jquery/datatables/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="scripts/jquery/datatables/css/jquery.dataTables.min.css"
+          type="text/css"/>
+
+
     <!-- bootstrap -->
     <script src="scripts/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="scripts/bootstrap/js/validator.js" type="text/javascript"></script>
@@ -104,7 +110,7 @@
         <p id="description"></p>
 
         <form id="form" role="form">
-
+            <table id="listTable"></table>
         </form>
         <div id="status"></div>
         <div id="output_format_div" style="display:none; float:right;">
@@ -128,7 +134,7 @@
             var groups;
             $(document).ready(function () {
                 // populateService('BlastN service');
-                get_all_services();
+                get_all_services_as_table();
 
 
             });

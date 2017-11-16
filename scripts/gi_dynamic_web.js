@@ -3,6 +3,44 @@ var textareas = [];
 var synchronous = false;
 var repeatable_groups = {};
 
+function get_all_services_as_table() {
+    // $('#form').html("<table id=\"listTable\">Loading services...</table>");
+
+    $.ajax({
+        url: server_url,
+        data: services,
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            console.info(JSON.stringify(json));
+            // var list_html = [];
+            // list_html.push('<h3>Click any of the service to load the form</h3>');
+            // list_html.push('<ul>');
+            // for (var j = 0; j < json['services'].length; j++) {
+            //     var service_name = json['services'][j]['service_name'];
+            //     var icon_uri = json['services'][j]['operations']['icon_uri'];
+            //     list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
+            // }
+            // list_html.push('</ul>');
+            // $('#form').html(list_html.join(' '));
+            var listTable = jQuery('#listTable').DataTable({
+                data: json['services'],
+                "columns": [
+                    {
+                        title: "Service",
+                        "render": function (data, type, full, meta) {
+                            return '<div class="newstyle_link" onclick="populateService(\'' + full['service_name'] + '\')"><img src="' + full['so:logo'] + '"/><u>' + full['service_name'] + '</u></div>';
+                        }
+                    },
+                    // {data: "service_name", title: "Service", "sDefaultContent": ""},
+                    {data: "description", title: "Description", "sDefaultContent": ""}
+
+                ]
+            });
+        }
+    });
+}
+
 function get_all_services() {
     $('#form').html("Getting service...");
     $.ajax({
@@ -315,7 +353,7 @@ function submit_form() {
     var form = jQuery('#form').serializeArray();
     form = form.concat(
         jQuery('#form input[type=checkbox]:not(:checked)').map(
-            function() {
+            function () {
                 return {"name": this.name, "value": "false"}
             }).get()
     );
@@ -336,7 +374,7 @@ function submit_form() {
         parameter['param'] = param;
         parameter['grassroots_type'] = grassroots_type;
         if (group != 'none') {
-            if (name[4] == 0){
+            if (name[4] == 0) {
                 parameter['group'] = repeatable_groups[group]['group'];
             } else {
                 parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
@@ -562,9 +600,9 @@ function display_polymarker_table(jsonResult) {
         startLine: 1
     });
     // csv_table.bind("loadComplete", function () {
-        console.log("bind table" );
-        csv_table_selector.jExpand();
-        csv_table_selector.load_msa(exons_genes_and_contigs);
+    console.log("bind table");
+    csv_table_selector.jExpand();
+    csv_table_selector.load_msa(exons_genes_and_contigs);
     // });
     // $('#statusTable').jExpand();
 
@@ -671,7 +709,7 @@ function run_linked_service(id) {
 
     $.ajax({
         url: server_url,
-        data: JSON.stringify({"services":[lined_service_request_json]}),
+        data: JSON.stringify({"services": [lined_service_request_json]}),
         // data: JSON.stringify(lined_service_request_json),
         type: "POST",
         dataType: "json",
