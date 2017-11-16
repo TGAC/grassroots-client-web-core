@@ -199,13 +199,19 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     if (parameter['enum'] == undefined) {
         // boolean checkbox
         if (grassroots_type == "xsd:boolean") {
+            // form_html.push('<div class="form-group">');
+            // form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            // form_html.push('<label class="radio-inline">');
+            // form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> True');
+            // form_html.push('</label>');
+            // form_html.push('<label class="radio-inline">');
+            // form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
+            // form_html.push('</label>');
+            // form_html.push('</div>');
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<label class="radio-inline">');
-            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> True');
-            form_html.push('</label>');
-            form_html.push('<label class="radio-inline">');
-            form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
+            form_html.push('<label class="checkbox">');
+            form_html.push(' <input type="checkbox" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> ');
             form_html.push('</label>');
             form_html.push('</div>');
 
@@ -307,6 +313,12 @@ function submit_form() {
     $('#status').html('<img src="images/ajax-loader.gif"/>');
     Utils.ui.disableButton('submit_button');
     var form = jQuery('#form').serializeArray();
+    form = form.concat(
+        jQuery('#form input[type=checkbox]:not(:checked)').map(
+            function() {
+                return {"name": this.name, "value": "false"}
+            }).get()
+    );
     var submission = {};
     var submit_job = {};
     var parameters = [];
