@@ -29,14 +29,59 @@ function get_all_services_as_table() {
                     {
                         title: "Service",
                         "render": function (data, type, full, meta) {
-                            return '<div class="newstyle_link" onclick="populateService(\'' + full['service_name'] + '\')"><img src="' + full['so:logo'] + '"/><u>' + full['service_name'] + '</u></div>';
+                            return '<div class="newstyle_link" onclick="populateService(\'' + full['so:name'] + '\')"><img src="' + full['so:image'] + '"/><u>' + full['so:name'] + '</u></div>';
                         }
                     },
-                    // {data: "service_name", title: "Service", "sDefaultContent": ""},
-                    {data: "description", title: "Description", "sDefaultContent": ""}
+                    {data: "so:description", title: "Description", "sDefaultContent": ""},
+                    {
+                        title: "Provider",
+                        "render": function (data, type, full, meta) {
+                            var provider_html = [];
+                            provider_html.push('<ul>');
+                            for (var proi = 0; proi < full['provider'].length; proi++) {
+                                var this_provider = full['provider'][proi];
+                                provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+                            }
+                            provider_html.push('</ul>');
+                            return provider_html.join(' ');
+                        }
+                    },
+                    {
+                        title: "Application Category",
+                        "render": function (data, type, full, meta) {
+                            return '<div title="'+full['so:description']+'">' + full['so:name'] + ' - ' + full['so:sameAs']+ '</u></div>';
+                        }
+                    },
+                    {
+                        title: "Input",
+                        "render": function (data, type, full, meta) {
+                            var input_html = [];
+                            input_html.push('<ul>');
+                            for (var ini = 0; ini < full['input'].length; ini++) {
+                                var this_input = full['input'][ini];
+                                input_html.push('<li title="' + this_input['so:description'] + '">' + this_input['so:name'] + ' - ' + this_input['so:sameAs'] + '</li>');
+                            }
+                            input_html.push('</ul>');
+                            return input_html.join(' ');
+                        }
+                    },
+                    {
+                        title: "Output",
+                        "render": function (data, type, full, meta) {
+                            var output_html = [];
+                            output_html.push('<ul>');
+                            for (var outi = 0; outi < full['output'].length; outi++) {
+                                var this_output = full['output'][outi];
+                                output_html.push('<li title="' + this_output['so:description'] + '">' + this_output['so:name'] + ' - ' + this_output['so:sameAs'] + '</li>');
+                            }
+                            output_html.push('</ul>');
+                            return output_html.join(' ');
+                        }
+                    }
+
 
                 ]
-            });
+            })
         }
     });
 }
@@ -54,7 +99,7 @@ function get_all_services() {
             list_html.push('<h3>Click any of the service to load the form</h3>');
             list_html.push('<ul>');
             for (var j = 0; j < json['services'].length; j++) {
-                var service_name = json['services'][j]['service_name'];
+                var service_name = json['services'][j]['so:name'];
                 var icon_uri = json['services'][j]['operations']['icon_uri'];
                 list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
             }
@@ -75,8 +120,8 @@ function populateService(service_name) {
         success: function (json) {
             response = json;
             console.info(JSON.stringify(json));
-            $('#title').html(response['services'][0]['service_name']);
-            $('#description').html(response['services'][0]['description']);
+            $('#title').html(response['services'][0]['so:name']);
+            $('#description').html(response['services'][0]['so:description']);
             parameters = response['services'][0]['operations']['parameter_set']['parameters'];
             groups = response['services'][0]['operations']['parameter_set']['groups'];
             synchronous = response['services'][0]['operations']['synchronous'];
@@ -392,7 +437,7 @@ function submit_form() {
     }
 
     submit_job['start_service'] = true;
-    submit_job['service_name'] = selected_service_name;
+    submit_job['so:name'] = selected_service_name;
 
     parameter_set['parameters'] = parameters;
     submit_job['parameter_set'] = parameter_set;
@@ -494,7 +539,7 @@ function checkResult(each_result) {
                         }, 6500);
                     }
                     else {
-                        jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['errors']['error']);
+                        jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['errors']);
                         Utils.ui.reenableButton('submit_button', 'Submit');
                     }
                 }
@@ -552,7 +597,7 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                                 var link_service_json = hit['linked_services'][linki];
                                 var link_service_id = generate_random_id();
                                 linked_services_global[link_service_id] = link_service_json;
-                                result_html.push(' | <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['service_name'] + '</a><span id="' + link_service_id + 'status"></span> |');
+                                result_html.push(' | <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['so:name'] + '</a><span id="' + link_service_id + 'status"></span> |');
 
                             }
                             result_html.push('</p>');
@@ -669,7 +714,7 @@ function downloadJobFromServer(id) {
     var previousjob_request_json = {
         "services": [{
             "start_service": true,
-            "service_name": "BlastN service",
+            "so:name": "BlastN service",
             "parameter_set": {
                 "parameters": [{
                     "param": "job_id",
