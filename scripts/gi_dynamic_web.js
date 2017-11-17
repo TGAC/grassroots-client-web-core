@@ -49,7 +49,13 @@ function get_all_services_as_table() {
                     {
                         title: "Application Category",
                         "render": function (data, type, full, meta) {
-                            return '<div title="'+full['so:description']+'">' + full['so:name'] + ' - ' + full['so:sameAs']+ '</u></div>';
+                            return '<div title="'+full['application_category']['so:description']+'">' + full['application_category']['so:name'] + ' - ' + full['application_category']['so:sameAs']+ '</u></div>';
+                        }
+                    },
+                    {
+                        title: "Application Sub-Category",
+                        "render": function (data, type, full, meta) {
+                            return '<div title="'+full['application_category']['so:description']+'">' + full['application_category']['so:name'] + ' - ' + full['application_category']['so:sameAs']+ '</u></div>';
                         }
                     },
                     {
