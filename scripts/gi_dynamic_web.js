@@ -29,7 +29,7 @@ function get_all_services_as_table() {
                     {
                         title: "Service",
                         "render": function (data, type, full, meta) {
-                            return '<div class="newstyle_link" onclick="populateService(\'' + full['so:name'] + '\')"><img src="' + full['so:image'] + '"/><u>' + full['so:name'] + '</u></div>';
+                            return '<div class="newstyle_link" onclick="populateService(\'' + full['so:name'] + '\')"><img src="' + full['operations']['so:image'] + '"/><u>' + full['so:name'] + '</u></div>';
                         }
                     },
                     {data: "so:description", title: "Description", "sDefaultContent": ""},
@@ -38,9 +38,15 @@ function get_all_services_as_table() {
                         "render": function (data, type, full, meta) {
                             var provider_html = [];
                             provider_html.push('<ul>');
-                            for (var proi = 0; proi < full['provider'].length; proi++) {
-                                var this_provider = full['provider'][proi];
+                            if (full['provider'] != undefined){
+                                var this_provider = full['provider'];
                                 provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+
+                            } else if (full['providers'] != undefined) {
+                                for (var proi = 0; proi < full['providers'].length; proi++) {
+                                    var this_provider = full['providers'][proi];
+                                    provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+                                }
                             }
                             provider_html.push('</ul>');
                             return provider_html.join(' ');
@@ -49,13 +55,19 @@ function get_all_services_as_table() {
                     {
                         title: "Application Category",
                         "render": function (data, type, full, meta) {
-                            return '<div title="'+full['application_category']['so:description']+'">' + full['application_category']['so:name'] + ' - ' + full['application_category']['so:sameAs']+ '</u></div>';
+                            return '<div title="' + full['application_category']['so:description'] + '">' + full['application_category']['so:name'] + ' (' + full['application_category']['so:sameAs'] + ')</u></div>';
                         }
                     },
                     {
                         title: "Application Sub-Category",
                         "render": function (data, type, full, meta) {
-                            return '<div title="'+full['application_category']['so:description']+'">' + full['application_category']['so:name'] + ' - ' + full['application_category']['so:sameAs']+ '</u></div>';
+                            if (full['application_subcategory'] != undefined) {
+                                return '<div title="' + full['application_subcategory']['so:description'] + '">' + full['application_subcategory']['so:name'] + ' (' + full['application_subcategory']['so:sameAs'] + ')</u></div>';
+
+                            }
+                            else {
+                                return '';
+                            }
                         }
                     },
                     {
@@ -65,7 +77,7 @@ function get_all_services_as_table() {
                             input_html.push('<ul>');
                             for (var ini = 0; ini < full['input'].length; ini++) {
                                 var this_input = full['input'][ini];
-                                input_html.push('<li title="' + this_input['so:description'] + '">' + this_input['so:name'] + ' - ' + this_input['so:sameAs'] + '</li>');
+                                input_html.push('<li title="' + this_input['so:description'] + '">' + this_input['so:name'] + ' (' + this_input['so:sameAs'] + ')</li>');
                             }
                             input_html.push('</ul>');
                             return input_html.join(' ');
@@ -78,7 +90,7 @@ function get_all_services_as_table() {
                             output_html.push('<ul>');
                             for (var outi = 0; outi < full['output'].length; outi++) {
                                 var this_output = full['output'][outi];
-                                output_html.push('<li title="' + this_output['so:description'] + '">' + this_output['so:name'] + ' - ' + this_output['so:sameAs'] + '</li>');
+                                output_html.push('<li title="' + this_output['so:description'] + '">' + this_output['so:name'] + ' (' + this_output['so:sameAs'] + ')</li>');
                             }
                             output_html.push('</ul>');
                             return output_html.join(' ');
