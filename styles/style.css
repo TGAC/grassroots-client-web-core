@@ -161,6 +161,20 @@ div.sectionDivider a {
     /*transform: translate(-40%, 0%);*/
     width: 150%;
 }
+
+.list_service_table_ul {
+    list-style: none;
+}
+
+table.dataTable span.highlight {
+    background-color: #FFFF88;
+    border-radius: 0.28571429rem;
+}
+
+table.dataTable span.column_highlight {
+    background-color: #ffcc99;
+    border-radius: 0.28571429rem;
+}
 /*fieldset {*/
     /*border: 1px groove #ddd !important;*/
     /*padding: 0 1.4em 1.4em 1.4em !important;*/

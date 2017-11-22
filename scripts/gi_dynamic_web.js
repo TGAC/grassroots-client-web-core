@@ -26,6 +26,7 @@ function get_all_services_as_table() {
             var context_json = json['@context'];
             var listTable = jQuery('#listTable').DataTable({
                 data: json['services'],
+                searchHighlight: true,
                 "columns": [
                     {
                         title: "Service",
@@ -39,15 +40,15 @@ function get_all_services_as_table() {
                         title: "Provider",
                         "render": function (data, type, full, meta) {
                             var provider_html = [];
-                            provider_html.push('<ul>');
+                            provider_html.push('<ul class="list_service_table_ul">');
                             if (full['provider'] != undefined) {
                                 var this_provider = full['provider'];
-                                provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/> <a href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+                                provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
 
                             } else if (full['providers'] != undefined) {
                                 for (var proi = 0; proi < full['providers'].length; proi++) {
                                     var this_provider = full['providers'][proi];
-                                    provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/> <a href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+                                    provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
                                 }
                             }
                             provider_html.push('</ul>');
@@ -76,7 +77,7 @@ function get_all_services_as_table() {
                         title: "Input",
                         "render": function (data, type, full, meta) {
                             var input_html = [];
-                            input_html.push('<ul>');
+                            input_html.push('<ul class="list_service_table_ul">');
                             for (var ini = 0; ini < full['input'].length; ini++) {
                                 var this_input = full['input'][ini];
                                 input_html.push('<li title="' + this_input['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, this_input['so:sameAs']) + '">' + this_input['so:name'] + '</a></li>');
@@ -89,7 +90,7 @@ function get_all_services_as_table() {
                         title: "Output",
                         "render": function (data, type, full, meta) {
                             var output_html = [];
-                            output_html.push('<ul>');
+                            output_html.push('<ul class="list_service_table_ul">');
                             for (var outi = 0; outi < full['output'].length; outi++) {
                                 var this_output = full['output'][outi];
                                 output_html.push('<li title="' + this_output['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, this_output['so:sameAs']) + '">' + this_output['so:name'] + '</a></li>');
@@ -101,7 +102,13 @@ function get_all_services_as_table() {
 
 
                 ]
-            })
+            });
+            // listTable.on( 'draw', function () {
+            //     var body = $( listTable.table().body() );
+            //
+            //     body.unhighlight();
+            //     body.highlight( listTable.search() );
+            // } );
         }
     });
 }
