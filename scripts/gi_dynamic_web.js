@@ -285,7 +285,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     }
     var grassroots_type = parameter['grassroots_type'];
     var type = parameter['type'];
-    var description = parameter['description'];
+    var description = parameter['so:description'];
     var current_value;
     var default_value;
     var group = "none";
@@ -401,8 +401,8 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         form_html.push('<select class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '">');
         for (var j = 0; j < enums.length; j++) {
             var this_enum = enums[j];
-            var option_text = this_enum['description'];
-            if (this_enum['description'] == undefined) {
+            var option_text = this_enum['so:description'];
+            if (this_enum['so:description'] == undefined) {
                 option_text = this_enum['value']
             }
             form_html.push('<option value="' + this_enum['value'] + '" ' + selected_option(default_value, this_enum['value'], true) + '>' + option_text + '</option>');
