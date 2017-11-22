@@ -286,8 +286,8 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     var grassroots_type = parameter['grassroots_type'];
     var type = parameter['type'];
     var description = parameter['so:description'];
-    var current_value;
-    var default_value;
+    var current_value = '';
+    var default_value = '';
     var group = "none";
 
     if (parameter['group'] !== undefined) {
@@ -299,11 +299,19 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     }
 
     if (grassroots_type == "params:directory") {
-        current_value = parameter['current_value']['value'];
-        default_value = parameter['default_value']['value'];
+        if (parameter['current_value'] != undefined) {
+            current_value = parameter['current_value']['value'];
+        }
+        if (default_value != undefined) {
+            default_value = parameter['default_value']['value'];
+        }
     } else {
-        current_value = parameter['current_value'];
-        default_value = parameter['default_value'];
+        if (parameter['current_value'] != undefined) {
+            current_value = parameter['current_value'];
+        }
+        if (parameter['default_value'] != undefined) {
+            default_value = parameter['default_value'];
+        }
     }
 
     if (parameter['enum'] == undefined) {
