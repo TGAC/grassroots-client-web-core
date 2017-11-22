@@ -152,6 +152,15 @@ div.sectionDivider a {
     /*text-underline-position: under;*/
     outline: 0
 }
+
+.list_service_table{
+    position: relative;
+    float: left;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, 0%);
+    width: 150%;
+}
 /*fieldset {*/
     /*border: 1px groove #ddd !important;*/
     /*padding: 0 1.4em 1.4em 1.4em !important;*/

@@ -30,7 +30,8 @@ function get_all_services_as_table() {
                     {
                         title: "Service",
                         "render": function (data, type, full, meta) {
-                            return '<div class="newstyle_link" onclick="populateService(\'' + full['so:name'] + '\')"><img src="' + full['operations']['so:image'] + '"/> <u>' + full['so:name'] + '</u></div>';
+                            // return '<div class="newstyle_link" onclick="populateService(\'' + full['so:name'] + '\')"><img src="' + full['operations']['so:image'] + '"/> <u>' + full['so:name'] + '</u></div>';
+                            return '<a class="newstyle_link" href="services.html?service=' + full['so:name'] + '"><img src="' + full['operations']['so:image'] + '"/> <u>' + full['so:name'] + '</u></a>';
                         }
                     },
                     {data: "so:description", title: "Description", "sDefaultContent": ""},
