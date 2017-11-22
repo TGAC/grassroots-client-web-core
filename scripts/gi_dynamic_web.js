@@ -27,6 +27,8 @@ function get_all_services_as_table() {
             var listTable = jQuery('#listTable').DataTable({
                 data: json['services'],
                 searchHighlight: true,
+                scrollX: true,
+                scrollCollapse: true,
                 "columns": [
                     {
                         title: "Service",
