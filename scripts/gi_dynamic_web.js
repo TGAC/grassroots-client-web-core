@@ -34,7 +34,7 @@ function get_all_services_as_table() {
                         title: "Service",
                         "render": function (data, type, full, meta) {
                             // return '<div class="newstyle_link" onclick="populateService(\'' + full['so:name'] + '\')"><img src="' + full['operations']['so:image'] + '"/> <u>' + full['so:name'] + '</u></div>';
-                            return '<a class="newstyle_link" href="services.html?service=' + full['so:name'] + '"><img src="' + full['operations']['so:image'] + '"/> <u>' + full['so:name'] + '</u></a>';
+                            return '<a class="newstyle_link" href="services.html?service=' + full['so:name'] + '"><img src="' + full['operation']['so:image'] + '"/> <u>' + full['so:name'] + '</u></a>';
                         }
                     },
                     {data: "so:description", title: "Description", "sDefaultContent": ""},
@@ -60,14 +60,14 @@ function get_all_services_as_table() {
                     {
                         title: "Application Category",
                         "render": function (data, type, full, meta) {
-                            return '<div title="' + full['application_category']['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, full['application_category']['so:sameAs']) + '" class="newstyle_link">' + full['application_category']['so:name'] + '</a></div>';
+                            return '<div title="' + full['category']['application_category']['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, full['category']['application_category']['so:sameAs']) + '" class="newstyle_link">' + full['category']['application_category']['so:name'] + '</a></div>';
                         }
                     },
                     {
                         title: "Application Sub-Category",
                         "render": function (data, type, full, meta) {
-                            if (full['application_subcategory'] != undefined) {
-                                return '<div title="' + full['application_subcategory']['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, full['application_subcategory']['so:sameAs']) + '" class="newstyle_link">' + full['application_subcategory']['so:name'] + '</a></div>';
+                            if (full['category']['application_subcategory'] != undefined) {
+                                return '<div title="' + full['category']['application_subcategory']['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, full['category']['application_subcategory']['so:sameAs']) + '" class="newstyle_link">' + full['category']['application_subcategory']['so:name'] + '</a></div>';
 
                             }
                             else {
@@ -80,8 +80,8 @@ function get_all_services_as_table() {
                         "render": function (data, type, full, meta) {
                             var input_html = [];
                             input_html.push('<ul class="list_service_table_ul">');
-                            for (var ini = 0; ini < full['input'].length; ini++) {
-                                var this_input = full['input'][ini];
+                            for (var ini = 0; ini < full['category']['input'].length; ini++) {
+                                var this_input = full['category']['input'][ini];
                                 input_html.push('<li title="' + this_input['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, this_input['so:sameAs']) + '">' + this_input['so:name'] + '</a></li>');
                             }
                             input_html.push('</ul>');
@@ -93,8 +93,8 @@ function get_all_services_as_table() {
                         "render": function (data, type, full, meta) {
                             var output_html = [];
                             output_html.push('<ul class="list_service_table_ul">');
-                            for (var outi = 0; outi < full['output'].length; outi++) {
-                                var this_output = full['output'][outi];
+                            for (var outi = 0; outi < full['category']['output'].length; outi++) {
+                                var this_output = full['category']['output'][outi];
                                 output_html.push('<li title="' + this_output['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, this_output['so:sameAs']) + '">' + this_output['so:name'] + '</a></li>');
                             }
                             output_html.push('</ul>');
@@ -105,12 +105,6 @@ function get_all_services_as_table() {
 
                 ]
             });
-            // listTable.on( 'draw', function () {
-            //     var body = $( listTable.table().body() );
-            //
-            //     body.unhighlight();
-            //     body.highlight( listTable.search() );
-            // } );
         }
     });
 }
