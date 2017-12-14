@@ -116,28 +116,29 @@ function ontology_links(context_json, ontology_ref) {
     return context_json[prefix] + ontology_array[1];
 }
 
-function get_all_services() {
-    $('#form').html("Getting service...");
-    $.ajax({
-        url: server_url,
-        data: services,
-        type: "POST",
-        dataType: "json",
-        success: function (json) {
-            console.info(JSON.stringify(json));
-            var list_html = [];
-            list_html.push('<h3>Click any of the service to load the form</h3>');
-            list_html.push('<ul>');
-            for (var j = 0; j < json['services'].length; j++) {
-                var service_name = json['services'][j]['so:name'];
-                var icon_uri = json['services'][j]['operations']['icon_uri'];
-                list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
-            }
-            list_html.push('</ul>');
-            $('#form').html(list_html.join(' '));
-        }
-    });
-}
+// //deprecated
+// function get_all_services() {
+//     $('#form').html("Getting service...");
+//     $.ajax({
+//         url: server_url,
+//         data: services,
+//         type: "POST",
+//         dataType: "json",
+//         success: function (json) {
+//             console.info(JSON.stringify(json));
+//             var list_html = [];
+//             list_html.push('<h3>Click any of the service to load the form</h3>');
+//             list_html.push('<ul>');
+//             for (var j = 0; j < json['services'].length; j++) {
+//                 var service_name = json['services'][j]['so:name'];
+//                 var icon_uri = json['services'][j]['operations']['icon_uri'];
+//                 list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
+//             }
+//             list_html.push('</ul>');
+//             $('#form').html(list_html.join(' '));
+//         }
+//     });
+// }
 
 function populateService(service_name) {
     $('#back_link').css('visibility', 'visible');
@@ -152,9 +153,9 @@ function populateService(service_name) {
             console.info(JSON.stringify(json));
             $('#title').html(response['services'][0]['so:name']);
             $('#description').html(response['services'][0]['so:description']);
-            parameters = response['services'][0]['operations']['parameter_set']['parameters'];
-            groups = response['services'][0]['operations']['parameter_set']['groups'];
-            synchronous = response['services'][0]['operations']['synchronous'];
+            parameters = response['services'][0]['operation']['parameter_set']['parameters'];
+            groups = response['services'][0]['operation']['parameter_set']['groups'];
+            synchronous = response['services'][0]['operation']['synchronous'];
             console.info(synchronous);
             produce_form('form', parameters, groups);
             for (var i = 0; i < textareas.length; i++) {
@@ -174,19 +175,19 @@ function produce_form(div, parameters, groups) {
                 var group_random_id = generate_random_id();
                 // repeatable stuff here
                 form_html.push('<fieldset>');
-                form_html.push('<legend>' + groups[j]['group'] + ' <span class="glyphicon glyphicon-plus pull-right" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
+                form_html.push('<legend>' + groups[j]['so:name'] + ' <span class="glyphicon glyphicon-plus pull-right" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
                 form_html.push('<div id="' + group_random_id + '">');
 
                 var this_group = {};
 
-                this_group['group'] = groups[j]['group'];
+                this_group['so:name'] = groups[j]['so:name'];
                 this_group['counter'] = 0;
 
                 // console.log(JSON.stringify(this_group));
                 repeatable_groups[group_random_id] = this_group;
                 var this_group_parameters = [];
                 for (var i = 0; i < parameters.length; i++) {
-                    if (groups[j]['group'] == parameters[i]['group']) {
+                    if (groups[j]['so:name'] == parameters[i]['group']) {
                         form_html.push(produce_one_parameter_form(parameters[i], true, group_random_id));
                         parameters_added.push(parameters[i]['param']);
                         this_group_parameters.push(parameters[i]);
@@ -199,9 +200,9 @@ function produce_form(div, parameters, groups) {
             } else {
                 if (groups[j]['visible'] || groups[j]['visible'] == undefined) {
                     form_html.push('<fieldset>');
-                    form_html.push('<legend>' + groups[j]['group'] + '</legend>');
+                    form_html.push('<legend>' + groups[j]['so:name'] + '</legend>');
                     for (var i = 0; i < parameters.length; i++) {
-                        if (groups[j]['group'] == parameters[i]['group']) {
+                        if (groups[j]['so:name'] == parameters[i]['group']) {
                             form_html.push(produce_one_parameter_form(parameters[i], false, null));
                             parameters_added.push(parameters[i]['param']);
                         }
@@ -210,11 +211,11 @@ function produce_form(div, parameters, groups) {
                 } else {
                     var random_id = generate_random_id();
                     form_html.push('<fieldset>');
-                    form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['group'] + '</a></legend>');
+                    form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['so:name'] + '</a></legend>');
 
                     form_html.push('<div id="' + random_id + '"  class="collapse">');
                     for (var i = 0; i < parameters.length; i++) {
-                        if (groups[j]['group'] == parameters[i]['group']) {
+                        if (groups[j]['so:name'] == parameters[i]['group']) {
                             form_html.push(produce_one_parameter_form(parameters[i], false, null));
                             parameters_added.push(parameters[i]['param']);
                         }
