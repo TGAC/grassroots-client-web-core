@@ -143,6 +143,7 @@ function ontology_links(context_json, ontology_ref) {
 function populateService(service_name) {
     $('#back_link').css('visibility', 'visible');
     selected_service_name = service_name;
+    console.log(selected_service_name);
     $.ajax({
         url: server_url,
         data: '{"services": ["' + service_name + '"], "operations": {"operation": "get_named_service"}}',
@@ -521,6 +522,9 @@ function submit_form() {
                     checkResult(each_result);
                 }
 
+            } else if (selected_service_name == 'Germplasm Research Unit seeds service' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
+                $('#status').html('');
+                $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
             } else {
                 $('#status').html('');
                 $('#result').html("Done");
@@ -542,7 +546,7 @@ function checkResult(each_result) {
         } else {
             $('#status').html('');
             $('#result').html("Done");
-            downloadFile(each_result['results'][0]['data'], selected_service_name);
+            $('#' + uuid).html(JSON.stringify(each_result['results'][0]['data']));
         }
     } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
         $('#' + uuid).html('Job ' + status_text_key + ': <br/>' + each_result['errors']['error']);
@@ -562,7 +566,8 @@ function checkResult(each_result) {
                             $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
                         } else if (selected_service_name == 'Polymarker service') {
                             $('#' + uuid).html(display_polymarker_table(json[0]));
-
+                        } else if (selected_service_name == 'Germplasm Research Unit seeds service' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
+                            $('#' + uuid).html(JSON.stringify(json[0]['results'][0]['data']));
                         } else {
                             $('#status').html('');
                             $('#result').html("Done");
