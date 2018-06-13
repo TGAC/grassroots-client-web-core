@@ -494,6 +494,7 @@ function submit_form() {
         type: "POST",
         dataType: "json",
         success: function (json) {
+            Utils.ui.reenableButton('submit_button', 'Submit');
             // response = json;
             console.info(JSON.stringify(json));
             //            if (synchronous){
@@ -527,19 +528,10 @@ function submit_form() {
                 $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
             }  else if (selected_service_name == 'Germplasm Research Unit seeds service' ) {
                 $('#status').html('');
-                $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-
-                var pie_view = false;
-                var yrtable;
-
-                var bam_list = [];
-
-                var datemin = 0;
-                var datemax = 0;
-
-                //    var markers = new Array();
-                var markersGroup = new L.MarkerClusterGroup({});
-                var map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+                $('#tableWrapper').html('<table id="resultTable"></table>');
+                // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+                markersGroup = new L.MarkerClusterGroup({});
+                map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
                 //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
@@ -558,23 +550,23 @@ function submit_form() {
                     language: 'eng',
                     format: 'png8',
                     size: '256'
-                }).addTo(map);;
+                }).addTo(map);
 
                 L.control.zoom({position: 'topright'}).addTo(map);
 
-                startGISPage(json['results'][0]['results']);
+                startGIS(json['results'][0]['results']);
 
                 mapFitBounds([[49.781264, -7.910156], [61.100789, -0.571289]]);
-                jQuery("#slider").dateRangeSlider({
-                    bounds: {
-                        min: new Date(2013, 0, 1),
-                        max: new Date()
-                    },
-                    defaultValues: {
-                        min: new Date(2013, 0, 1),
-                        max: new Date()
-                    }
-                });
+                // jQuery("#slider").dateRangeSlider({
+                //     bounds: {
+                //         min: new Date(2013, 0, 1),
+                //         max: new Date()
+                //     },
+                //     defaultValues: {
+                //         min: new Date(2013, 0, 1),
+                //         max: new Date()
+                //     }
+                // });
             } else {
                 $('#status').html('');
                 $('#result').html("Done");

@@ -1,4 +1,4 @@
-function startGISPage(jsonArray) {
+function startGIS(jsonArray) {
 
     var filtered_data_donor = [];
     var filtered_data_breeder = [];
@@ -6,12 +6,12 @@ function startGISPage(jsonArray) {
     for (i = 0; i < jsonArray.length; i++) {
         if (jsonArray[i]['data']['BreederAddress'] != undefined) {
             if (jsonArray[i]['data']['BreederAddress']['location']['location'] != undefined) {
-                filtered_data_breeder.push(json.data[i]);
+                filtered_data_breeder.push(jsonArray[i]);
             }
         }
         if (jsonArray[i]['data']['DonorAddress'] != undefined) {
             if (jsonArray[i]['data']['DonorAddress']['location']['location'] != undefined) {
-                filtered_data_donor.push(json.data[i]);
+                filtered_data_donor.push(jsonArray[i]);
             }
         }
     }
@@ -25,50 +25,49 @@ function produceTable(data) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
+            {data: "data.dwc:recordNumber", title: "Record Number", "sDefaultContent": ""},
             {data: "data.accession", title: "Accession", "sDefaultContent": ""},
-            {data: "data.DonorAddress.Address.addressCountry", title: "Donor Country", "sDefaultContent": ""},
             {data: "data.ploidy", title: "Ploidy", "sDefaultContent": ""},
             {data: "data.dwc:scientificName", title: "Scientific Name", "sDefaultContent": ""},
-            {data: "data.", title: "", "sDefaultContent": ""},
-            {data: "data.", title: "", "sDefaultContent": ""},
-            {data: "data.", title: "", "sDefaultContent": ""},
-            {data: "data.", title: "", "sDefaultContent": ""},
-            {data: "data.sample.Host", title: "Host", "sDefaultContent": ""},
-
+            {data: "data.dwc:genus", title: "Genus", "sDefaultContent": ""},
+            {data: "data.dwc:year", title: "Year", "sDefaultContent": ""},
+            {data: "data.dwc:vernacularName", title: "Vernacular Name", "sDefaultContent": ""},
             {
                 title: "Donor",
                 "render": function (data, type, full, meta) {
-                    if (full['data']['DonorAddress'] != undefined) {
-                        return ['data']['DonorAddress']['Address']['name'] + '<br/>'
-                            + ['data']['DonorAddress']['Address']['addressLocality'] + '<br/>'
-                            + ['data']['DonorAddress']['Address']['addressCountry'] + '<br/>'
-                            + ['data']['DonorAddress']['Address']['postalCode'];
+                    var donorInfo = '';
+                    if (full['data']['DonorAddress'] !== undefined && full['data']['DonorAddress'] !== "undefined") {
+                        if (full['data']['DonorAddress']['Address'] !== undefined && full['data']['DonorAddress']['Address'] !== "undefined") {
+                            donorInfo = full['data']['DonorAddress']['Address']['name'] + '<br/>'
+                                + full['data']['DonorAddress']['Address']['addressLocality'] + '<br/>'
+                                + full['data']['DonorAddress']['Address']['addressCountry'] + '<br/>'
+                                + full['data']['DonorAddress']['Address']['postalCode'];
+                        }
                     }
-                    else {
-                        return '';
-                    }
+                    return donorInfo;
                 }
             },
             {
                 title: "Breeder",
                 "render": function (data, type, full, meta) {
-                    if (full['data']['BreederAddress'] != undefined) {
-                        return ['data']['BreederAddress']['Address']['name'] + '<br/>'
-                            + ['data']['BreederAddress']['Address']['addressLocality'] + '<br/>'
-                            + ['data']['BreederAddress']['Address']['addressCountry'] + '<br/>'
-                            + ['data']['BreederAddress']['Address']['postalCode'];
+                    var breederInfo = '';
+                    if (full['data']['BreederAddress'] !== undefined && full['data']['BreederAddress'] !== "undefined") {
+                        if (full['data']['DonorAddress']['Address'] !== undefined && full['data']['DonorAddress']['Address'] !== "undefined") {
+                            breederInfo = full['data']['BreederAddress']['Address']['name'] + '<br/>'
+                                + full['data']['BreederAddress']['Address']['addressLocality'] + '<br/>'
+                                + full['data']['BreederAddress']['Address']['addressCountry'] + '<br/>'
+                                + full['data']['BreederAddress']['Address']['postalCode'];
+                        }
                     }
-                    else {
-                        return '';
-                    }
+                    return breederInfo;
                 }
             },
 
             {
                 title: "Order",
                 "render": function (data, type, full, meta) {
-                    if (full['data']['order_link']['url'] != undefined) {
-                        return '<a href="' + full['data']['order_link']['url'] + '">Order</a>';
+                    if (full['data']['order_link'] !== undefined) {
+                        return '<a target="_blank" href="' + full['data']['order_link']['url'] + '">Order</a>';
                     }
                     else {
                         return '';
@@ -105,22 +104,23 @@ function produceTable(data) {
     // }
 }
 
-jQuery.fn.dataTableExt.afnFiltering.push(
-    function (oSettings, aData, iDataIndex) {
-        var dateStart = datemin;
-        var dateEnd = datemax;
-
-        var evalDate = Date.parse(aData[5]);
-
-        if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
-                || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    });
+//
+// jQuery.fn.dataTableExt.afnFiltering.push(
+//     function (oSettings, aData, iDataIndex) {
+//         var dateStart = datemin;
+//         var dateEnd = datemax;
+//
+//         var evalDate = Date.parse(aData[5]);
+//
+//         if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
+//                 || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
+//             return true;
+//         }
+//         else {
+//             return false;
+//         }
+//
+//     });
 
 function ukcpvs_only() {
     var column = yrtable.column(2);
@@ -154,8 +154,8 @@ function displayYRLocations_new(array, type) {
         var country = '';
         var town = '';
         var name = '';
-        if (type == 'donor') {
-            la = array[i][['data']['DonorAddress']['location']['location']['latitude'];
+        if (type === 'donor') {
+            la = array[i]['data']['DonorAddress']['location']['location']['latitude'];
             lo = array[i]['data']['DonorAddress']['location']['location']['longitude'];
             title = 'Donor Address';
 
@@ -170,8 +170,8 @@ function displayYRLocations_new(array, type) {
                     name = array[i]['data']['DonorAddress']['Address']['name'];
                 }
             }
-        } else if (type == 'breeder'){
-            la = array[i][['data']['BreederAddress']['location']['location']['latitude'];
+        } else if (type === 'breeder') {
+            la = array[i]['data']['BreederAddress']['location']['location']['latitude'];
             lo = array[i]['data']['BreederAddress']['location']['location']['longitude'];
             title = 'Donor Address';
 
@@ -198,7 +198,7 @@ function displayYRLocations_new(array, type) {
             + '<b>Organisation: </b>' + name + '<br/>'
             + '<b>Country: </b>' + country + '<br/>'
             + '<b>Town: </b>' + town + '<br/>'
-            + '<a href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
+            + '<a target="_blank" href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
         ;
         addPointer(la, lo, title, popup_note, type);
     }
@@ -214,29 +214,17 @@ function addPointer(la, lo, title, note, type) {
     //     iconSize: null
     // });
     var markerLayer;
-    if (type == 'breeder') {
-        markerLayer = L.marker([la, lo], {title: title, icon: greenIcon}).bindPopup(note);
-    }
-    else {
-        markerLayer = L.marker([la, lo], {title: title}).bindPopup(note);
-    }
-    //markers.push(markerLayer);
+    // if (type === 'breeder') {
+    //     markerLayer = L.marker([la, lo], {title: title, icon: greenIcon}).bindPopup(note);
+    // }
+    // else {
+    markerLayer = L.marker([la, lo], {title: title}).bindPopup(note);
+    // }
+    // markers.push(markerLayer);
     markersGroup.addLayer(markerLayer);
 
 }
 
-function removePointers() {
-    map.removeLayer(markersGroup);
-    if (pie_view) {
-        markersGroup = new L.MarkerClusterGroup({
-            maxClusterRadius: 2 * 30,
-            iconCreateFunction: defineClusterIcon
-        });
-    }
-    else {
-        markersGroup = new L.MarkerClusterGroup();
-    }
-}
 
 function removeTable() {
     jQuery('#resultTable').dataTable().fnDestroy();
@@ -258,101 +246,6 @@ function randomNumberFromInterval(min, max) {
     return Math.random() * (max - min + 1) + min;
 }
 
-var rmax = 30;
-
-function defineClusterIcon(cluster) {
-    var children = cluster.getAllChildMarkers(),
-        n = children.length, //Get number of markers in cluster
-        strokeWidth = 1, //Set clusterpie stroke width
-        r = rmax - 2 * strokeWidth - (n < 10 ? 12 : n < 100 ? 8 : n < 1000 ? 4 : 0), //Calculate clusterpie radius...
-        iconDim = (r + strokeWidth) * 2, //...and divIcon dimensions (leaflet really want to know the size)
-        data = d3.nest() //Build a dataset for the pie chart
-            .key(function (d) {
-                return d.options.title;
-            })
-            .entries(children, d3.map),
-        //bake some svg markup
-        html = bakeThePie({
-            data: data,
-            valueFunc: function (d) {
-                return d.values.length;
-            },
-            strokeWidth: 1,
-            outerRadius: r,
-            innerRadius: r - 10,
-            pieClass: 'cluster-pie',
-            pieLabel: n,
-            pieLabelClass: 'marker-cluster-pie-label',
-            pathClassFunc: function (d) {
-                return "pie-" + d.data.key;
-            }
-//                    ,
-//                    pathTitleFunc: function (d) {
-//                        return "path title";
-//                    }
-        }),
-        //Create a new divIcon and assign the svg markup to the html property
-        myIcon = new L.DivIcon({
-            html: html,
-            className: 'marker-cluster',
-            iconSize: new L.Point(iconDim, iconDim)
-        });
-    return myIcon;
-}
-
-function bakeThePie(options) {
-    var data = options.data,
-        valueFunc = options.valueFunc,
-        r = options.outerRadius ? options.outerRadius : 28, //Default outer radius = 28px
-        rInner = options.innerRadius ? options.innerRadius : r - 10, //Default inner radius = r-10
-        strokeWidth = options.strokeWidth ? options.strokeWidth : 1, //Default stroke is 1
-        pathClassFunc = options.pathClassFunc ? options.pathClassFunc : function () {
-            return '';
-        }, //Class for each path
-//                pathTitleFunc = options.pathTitleFunc ? options.pathTitleFunc : function () {
-//                    return '';
-//                }, //Title for each path
-        pieClass = options.pieClass ? options.pieClass : 'marker-cluster-pie', //Class for the whole pie
-        pieLabel = options.pieLabel ? options.pieLabel : d3.sum(data, valueFunc), //Label for the whole pie
-        pieLabelClass = options.pieLabelClass ? options.pieLabelClass : 'marker-cluster-pie-label',//Class for the pie label
-
-        origo = (r + strokeWidth), //Center coordinate
-        w = origo * 2, //width and height of the svg element
-        h = w,
-        donut = d3.layout.pie(),
-        arc = d3.svg.arc().innerRadius(rInner).outerRadius(r);
-
-    //Create an svg element
-    var svg = document.createElementNS(d3.ns.prefix.svg, 'svg');
-    //Create the pie chart
-    var vis = d3.select(svg)
-        .data([data])
-        .attr('class', pieClass)
-        .attr('width', w)
-        .attr('height', h);
-
-    var arcs = vis.selectAll('g.arc')
-        .data(donut.value(valueFunc))
-        .enter().append('svg:g')
-        .attr('class', 'arc')
-        .attr('transform', 'translate(' + origo + ',' + origo + ')');
-
-    arcs.append('svg:path')
-        .attr('class', pathClassFunc)
-        .attr('stroke-width', strokeWidth)
-        .attr('d', arc)
-//                .append('svg:title')
-//                .text(pathTitleFunc)
-    ;
-    vis.append('text')
-        .attr('x', origo)
-        .attr('y', origo)
-        .attr('class', pieLabelClass)
-        .attr('text-anchor', 'middle')
-        .attr('dy', '.3em')
-        .text(pieLabel);
-    return serializeXmlNode(svg);
-}
 
 function serializeXmlNode(xmlNode) {
     if (typeof window.XMLSerializer != "undefined") {
