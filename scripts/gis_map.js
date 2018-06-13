@@ -1,4 +1,3 @@
-
 function startGISPage(jsonArray) {
 
     var filtered_data_donor = [];
@@ -6,12 +5,12 @@ function startGISPage(jsonArray) {
     jQuery('#status').html('');
     for (i = 0; i < jsonArray.length; i++) {
         if (jsonArray[i]['data']['BreederAddress'] != undefined) {
-            if (jsonArray[i]['data']['BreederAddress']['location']['location'] != undefined ) {
+            if (jsonArray[i]['data']['BreederAddress']['location']['location'] != undefined) {
                 filtered_data_breeder.push(json.data[i]);
             }
         }
         if (jsonArray[i]['data']['DonorAddress'] != undefined) {
-            if (jsonArray[i]['data']['BreederAddress']['location']['location'] != undefined ) {
+            if (jsonArray[i]['data']['DonorAddress']['location']['location'] != undefined) {
                 filtered_data_donor.push(json.data[i]);
             }
         }
@@ -26,23 +25,24 @@ function produceTable(data) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
-            {data: "data.ID", title: "ID", "sDefaultContent": ""},
-            {data: "data.sample.Address.addressCountry", title: "Country", "sDefaultContent": ""},
-            {data: "data.UKCPVS ID", title: "UKCPVS ID", "sDefaultContent": "Unknown"},
-            {data: "data.sample.Disease", title: "Rust Type", "sDefaultContent": "Unknown"},
-            {data: "data.sample.Name/Collector.name", title: "Collector", "sDefaultContent": ""},
-            {data: "data.sample.Date collected.date", title: "Date", "sDefaultContent": ""},
+            {data: "data.accession", title: "Accession", "sDefaultContent": ""},
+            {data: "data.DonorAddress.Address.addressCountry", title: "Donor Country", "sDefaultContent": ""},
+            {data: "data.ploidy", title: "Ploidy", "sDefaultContent": ""},
+            {data: "data.dwc:scientificName", title: "Scientific Name", "sDefaultContent": ""},
+            {data: "data.", title: "", "sDefaultContent": ""},
+            {data: "data.", title: "", "sDefaultContent": ""},
+            {data: "data.", title: "", "sDefaultContent": ""},
+            {data: "data.", title: "", "sDefaultContent": ""},
             {data: "data.sample.Host", title: "Host", "sDefaultContent": ""},
-            //{
-            //    data: "data.sample.RNA-seq? (Selected/In progress/Completed/Failed)",
-            //    title: "RNA-seq",
-            //    "sDefaultContent": ""
-            //},
+
             {
-                title: "Country",
+                title: "Donor",
                 "render": function (data, type, full, meta) {
-                    if (full['data']['country'] != undefined ) {
-                        return full['data']['country']['name'];
+                    if (full['data']['DonorAddress'] != undefined) {
+                        return ['data']['DonorAddress']['Address']['name'] + '<br/>'
+                            + ['data']['DonorAddress']['Address']['addressLocality'] + '<br/>'
+                            + ['data']['DonorAddress']['Address']['addressCountry'] + '<br/>'
+                            + ['data']['DonorAddress']['Address']['postalCode'];
                     }
                     else {
                         return '';
@@ -50,55 +50,47 @@ function produceTable(data) {
                 }
             },
             {
-                title: "Genotype",
+                title: "Breeder",
                 "render": function (data, type, full, meta) {
-                    if (full['data']['genotype'] != undefined && full['data']['genotype'] != "undefined") {
-                        if (full['data']['genotype']['Genetic group'] != undefined && full['data']['genotype']['Genetic group'] != "undefined") {
-                            return full['data']['genotype']['Genetic group'];
-                        }
-                        else {
-                            return '';
-                        }
+                    if (full['data']['BreederAddress'] != undefined) {
+                        return ['data']['BreederAddress']['Address']['name'] + '<br/>'
+                            + ['data']['BreederAddress']['Address']['addressLocality'] + '<br/>'
+                            + ['data']['BreederAddress']['Address']['addressCountry'] + '<br/>'
+                            + ['data']['BreederAddress']['Address']['postalCode'];
                     }
                     else {
                         return '';
                     }
                 }
             },
-            {data: "data.sample.Variety", title: "Variety", "sDefaultContent": ""},
-            {data: "data.sample.Address.addressLocality", title: "Location", "sDefaultContent": ""},
-//                {data: "data.verified", title: "Verified", "sDefaultContent": ""},
-            {
-                title: "Verified",
-                "render": function (data, type, full, meta) {
-                    return ((full["data"]["verified"]) ? 'Verified' : 'Preliminary');
-                }
-            },
-            {
-                title: "File request",
-                "render": function (data, type, full, meta) {
-                    return '<input type="checkbox" id="' + full['data']['ID'] + '" onclick="checkFileBox(\'' + full['data']['ID'] + '\');"/>';
 
+            {
+                title: "Order",
+                "render": function (data, type, full, meta) {
+                    if (full['data']['order_link']['url'] != undefined) {
+                        return '<a href="' + full['data']['order_link']['url'] + '">Order</a>';
+                    }
+                    else {
+                        return '';
+                    }
                 }
-            },
-            {data: "data.sample_live_date.date", title: "Publish Date", "sDefaultContent": ""}
-
+            }
         ]
 
     });
 
-    jQuery('#resultTable tbody').on('click', 'tr', function () {
-        var data = yrtable.row(this).data();
-        var la = data['data']['sample']['location']['location']['latitude'];
-        var lo = data['data']['sample']['location']['location']['longitude'];
-        map.setView([la, lo], 16, {animate: true});
-    });
-
-    jQuery('#resultTable').on('search.dt', function () {
-        removePointers();
-        var filteredData = yrtable.rows({filter: 'applied'}).data().toArray();
-        displayYRLocations_new(filteredData);
-    });
+    // jQuery('#resultTable tbody').on('click', 'tr', function () {
+    //     var data = yrtable.row(this).data();
+    //     var la = data['data']['sample']['location']['location']['latitude'];
+    //     var lo = data['data']['sample']['location']['location']['longitude'];
+    //     map.setView([la, lo], 16, {animate: true});
+    // });
+    //
+    // jQuery('#resultTable').on('search.dt', function () {
+    //     removePointers();
+    //     var filteredData = yrtable.rows({filter: 'applied'}).data().toArray();
+    //     displayYRLocations_new(filteredData);
+    // });
 
 
     // jQuery("#slider").bind("valuesChanging", function (e, data) {
@@ -121,7 +113,7 @@ jQuery.fn.dataTableExt.afnFiltering.push(
         var evalDate = Date.parse(aData[5]);
 
         if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
-            || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
+                || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
             return true;
         }
         else {
@@ -154,200 +146,79 @@ function normal_view() {
     column.search('').draw();
 }
 
-function displayYRLocations_new(array,type) {
+function displayYRLocations_new(array, type) {
     for (i = 0; i < array.length; i++) {
-        var la = array[i]['data']['sample']['location']['location']['latitude'];
-        var lo = array[i]['data']['sample']['location']['location']['longitude'];
-        var geno = '';
+        var la = '';
+        var lo = '';
+        var title = '';
         var country = '';
         var town = '';
+        var name = '';
+        if (type == 'donor') {
+            la = array[i][['data']['DonorAddress']['location']['location']['latitude'];
+            lo = array[i]['data']['DonorAddress']['location']['location']['longitude'];
+            title = 'Donor Address';
 
-        if (array[i]['data']['genotype'] != undefined && array[i]['data']['genotype'] != "undefined") {
-            geno = array[i]['data']['genotype']['Genetic group'];
-        }
-        var collector = 'N/A';
+            if (array[i]['data']['DonorAddress']['Address'] != undefined) {
+                if (array[i]['data']['DonorAddress']['Address']['addressCountry'] != undefined) {
+                    country = array[i]['data']['DonorAddress']['Address']['addressCountry'];
+                }
+                if (array[i]['data']['DonorAddress']['Address']['addressLocality'] != undefined) {
+                    town = array[i]['data']['DonorAddress']['Address']['addressLocality'];
+                }
+                if (array[i]['data']['DonorAddress']['Address']['name'] != undefined) {
+                    name = array[i]['data']['DonorAddress']['Address']['name'];
+                }
+            }
+        } else if (type == 'breeder'){
+            la = array[i][['data']['BreederAddress']['location']['location']['latitude'];
+            lo = array[i]['data']['BreederAddress']['location']['location']['longitude'];
+            title = 'Donor Address';
 
-        if (array[i]['data']['sample']['Name/Collector'] != undefined) {
-            if (array[i]['data']['sample']['Name/Collector']['name'] != undefined) {
-                collector = array[i]['data']['sample']['Name/Collector']['name'];
+            if (array[i]['data']['BreederAddress']['Address'] != undefined) {
+                if (array[i]['data']['BreederAddress']['Address']['addressCountry'] != undefined) {
+                    country = array[i]['data']['BreederAddress']['Address']['addressCountry'];
+                }
+                if (array[i]['data']['BreederAddress']['Address']['addressLocality'] != undefined) {
+                    town = array[i]['data']['BreederAddress']['Address']['addressLocality'];
+                }
+                if (array[i]['data']['BreederAddress']['Address']['name'] != undefined) {
+                    name = array[i]['data']['BreederAddress']['Address']['name'];
+                }
             }
+
         }
-        if (array[i]['data']['sample']['Address'] != undefined) {
-            if (array[i]['data']['sample']['Address']['addressCountry'] != undefined) {
-                country = array[i]['data']['sample']['Address']['addressCountry'];
-            }
-            if (array[i]['data']['sample']['Address']['addressCountry'] == undefined){
-                console.log("no country: " + array[i]['data']['ID']);
-            }
-            if (array[i]['data']['sample']['Address']['addressLocality'] != undefined) {
-                town = array[i]['data']['sample']['Address']['addressLocality'];
-            }
-            if (array[i]['data']['sample']['Address']['addressLocality'] == undefined){
-                console.log("no locality: " + array[i]['data']['ID']);
-            }
-        } else {
-            console.log("no address: " + array[i]['data']['ID']);
-        }
-        var popup_note = '<b>ID: </b>' + array[i]['data']['ID'] + '<br/>'
-                + '<b>Country: </b>' + country + '<br/>'
-                + '<b>UKCPVS ID: </b>' + array[i]['data']['UKCPVS ID'] + '<br/>'
-                + '<b>Rust Type: </b>' + array[i]['data']['sample']['Disease'] + '<br/>'
-                + '<b>Collector: </b>' + collector + '<br/>'
-                + '<b>Date collected: </b>' + array[i]['data']['sample']['Date collected']['date'] + '<br/>'
-                + '<b>Host: </b>' + array[i]['data']['sample']['Host'] + '<br/>'
-                + '<b>RNA-seq: </b>' + array[i]['data']['sample']['RNA-seq? (Selected/In progress/Completed/Failed)'] + '<br/>'
-                + '<b>Phenotype: </b>' + phenotype_html(array[i]['data']['UKCPVS ID'], array[i]['data']['phenotype']) + '<br/>'
-                + '<b>Genotype: </b>' + geno + '<br/>'
-                + '<b>Town: </b>' + town
-            ;
-        addPointer(la, lo, geno, popup_note);
+        var popup_note = '<b>Ploidy: </b>' + array[i]['data']['ploidy'] + '<br/>'
+            + '<b>Accession: </b>' + array[i]['data']['accession'] + '<br/>'
+            + '<b>Genus: </b>' + array[i]['data']['dwc:genus'] + '<br/>'
+            + '<b>Scientific Name: </b>' + array[i]['data']['dwc:scientificName'] + '<br/>'
+            + '<b>Year: </b>' + array[i]['data']['dwc:year'] + '<br/>'
+            + '<b>Vernacular Name: </b>' + array[i]['data']['dwc:vernacularName'] + '<br/>'
+            + '<b>Record Number: </b>' + array[i]['data']['dwc:recordNumber'] + '<br/>'
+            + '<b>Organisation: </b>' + name + '<br/>'
+            + '<b>Country: </b>' + country + '<br/>'
+            + '<b>Town: </b>' + town + '<br/>'
+            + '<a href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
+        ;
+        addPointer(la, lo, title, popup_note, type);
     }
     map.addLayer(markersGroup);
 
 
 }
 
-function phenotype_html_ukid(id, phenotype) {
-    if (id != undefined) {
-        if (phenotype != undefined) {
-            return '<u onclick="phenotype_colorbox(\'' + id + '\');" style="cursor: pointer;">' + id + '</u>';
-        }
-        else {
-            return id;
-        }
-    }
-    else {
-        return "Unknown";
-    }
-}
-
-function phenotype_html(id, phenotype) {
-    if (id != undefined) {
-        if (phenotype != undefined) {
-            return '<u onclick="phenotype_colorbox(\'' + id + '\');" style="cursor: pointer;">' + id + '</u>';
-        }
-        else {
-            return "";
-        }
-    }
-    else {
-        return "";
-    }
-}
-
-function phenotype_colorbox(id) {
-    var phynotype_data = phenotype(id);
-    jQuery.colorbox({width: "80%", html: phynotype_data});
-}
-
-function phenotype(id) {
-    var phynotype_data = "";
-    for (i = 0; i < filtered_data.length; i++) {
-        if (id == filtered_data[i]['data']['UKCPVS ID']) {
-            phynotype_data = '<div style="margin:20px;">'
-                + '<table id="' + id + '">'
-                + '<thead><tr><th></th><th></th></tr></thead>'
-                + '<tbody>'
-                + '<tr><td>Batch: </td><td>' + filtered_data[i]['data']['phenotype']['Batch'] + '</td></tr>'
-                + '<tr><td>No of isols tested: </td><td>' + filtered_data[i]['data']['phenotype']['No of isols tested'] + '</td></tr>'
-                + '<tr><td>Isolate: </td><td>' + filtered_data[i]['data']['phenotype']['Isolate'] + '</td></tr>'
-                + '<tr><td>Host: </td><td>' + filtered_data[i]['data']['phenotype']['Host'] + '</td></tr>'
-                + '<tr><td>Chinese 166 Gene:1: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Chinese 166']) + '</tr>'
-                + '<tr><td>Kalyansona Gene:2: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Kalyansona']) + '</tr>'
-                + '<tr><td>Vilmorin 23 Gene:3a+: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Vilmorin 23']) + '</tr>'
-                + '<tr><td>Nord Desprez Gene:3a+: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Nord Desprez']) + '</tr>'
-                + '<tr><td>Hybrid 46 Gene:(3b)4b: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Hybrid 46']) + '</tr>'
-                + '<tr><td>Heines Kolben Gene:2,6: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Heines Kolben']) + '</tr>'
-                + '<tr><td>Heines Peko Gene:2,6: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Heines Peko']) + '</tr>'
-                + '<tr><td>Lee Gene:7: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Lee']) + '</tr>'
-                + '<tr><td>Av x Yr7 NIL Gene:7: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Av x Yr7 NIL']) + '</tr>'
-                + '<tr><td>Compair Gene:8: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Compair']) + '</tr>'
-                + '<tr><td>Kavkaz x 4 Fed Gene:9: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Kavkaz x 4 Fed']) + '</tr>'
-                + '<tr><td>Clement Gene:9: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Clement']) + '</tr>'
-                + '<tr><td>AVS x Yr 15 Gene:15: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['AVS x Yr 15']) + '</tr>'
-                + '<tr><td>VPM 1 Gene:17: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['VPM 1']) + '</tr>'
-                + '<tr><td>Rendezvous Gene:17: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Rendezvous']) + '</tr>'
-                + '<tr><td>Av x Yr17 Gene:17: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Av x Yr17']) + '</tr>'
-                + '<tr><td>Carstens V Gene:32: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Carstens V']) + '</tr>'
-                + '<tr><td>Talon Gene:32: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Talon']) + '</tr>'
-                + '<tr><td>Av x Yr32 Gene:32: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Av x Yr32']) + '</tr>'
-                + '<tr><td>Spaldings Prolific Gene:sp: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Spaldings Prolific']) + '</tr>'
-                + '<tr><td>Robigus Gene:Rob\': </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Robigus']) + '</tr>'
-                + '<tr><td>Solstice Gene:\'Sol\': </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Solstice']) + '</tr>'
-                + '<tr><td>Timber Gene:\'Tim\': </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Timber']) + '</tr>'
-                + '<tr><td>Warrior Gene:War\': </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Warrior']) + '</tr>'
-                + '<tr><td>KWS-Sterling Gene:Ste\': </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['KWS-Sterling']) + '</tr>'
-                + '<tr><td>Cadenza Gene:6 7: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Cadenza']) + '</tr>'
-                + '<tr><td>Claire Gene:Claire: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Claire']) + '</tr>'
-                + '<tr><td>Crusoe Gene:Crusoe: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Crusoe']) + '</tr>'
-                + '<tr><td>Ambition Gene:Amb\': </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Ambition']) + '</tr>'
-                + '<tr><td>Heines VII Gene:Yr2 Yr25+: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Heines VII']) + '</tr>'
-                + '<tr><td>Suwon Omar Gene:Yr(Su): </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Suwon Omar']) + '</tr>'
-                + '<tr><td>Avocet Yr5 Gene:Yr5: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Avocet Yr5']) + '</tr>'
-                + '<tr><td>Avocet Yr6 Gene:Yr6: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Avocet Yr6']) + '</tr>'
-                + '<tr><td>Moro Gene:Yr10: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Moro']) + '</tr>'
-                + '<tr><td>Avocet Yr24 Gene:Yr24: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Avocet Yr24']) + '</tr>'
-                + '<tr><td>Opata Gene:Yr27+: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Opata']) + '</tr>'
-                + '<tr><td>Strubes Dickkopf Gene:YrSd Yr25: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Strubes Dickkopf']) + '</tr>'
-                + '<tr><td>Avocet Yr27 Gene:Yr27: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Avocet Yr27']) + '</tr>'
-                + '<tr><td>Apache Gene:7 17: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Apache']) + '</tr>'
-                + '<tr><td>Vuka: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Vuka']) + '</tr>'
-                + '<tr><td>Grenado: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Grenado']) + '</tr>'
-                + '<tr><td>Benetto: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Benetto']) + '</tr>'
-                + '<tr><td>Tradiro: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Tradiro']) + '</tr>'
-                + '<tr><td>Tribeca: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Tribeca']) + '</tr>'
-                + '<tr><td>Tulus: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Tulus']) + '</tr>'
-                + '<tr><td>Dublet: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Dublet']) + '</tr>'
-                + '<tr><td>KWS Fido: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['KWS Fido']) + '</tr>'
-                + '<tr><td>Brigadier: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Brigadier']) + '</tr>'
-                + '<tr><td>Stigg: </td>' + divbgcolor(filtered_data[i]['data']['phenotype']['Stigg']) + '</tr>'
-                + '</tbody>'
-                + '</table>'
-                + '</div>';
-
-        }
-    }
-    return phynotype_data;
-}
-
-
-function divbgcolor(value) {
-    if (parseFloat(value) < 1) {
-        return "<td class='pheno_1 in_box'>" + value + "</td>";
-    }
-    if (parseFloat(value) >= 1 && parseFloat(value) < 2) {
-        return "<td class='pheno_12 in_box'>" + value + "</td>";
-    }
-    if (parseFloat(value) >= 2 && parseFloat(value) < 3) {
-        return "<td class='pheno_23 in_box'>" + value + "</td>";
-    }
-    if (parseFloat(value) >= 3) {
-        return "<td class='pheno_3 in_box'>" + value + "</td>";
-    }
-    else {
-        return "<td >" + value + "</td>";
-    }
-}
-
-function addRandomPointer() {
-    var la = randomNumberFromInterval(45, 60);
-    var lo = randomNumberFromInterval(0, 25);
-
-    addPointer(la, lo, "Hey, random! la: " + la + " lo: " + lo);
-}
-
-function addPointer(la, lo, geno, note, type) {
-    var myClass = 'marker category-' + geno;
-    var myIcon = L.divIcon({
-        className: myClass,
-        iconSize: null
-    });
+function addPointer(la, lo, title, note, type) {
+    // var myClass = 'marker category-' + geno;
+    // var myIcon = L.divIcon({
+    //     className: myClass,
+    //     iconSize: null
+    // });
     var markerLayer;
     if (type == 'breeder') {
-        markerLayer = L.marker([la, lo], {title: geno, icon: greenIcon}).bindPopup(note);
+        markerLayer = L.marker([la, lo], {title: title, icon: greenIcon}).bindPopup(note);
     }
     else {
-        markerLayer = L.marker([la, lo], {title: geno}).bindPopup(note);
+        markerLayer = L.marker([la, lo], {title: title}).bindPopup(note);
     }
     //markers.push(markerLayer);
     markersGroup.addLayer(markerLayer);
@@ -400,7 +271,7 @@ function defineClusterIcon(cluster) {
                 return d.options.title;
             })
             .entries(children, d3.map),
-    //bake some svg markup
+        //bake some svg markup
         html = bakeThePie({
             data: data,
             valueFunc: function (d) {
@@ -420,7 +291,7 @@ function defineClusterIcon(cluster) {
 //                        return "path title";
 //                    }
         }),
-    //Create a new divIcon and assign the svg markup to the html property
+        //Create a new divIcon and assign the svg markup to the html property
         myIcon = new L.DivIcon({
             html: html,
             className: 'marker-cluster',
@@ -539,19 +410,19 @@ function renderLegend() {
 
 
 function checkFileBox(div_id) {
-    if (document.getElementById(div_id).checked){
+    if (document.getElementById(div_id).checked) {
         bam_list.push(div_id);
-        console.log("add:"+div_id);
+        console.log("add:" + div_id);
     } else {
-        bam_list.splice(bam_list.indexOf(div_id),1);
-        console.log("remove:"+div_id);
+        bam_list.splice(bam_list.indexOf(div_id), 1);
+        console.log("remove:" + div_id);
     }
 
 }
 
 var blueIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-blue.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-blue.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -559,8 +430,8 @@ var blueIcon = new L.Icon({
 });
 
 var redIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-red.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-red.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -568,8 +439,8 @@ var redIcon = new L.Icon({
 });
 
 var greenIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-green.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-green.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -577,8 +448,8 @@ var greenIcon = new L.Icon({
 });
 
 var orangeIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-orange.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-orange.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -586,8 +457,8 @@ var orangeIcon = new L.Icon({
 });
 
 var yellowIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-yellow.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-yellow.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -595,8 +466,8 @@ var yellowIcon = new L.Icon({
 });
 
 var violetIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-violet.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-violet.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -604,8 +475,8 @@ var violetIcon = new L.Icon({
 });
 
 var greyIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-grey.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-grey.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -613,8 +484,8 @@ var greyIcon = new L.Icon({
 });
 
 var blackIcon = new L.Icon({
-    iconUrl: 'img/marker-icon-2x-black.png',
-    shadowUrl: 'img/marker-shadow.png',
+    iconUrl: 'scripts/leaflet/image/marker-icon-2x-black.png',
+    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
