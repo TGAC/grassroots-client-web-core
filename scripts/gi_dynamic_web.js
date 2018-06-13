@@ -528,6 +528,7 @@ function submit_form() {
                 $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
             }  else if (selected_service_name == 'Germplasm Research Unit seeds service' ) {
                 $('#status').html('');
+                $('#form').html('');
                 $('#tableWrapper').html('<table id="resultTable"></table>');
                 // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
                 markersGroup = new L.MarkerClusterGroup({});

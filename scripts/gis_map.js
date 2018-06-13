@@ -154,6 +154,21 @@ function displayYRLocations_new(array, type) {
         var country = '';
         var town = '';
         var name = '';
+
+
+        var popup_note = '<b>Record Number: </b>' + array[i]['data']['dwc:recordNumber'] + '<br/>'
+            + '<b>Accession: </b>' + array[i]['data']['accession'] + '<br/>'
+            + '<b>Genus: </b>' + array[i]['data']['dwc:genus'] + '<br/>'
+            + '<b>Scientific Name: </b>' + array[i]['data']['dwc:scientificName'] + '<br/>'
+            + '<b>Year: </b>' + array[i]['data']['dwc:year'] + '<br/>'
+            + '<b>Vernacular Name: </b>' + array[i]['data']['dwc:vernacularName'] + '<br/>'
+            + '<b>Ploidy: </b>' + array[i]['data']['ploidy'] + '<br/>'
+            + '<b>Organisation: </b>' + name + '<br/>'
+            + '<b>Country: </b>' + country + '<br/>'
+            + '<b>Town: </b>' + town + '<br/>'
+            + '<a target="_blank" href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
+        ;
+
         if (type === 'donor') {
             la = array[i]['data']['DonorAddress']['location']['location']['latitude'];
             lo = array[i]['data']['DonorAddress']['location']['location']['longitude'];
@@ -170,10 +185,11 @@ function displayYRLocations_new(array, type) {
                     name = array[i]['data']['DonorAddress']['Address']['name'];
                 }
             }
+            popup_note = '<h5> Donor Information</h5>' + popup_note;
         } else if (type === 'breeder') {
             la = array[i]['data']['BreederAddress']['location']['location']['latitude'];
             lo = array[i]['data']['BreederAddress']['location']['location']['longitude'];
-            title = 'Donor Address';
+            title = 'Breeder Address';
 
             if (array[i]['data']['BreederAddress']['Address'] != undefined) {
                 if (array[i]['data']['BreederAddress']['Address']['addressCountry'] != undefined) {
@@ -186,20 +202,9 @@ function displayYRLocations_new(array, type) {
                     name = array[i]['data']['BreederAddress']['Address']['name'];
                 }
             }
+            popup_note = '<h5> Breeder Information</h5>' + popup_note;
 
         }
-        var popup_note = '<b>Ploidy: </b>' + array[i]['data']['ploidy'] + '<br/>'
-            + '<b>Accession: </b>' + array[i]['data']['accession'] + '<br/>'
-            + '<b>Genus: </b>' + array[i]['data']['dwc:genus'] + '<br/>'
-            + '<b>Scientific Name: </b>' + array[i]['data']['dwc:scientificName'] + '<br/>'
-            + '<b>Year: </b>' + array[i]['data']['dwc:year'] + '<br/>'
-            + '<b>Vernacular Name: </b>' + array[i]['data']['dwc:vernacularName'] + '<br/>'
-            + '<b>Record Number: </b>' + array[i]['data']['dwc:recordNumber'] + '<br/>'
-            + '<b>Organisation: </b>' + name + '<br/>'
-            + '<b>Country: </b>' + country + '<br/>'
-            + '<b>Town: </b>' + town + '<br/>'
-            + '<a target="_blank" href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
-        ;
         addPointer(la, lo, title, popup_note, type);
     }
     map.addLayer(markersGroup);
