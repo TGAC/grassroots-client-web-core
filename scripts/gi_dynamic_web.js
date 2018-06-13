@@ -522,9 +522,59 @@ function submit_form() {
                     checkResult(each_result);
                 }
 
-            } else if (selected_service_name == 'Germplasm Research Unit seeds service' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
+            } else if (selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
                 $('#status').html('');
                 $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+            }  else if (selected_service_name == 'Germplasm Research Unit seeds service' ) {
+                $('#status').html('');
+                $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+
+                var pie_view = false;
+                var yrtable;
+
+                var bam_list = [];
+
+                var datemin = 0;
+                var datemax = 0;
+
+                //    var markers = new Array();
+                var markersGroup = new L.MarkerClusterGroup({});
+                var map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+
+                //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                //        maxZoom: 18
+                //    }).addTo(map);
+                L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
+                    attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
+                    subdomains: '1234',
+                    base: 'base',
+                    type: 'maptile',
+                    scheme: 'pedestrian.day',
+                    app_id: '1yM5jhYmACdjFG39Q7yP',
+                    app_code: 'ZAuXzelqWvL92h_jjEY_pA',
+                    mapID: 'newest',
+                    maxZoom: 20,
+                    language: 'eng',
+                    format: 'png8',
+                    size: '256'
+                }).addTo(map);;
+
+                L.control.zoom({position: 'topright'}).addTo(map);
+
+                startGISPage(json['results'][0]['results']);
+
+                mapFitBounds([[49.781264, -7.910156], [61.100789, -0.571289]]);
+                jQuery("#slider").dateRangeSlider({
+                    bounds: {
+                        min: new Date(2013, 0, 1),
+                        max: new Date()
+                    },
+                    defaultValues: {
+                        min: new Date(2013, 0, 1),
+                        max: new Date()
+                    }
+                });
             } else {
                 $('#status').html('');
                 $('#result').html("Done");
@@ -909,8 +959,8 @@ function display_blast_result_jsonout(json) {
     for (var i = 0; i < json['results'].length; i++) {
         var blast_result_string = json['results'][i]['results'][0]['data'];
         var uuid = json['job_uuid'];
-        var description = json['results'][i]['description'];
-        var db = json['name'];
+        var description = json['results'][i]['so:description'];
+        var db = json['results'][i]['so:name'];
 
         blast_result_string = blast_result_string.replace(/\\n/g, "\\n")
             .replace(/\\'/g, "\\'")

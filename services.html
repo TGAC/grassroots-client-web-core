@@ -36,6 +36,16 @@
     <script type="text/javascript" src="scripts/gi_dynamic_web.js"></script>
     <script type="text/javascript" src="scripts/wis.js"></script>
     <script type="text/javascript" src="scripts/FileSaver.min.js"></script>
+    <script type="text/javascript" src="scripts/gis_map.js"></script>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="scripts/leaflet/leaflet.css" />
+    <script src="scripts/leaflet/leaflet.js"></script>
+
+    <!-- Leaflet markercluster -->
+    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.css" />
+    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.Default.css" />
+    <script src="scripts/leaflet.markercluster/leaflet.markercluster.js"></script>
     <!-- polymarker -->
     <script type="text/javascript" src="scripts/marker.js"></script>
     <script type="text/javascript" src="scripts/biojs_io_fasta.min.js"></script>
@@ -124,9 +134,16 @@
 
         <div id="result"></div>
 
+        <div id="map"></div>
+
+        <div id="tableWrapper" style="margin-top:-45px;margin-left:-10px;">
+            <table id="resultTable"></table>
+        </div>
+
+
         <script type="text/javascript">
             // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
-            var server_url = "/grassroots-test/2.1/controller";
+            var server_url = "/grassroots-test/5/controller";
             var services = '{"operations": {"operation":"get_all_services"}}';
             var selected_service_name;
             var response = null;
