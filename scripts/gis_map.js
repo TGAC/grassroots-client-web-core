@@ -150,7 +150,6 @@ function displayYRLocations_new(array, type) {
     for (i = 0; i < array.length; i++) {
         var la = '';
         var lo = '';
-        var title = '';
         var country = '';
         var town = '';
         var name = '';
@@ -172,7 +171,6 @@ function displayYRLocations_new(array, type) {
         if (type === 'donor') {
             la = array[i]['data']['DonorAddress']['location']['location']['latitude'];
             lo = array[i]['data']['DonorAddress']['location']['location']['longitude'];
-            title = 'Donor Address';
 
             if (array[i]['data']['DonorAddress']['Address'] != undefined) {
                 if (array[i]['data']['DonorAddress']['Address']['addressCountry'] != undefined) {
@@ -189,7 +187,6 @@ function displayYRLocations_new(array, type) {
         } else if (type === 'breeder') {
             la = array[i]['data']['BreederAddress']['location']['location']['latitude'];
             lo = array[i]['data']['BreederAddress']['location']['location']['longitude'];
-            title = 'Breeder Address';
 
             if (array[i]['data']['BreederAddress']['Address'] != undefined) {
                 if (array[i]['data']['BreederAddress']['Address']['addressCountry'] != undefined) {
@@ -205,26 +202,95 @@ function displayYRLocations_new(array, type) {
             popup_note = '<h5> Breeder Information</h5>' + popup_note;
 
         }
-        addPointer(la, lo, title, popup_note, type);
+        addPointer(la, lo, popup_note, type);
     }
     map.addLayer(markersGroup);
 
 
 }
 
-function addPointer(la, lo, title, note, type) {
-    // var myClass = 'marker category-' + geno;
-    // var myIcon = L.divIcon({
-    //     className: myClass,
-    //     iconSize: null
-    // });
+
+
+function addPointer(la, lo, note, type) {
+
+    var blueIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-blue.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var redIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-red.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var greenIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-green.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var orangeIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-orange.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var yellowIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-yellow.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var violetIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-violet.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var greyIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-grey.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var blackIcon = new L.Icon({
+        iconUrl: 'scripts/leaflet/images/marker-icon-2x-black.png',
+        shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
     var markerLayer;
-    // if (type === 'breeder') {
-    //     markerLayer = L.marker([la, lo], {title: title, icon: greenIcon}).bindPopup(note);
-    // }
-    // else {
-    markerLayer = L.marker([la, lo], {title: title}).bindPopup(note);
-    // }
+    if (type === 'breeder') {
+        markerLayer = L.marker([la, lo], {icon: greenIcon}).bindPopup(note);
+    }
+    else {
+        markerLayer = L.marker([la, lo]).bindPopup(note);
+    }
     // markers.push(markerLayer);
     markersGroup.addLayer(markerLayer);
 
@@ -318,74 +384,3 @@ function checkFileBox(div_id) {
 
 }
 
-var blueIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-blue.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var redIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-red.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var greenIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-green.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var orangeIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-orange.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var yellowIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-yellow.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var violetIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-violet.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var greyIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-grey.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-var blackIcon = new L.Icon({
-    iconUrl: 'scripts/leaflet/image/marker-icon-2x-black.png',
-    shadowUrl: 'scripts/leaflet/image/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
