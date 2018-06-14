@@ -91,21 +91,55 @@ function produceTable(data) {
     });
 
     jQuery('#resultTable tbody').on('click', 'td', function () {
-        var visIdx = yrtable.cell(this).index();
-        console.log(visIdx);
-        var columnIdx = yrtable.column.index(visIdx );
-        var data = yrtable.row(this).data();
-        console.log(columnIdx);
-        // var la = data['data']['sample']['location']['location']['latitude'];
-        // var lo = data['data']['sample']['location']['location']['longitude'];
-        // map.setView([la, lo], 16, {animate: true});
+        var cellIdx = yrtable.cell(this).index();
+        console.log(cellIdx);
+        var columnIdx = cellIdx['column'];
+        var rowIdx = cellIdx['row'];
+        var json = yrtable.row(rowIdx).data();
+        console.log(json);
+        if (columnIdx == 7){
+            if (json['data']['DonorAddress'] != undefined) {
+                if (json['data']['DonorAddress']['location']['location'] != undefined) {
+                    var la = json['data']['DonorAddress']['location']['location']['latitude'];
+                    var lo = json['data']['DonorAddress']['location']['location']['longitude'];
+                    map.setView([la, lo], 16, {animate: true});
+                }
+            }
+
+
+        } else if (columnIdx == 8){
+            if (json['data']['BreederAddress'] != undefined) {
+                if (json['data']['BreederAddress']['location']['location'] != undefined) {
+                    var la = json['data']['BreederAddress']['location']['location']['latitude'];
+                    var lo = json['data']['BreederAddress']['location']['location']['longitude'];
+                    map.setView([la, lo], 16, {animate: true});
+                }
+            }
+
+        }
+
     });
-    //
-    // jQuery('#resultTable').on('search.dt', function () {
-    //     removePointers();
-    //     var filteredData = yrtable.rows({filter: 'applied'}).data().toArray();
-    //     displayYRLocations_new(filteredData);
-    // });
+
+    jQuery('#resultTable').on('search.dt', function () {
+        removePointers();
+        var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
+        var search_data_breeder = [];
+        var search_data_donor = [];
+        for (i = 0; i < searchData.length; i++) {
+            if (searchData[i]['data']['BreederAddress'] != undefined) {
+                if (searchData[i]['data']['BreederAddress']['location']['location'] != undefined) {
+                    search_data_breeder.push(searchData[i]);
+                }
+            }
+            if (searchData[i]['data']['DonorAddress'] != undefined) {
+                if (searchData[i]['data']['DonorAddress']['location']['location'] != undefined) {
+                    search_data_donor.push(searchData[i]);
+                }
+            }
+        }
+        displayYRLocations_new(search_data_breeder, 'Breeder');
+        displayYRLocations_new(search_data_donor, 'Donor');
+    });
 
 
     // jQuery("#slider").bind("valuesChanging", function (e, data) {
@@ -119,7 +153,18 @@ function produceTable(data) {
     //     yrtable.column(13).visible(false);
     // }
 }
-
+function removePointers() {
+    map.removeLayer(markersGroup);
+    // if (pie_view) {
+    //     markersGroup = new L.MarkerClusterGroup({
+    //         maxClusterRadius: 2 * 30,
+    //         iconCreateFunction: defineClusterIcon
+    //     });
+    // }
+    // else {
+        markersGroup = new L.MarkerClusterGroup();
+    // }
+}
 //
 // jQuery.fn.dataTableExt.afnFiltering.push(
 //     function (oSettings, aData, iDataIndex) {
