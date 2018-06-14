@@ -16,8 +16,8 @@ function startGIS(jsonArray) {
         }
     }
     produceTable(jsonArray);
-    displayYRLocations_new(filtered_data_breeder, 'breeder');
-    displayYRLocations_new(filtered_data_donor, 'donor');
+    displayYRLocations_new(filtered_data_breeder, 'Breeder');
+    displayYRLocations_new(filtered_data_donor, 'Donor');
     // renderLegend();
 }
 
@@ -64,6 +64,18 @@ function produceTable(data) {
             },
 
             {
+                title: "View Record",
+                "render": function (data, type, full, meta) {
+                    if (full['data']['order_link'] !== undefined) {
+                        return '<a target="_blank" href="https://www.seedstor.ac.uk/search-infoaccession.php?idPlant=' + full['data']['dwc:recordNumber'] + '">View</a>';
+                    }
+                    else {
+                        return '';
+                    }
+                }
+            },
+
+            {
                 title: "Order",
                 "render": function (data, type, full, meta) {
                     if (full['data']['order_link'] !== undefined) {
@@ -78,12 +90,16 @@ function produceTable(data) {
 
     });
 
-    // jQuery('#resultTable tbody').on('click', 'tr', function () {
-    //     var data = yrtable.row(this).data();
-    //     var la = data['data']['sample']['location']['location']['latitude'];
-    //     var lo = data['data']['sample']['location']['location']['longitude'];
-    //     map.setView([la, lo], 16, {animate: true});
-    // });
+    jQuery('#resultTable tbody').on('click', 'td', function () {
+        var visIdx = yrtable.cell(this).index();
+        console.log(visIdx);
+        var columnIdx = yrtable.column.index(visIdx );
+        var data = yrtable.row(this).data();
+        console.log(columnIdx);
+        // var la = data['data']['sample']['location']['location']['latitude'];
+        // var lo = data['data']['sample']['location']['location']['longitude'];
+        // map.setView([la, lo], 16, {animate: true});
+    });
     //
     // jQuery('#resultTable').on('search.dt', function () {
     //     removePointers();
@@ -155,20 +171,8 @@ function displayYRLocations_new(array, type) {
         var name = '';
 
 
-        var popup_note = '<b>Record Number: </b>' + array[i]['data']['dwc:recordNumber'] + '<br/>'
-            + '<b>Accession: </b>' + array[i]['data']['accession'] + '<br/>'
-            + '<b>Genus: </b>' + array[i]['data']['dwc:genus'] + '<br/>'
-            + '<b>Scientific Name: </b>' + array[i]['data']['dwc:scientificName'] + '<br/>'
-            + '<b>Year: </b>' + array[i]['data']['dwc:year'] + '<br/>'
-            + '<b>Vernacular Name: </b>' + array[i]['data']['dwc:vernacularName'] + '<br/>'
-            + '<b>Ploidy: </b>' + array[i]['data']['ploidy'] + '<br/>'
-            + '<b>Organisation: </b>' + name + '<br/>'
-            + '<b>Country: </b>' + country + '<br/>'
-            + '<b>Town: </b>' + town + '<br/>'
-            + '<a target="_blank" href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
-        ;
 
-        if (type === 'donor') {
+        if (type === 'Donor') {
             la = array[i]['data']['DonorAddress']['location']['location']['latitude'];
             lo = array[i]['data']['DonorAddress']['location']['location']['longitude'];
 
@@ -183,8 +187,7 @@ function displayYRLocations_new(array, type) {
                     name = array[i]['data']['DonorAddress']['Address']['name'];
                 }
             }
-            popup_note = '<h5> Donor Information</h5>' + popup_note;
-        } else if (type === 'breeder') {
+        } else if (type === 'Breeder') {
             la = array[i]['data']['BreederAddress']['location']['location']['latitude'];
             lo = array[i]['data']['BreederAddress']['location']['location']['longitude'];
 
@@ -202,7 +205,21 @@ function displayYRLocations_new(array, type) {
             popup_note = '<h5> Breeder Information</h5>' + popup_note;
 
         }
-        addPointer(la, lo, popup_note, type);
+
+        var popup_note = '<b>Record Number: </b>' + array[i]['data']['dwc:recordNumber'] + '<br/>'
+            + '<b>Accession: </b>' + array[i]['data']['accession'] + '<br/>'
+            + '<b>Genus: </b>' + array[i]['data']['dwc:genus'] + '<br/>'
+            + '<b>Scientific Name: </b>' + array[i]['data']['dwc:scientificName'] + '<br/>'
+            + '<b>Year: </b>' + array[i]['data']['dwc:year'] + '<br/>'
+            + '<b>Vernacular Name: </b>' + array[i]['data']['dwc:vernacularName'] + '<br/>'
+            + '<b>Ploidy: </b>' + array[i]['data']['ploidy'] + '<br/>'
+            + '<b>Organisation: </b>' + name + '<br/>'
+            + '<b>Country: </b>' + country + '<br/>'
+            + '<b>Town: </b>' + town + '<br/>'
+            + '<a target="_blank" href="https://www.seedstor.ac.uk/search-infoaccession.php?idPlant=' + array[i]['data']['dwc:recordNumber'] + '">View record </a>' + ' | '
+            + '<a target="_blank" href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
+        ;
+        addPointer(la, lo, '<h5> ' + type+ ' Information</h5>' + popup_note, type);
     }
     map.addLayer(markersGroup);
 
@@ -285,7 +302,7 @@ function addPointer(la, lo, note, type) {
         shadowSize: [41, 41]
     });
     var markerLayer;
-    if (type === 'breeder') {
+    if (type === 'Breeder') {
         markerLayer = L.marker([la, lo], {icon: greenIcon}).bindPopup(note);
     }
     else {
