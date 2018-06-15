@@ -38,6 +38,8 @@
     <script type="text/javascript" src="scripts/FileSaver.min.js"></script>
     <script type="text/javascript" src="scripts/gis_map.js"></script>
 
+
+    <script src="scripts/d3/d3.min.js" type="text/javascript"></script>
     <!-- Leaflet -->
     <link rel="stylesheet" href="scripts/leaflet/leaflet.css" />
     <script src="scripts/leaflet/leaflet.js"></script>
@@ -140,7 +142,7 @@
             <table id="resultTable"></table>
         </div>
 
-
+        <div id="legend" style="display: none"></div>
         <script type="text/javascript">
             // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
             var server_url = "/grassroots-test/5/controller";

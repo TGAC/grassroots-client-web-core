@@ -191,3 +191,45 @@ table.dataTable span.column_highlight {
     /*padding:0 10px;*/
     /*border-bottom:none;*/
 /*}*/
+
+#legend {
+    position: absolute;
+    top: 275px;
+    /*left: 1130px;*/
+    /*right: 10px;*/
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-size: 1em;
+    font-family: sans-serif;
+    width: 165px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.legendheading {
+    position: relative;
+    height: 25px;
+    margin-bottom: 5px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.legenditem {
+    padding: 2px;
+    margin-bottom: 2px;
+}
+
+
+.lengend-1 {
+    fill: #34b42e;
+    stroke: #444;
+    background: #34b42e;
+    border-color: #444;
+}
+
+.lengend-2 {
+    fill: #398ece;
+    stroke: #444;
+    background: #398ece;
+    border-color: #444;
+}

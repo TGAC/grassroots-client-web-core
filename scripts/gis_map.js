@@ -18,7 +18,7 @@ function startGIS(jsonArray) {
     produceTable(jsonArray);
     displayYRLocations_new(filtered_data_breeder, 'Breeder');
     displayYRLocations_new(filtered_data_donor, 'Donor');
-    // renderLegend();
+    renderLegend();
 }
 
 function produceTable(data) {
@@ -92,11 +92,9 @@ function produceTable(data) {
 
     jQuery('#resultTable tbody').on('click', 'td', function () {
         var cellIdx = yrtable.cell(this).index();
-        console.log(cellIdx);
         var columnIdx = cellIdx['column'];
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        console.log(json);
         if (columnIdx == 7){
             if (json['data']['DonorAddress'] != undefined) {
                 if (json['data']['DonorAddress']['location']['location'] != undefined) {
@@ -188,24 +186,6 @@ function ukcpvs_only() {
     column.search('^((?!Unknown).)*$', true, false).draw();
 }
 
-function ukcpvs_and_all() {
-    var column = yrtable.column(2);
-    column.search('').draw();
-}
-
-function genotype_view() {
-    pie_view = true;
-    renderLegend();
-    var column = yrtable.column(8);
-    column.search('^\\d|\\d-\\d|Mixed$', true, false).draw();
-}
-
-function normal_view() {
-    pie_view = false;
-    renderLegend();
-    var column = yrtable.column(8);
-    column.search('').draw();
-}
 
 function displayYRLocations_new(array, type) {
     for (i = 0; i < array.length; i++) {
@@ -391,23 +371,13 @@ function serializeXmlNode(xmlNode) {
 }
 
 function renderLegend() {
+    jQuery('#legend').show();
     jQuery('#legend').html('');
-    if (pie_view) {
+    // if (pie_view) {
         var metajson = {
             "lookup": {
-                "1": "Genetic group 1",
-                "2": "Genetic group 2",
-                "3": "Genetic group 3",
-                "4": "Genetic group 4",
-                "5": "Genetic group 5",
-                "6": "Genetic group 6",
-                "7": "Genetic group 7",
-                //"1-4": "Genetic group 1-4",
-                "1-5": "Genetic group 1-5",
-                "4-6": "Genetic group 4-6",
-                "4-1": "Genetic group 4-1",
-                //"5-1": "Genetic group 5-1",
-                "Mixed": "Genetic group mixed"
+                "1": "Breeder",
+                "2": "Donor"
             }
         };
 
@@ -416,7 +386,7 @@ function renderLegend() {
 
         var heading = legenddiv.append('div')
             .classed('legendheading', true)
-            .text("Genotype");
+            .text("Marker types");
 
         var legenditems = legenddiv.selectAll('.legenditem')
             .data(data);
@@ -425,13 +395,13 @@ function renderLegend() {
             .enter()
             .append('div')
             .attr('class', function (d) {
-                return 'category-' + d.key;
+                return 'lengend-' + d.key;
             })
             .classed({'legenditem': true})
             .text(function (d) {
                 return d.value;
             });
-    }
+    // }
 }
 
 
