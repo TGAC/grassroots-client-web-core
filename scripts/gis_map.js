@@ -38,7 +38,7 @@ function produceTable(data) {
                     var donorInfo = '';
                     if (full['data']['DonorAddress'] !== undefined && full['data']['DonorAddress'] !== "undefined") {
                         if (full['data']['DonorAddress']['Address'] !== undefined && full['data']['DonorAddress']['Address'] !== "undefined") {
-                            donorInfo = '<span class="newstyle_link" ' + full['data']['DonorAddress']['Address']['name'] + '<br/>'
+                            donorInfo = '<span class=\"newstyle_link\"> ' + full['data']['DonorAddress']['Address']['name'] + '<br/>'
                                 + full['data']['DonorAddress']['Address']['addressLocality'] + '<br/>'
                                 + full['data']['DonorAddress']['Address']['addressCountry'] + '<br/>'
                                 + full['data']['DonorAddress']['Address']['postalCode'] + '</span>';
@@ -53,7 +53,7 @@ function produceTable(data) {
                     var breederInfo = '';
                     if (full['data']['BreederAddress'] !== undefined && full['data']['BreederAddress'] !== "undefined") {
                         if (full['data']['DonorAddress']['Address'] !== undefined && full['data']['DonorAddress']['Address'] !== "undefined") {
-                            breederInfo = '<span class="newstyle_link" ' + full['data']['BreederAddress']['Address']['name'] + '<br/>'
+                            breederInfo = '<span class=\"newstyle_link\"> ' + full['data']['BreederAddress']['Address']['name'] + '<br/>'
                                 + full['data']['BreederAddress']['Address']['addressLocality'] + '<br/>'
                                 + full['data']['BreederAddress']['Address']['addressCountry'] + '<br/>'
                                 + full['data']['BreederAddress']['Address']['postalCode'] + '</span>';
