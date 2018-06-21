@@ -556,8 +556,8 @@ function submit_form() {
                 L.control.zoom({position: 'topright'}).addTo(map);
 
                 startGIS(json['results'][0]['results']);
-
-                mapFitBounds([[49.781264, -7.910156], [61.100789, -0.571289]]);
+                map.fitWorld({reset: true}).zoomIn();
+                // mapFitBounds([[49.781264, -7.910156], [61.100789, -0.571289]]);
                 // jQuery("#slider").dateRangeSlider({
                 //     bounds: {
                 //         min: new Date(2013, 0, 1),
