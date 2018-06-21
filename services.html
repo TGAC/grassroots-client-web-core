@@ -224,6 +224,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $(this).scrollTop(0);
         if (getUrlParameter('service') != null) {
             var modalid = getUrlParameter('service');
              populateService(modalid);

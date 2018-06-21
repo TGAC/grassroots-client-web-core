@@ -115,6 +115,7 @@ function produceTable(data) {
             }
 
         }
+        $(window).scrollTop($('#map').offset().top -90);
 
     });
 
