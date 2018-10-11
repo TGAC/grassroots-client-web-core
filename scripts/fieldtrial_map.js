@@ -1,4 +1,6 @@
-function startGIS(jsonArray) {
+
+
+function startFieldtrialGIS(jsonArray) {
 
     var filtered_data_donor = [];
     var filtered_data_breeder = [];
@@ -22,7 +24,7 @@ function startGIS(jsonArray) {
     renderLegend();
 }
 
-function produceTable(data) {
+function produceFieldtrialTable(data) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [

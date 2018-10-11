@@ -506,7 +506,7 @@ function submit_form() {
                 for (var i = 0; i < json['results'].length; i++) {
                     var each_result = json['results'][i];
                     var uuid = each_result['job_uuid'];
-                    var dbname = each_result['name'];
+                    var dbname = each_result['so:name'];
                     $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
 
                     checkResult(each_result);
@@ -517,7 +517,7 @@ function submit_form() {
                 for (var i = 0; i < json['results'].length; i++) {
                     var each_result = json['results'][i];
                     var uuid = each_result['job_uuid'];
-                    var dbname = each_result['name'];
+                    var dbname = each_result['so:name'];
                     $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
 
                     checkResult(each_result);
