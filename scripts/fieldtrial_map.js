@@ -24,10 +24,52 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
-            {data: fieldTrialName, title: "Field Trial", "sDefaultContent": ""},
-            {data: team, title: "Team", "sDefaultContent": ""},
-            {data: "data.sowing_date", title: "Sowing Date", "sDefaultContent": ""},
-            {data: "data.harvest_date", title: "Harvest Date", "sDefaultContent": ""},
+            {
+                title: "Field Trial",
+                "render": function (data, type, full, meta) {
+                        return fieldTrialName;
+                }
+            },
+            {
+                title: "Team",
+                "render": function (data, type, full, meta) {
+                    return team;
+                }
+            },
+            {
+                title: "Sowing Date",
+                "render": function (data, type, full, meta) {
+                    if (full['sowing_date'] != undefined ) {
+                        return full['sowing_date'];
+                    }
+                    else {
+                        return '';
+                    }
+                }
+            },
+            {
+                title: "Harvest Date",
+                "render": function (data, type, full, meta) {
+                    if (full['harvest_date'] != undefined ) {
+                        return full['harvest_date'];
+                    }
+                    else {
+                        return '';
+                    }
+                }
+            },
+            {
+                title: "Plots",
+                "render": function (data, type, full, meta) {
+                    if (full['_id'] != undefined ) {
+                        var id = full['_id']['$oid'];
+                        return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">Plot</u>';
+                    }
+                    else {
+                        return '';
+                    }
+                }
+            },
             {
                 title: "Address",
                 "render": function (data, type, full, meta) {
@@ -154,7 +196,7 @@ function displayFTLocations(array, fieldTrialName, team) {
             + '<b>Team: </b>' + team + '<br/>'
             + '<b>Sowing Date: </b>' + array[i]['sowing_date'] + '<br/>'
             + '<b>Harvest Date: </b>' + array[i]['harvest_date'] + '<br/>'
-            + '<u onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">Plots</u>'
+            + '<u class=\"newstyle_link\" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">Plots</u>'
         ;
         addPointer(la, lo, popup_note);
     }
