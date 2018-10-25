@@ -5,42 +5,40 @@ function startFieldtrialGIS(jsonArray) {
     var fieldTrialName = '';
     var team = '';
     for (i = 0; i < jsonArray.length; i++) {
-        for (j = 0; j < jsonArray[i]['experimental_areas'].length; j++)
-            if (jsonArray[i]['experimental_areas'][j]['address'] != undefined) {
-                fieldTrialName = jsonArray[i]['so:name'];
-                team = jsonArray[i]['team'];
-                if (jsonArray[i]['data']['BreederAddress']['location']['centre'] != undefined) {
-                    filtered_data.push(jsonArray[i]['experimental_areas'][j]);
+        for (j = 0; j < jsonArray[i]['data']['experimental_areas'].length; j++)
+            if (jsonArray[i]['data']['experimental_areas'][j]['address'] != undefined) {
+                fieldTrialName = jsonArray[i]['data']['so:name'];
+                team = jsonArray[i]['data']['team'];
+                if (jsonArray[i]['data']['experimental_areas'][j]['address']['address']['location']['centre'] != undefined) {
+                    filtered_data.push(jsonArray[i]['data']['experimental_areas'][j]);
                 }
             }
     }
     // removeTable();
     produceFieldtrialTable(filtered_data, fieldTrialName, team);
     displayFTLocations(filtered_data, fieldTrialName, team);
-    renderLegend();
+    // renderLegend();
 }
 
 function produceFieldtrialTable(data, fieldTrialName, team) {
+    console.log(data);
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
             {data: fieldTrialName, title: "Field Trial", "sDefaultContent": ""},
             {data: team, title: "Team", "sDefaultContent": ""},
-            {data: "data.ploidy", title: "Ploidy", "sDefaultContent": ""},
-            {data: "data.dwc:scientificName", title: "Scientific Name", "sDefaultContent": ""},
-            {data: "data.dwc:genus", title: "Genus", "sDefaultContent": ""},
-            {data: "data.dwc:year", title: "Year", "sDefaultContent": ""},
-            {data: "data.dwc:vernacularName", title: "Vernacular Name", "sDefaultContent": ""},
+            {data: "data.sowing_date", title: "Sowing Date", "sDefaultContent": ""},
+            {data: "data.harvest_date", title: "Harvest Date", "sDefaultContent": ""},
             {
                 title: "Address",
                 "render": function (data, type, full, meta) {
                     var addressInfo = '';
-                    if (full['address'] !== undefined && full['data']['address'] !== "undefined") {
-                        if (full['address']['Address'] !== undefined && full['address']['Address'] !== "undefined") {
-                            donorInfo = '<span class=\"newstyle_link\"> ' + full['data']['DonorAddress']['Address']['name'] + '<br/>'
-                                + full['address']['Address']['addressLocality'] + '<br/>'
-                                + full['address']['Address']['addressCountry'] + '<br/>'
-                                + full['address']['Address']['postalCode'] + '</span>';
+                    if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
+                        if (full['address']['address']['Address'] !== undefined && full['address']['address']['Address'] !== "undefined") {
+                            addressInfo = '<span class=\"newstyle_link\"> ' + full['address']['address']['Address']['name'] + '<br/>'
+                                + full['address']['address']['Address']['addressLocality'] + '<br/>'
+                                + full['address']['address']['Address']['addressCountry'] + '<br/>'
+                                + full['address']['address']['Address']['postalCode'] + '</span>';
                         }
                     }
                     return addressInfo;
@@ -55,9 +53,9 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
             if (json['address'] != undefined) {
-                if (json['address']['location']['location'] != undefined) {
-                    var la = json['address']['location']['centre']['latitude'];
-                    var lo = json['address']['location']['centre']['longitude'];
+                if (json['address']['address']['location']['location'] != undefined) {
+                    var la = json['address']['address']['location']['centre']['latitude'];
+                    var lo = json['address']['address']['location']['centre']['longitude'];
                     map.setView([la, lo], 16, {animate: true});
                 }
             }
@@ -68,22 +66,15 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
     jQuery('#resultTable').on('search.dt', function () {
         removePointers();
         var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
-        var search_data_breeder = [];
-        var search_data_donor = [];
+        var search_data = [];
         for (i = 0; i < searchData.length; i++) {
-            if (searchData[i]['data']['BreederAddress'] != undefined) {
-                if (searchData[i]['data']['BreederAddress']['location']['location'] != undefined) {
-                    search_data_breeder.push(searchData[i]);
-                }
-            }
-            if (searchData[i]['data']['DonorAddress'] != undefined) {
-                if (searchData[i]['data']['DonorAddress']['location']['location'] != undefined) {
-                    search_data_donor.push(searchData[i]);
+            if (searchData[i]['address']['address'] != undefined) {
+                if (searchData[i]['address']['address']['location']['centre'] != undefined) {
+                    search_data.push(searchData[i]);
                 }
             }
         }
-        displayYRLocations_new(search_data_breeder, 'Breeder');
-        displayYRLocations_new(search_data_donor, 'Donor');
+        displayFTLocations(search_data, fieldTrialName, team);
     });
 
 
@@ -145,18 +136,18 @@ function displayFTLocations(array, fieldTrialName, team) {
         var name = '';
 
 
-        la = array[i]['address']['location']['centre']['latitude'];
-        lo = array[i]['address']['location']['centre']['longitude'];
+        la = array[i]['address']['address']['location']['centre']['latitude'];
+        lo = array[i]['address']['address']['location']['centre']['longitude'];
 
-        if (array[i]['address']['Address'] != undefined) {
-            if (array[i]['address']['Address']['addressCountry'] != undefined) {
-                country = array[i]['address']['Address']['addressCountry'];
+        if (array[i]['address']['address']['Address'] != undefined) {
+            if (array[i]['address']['address']['Address']['addressCountry'] != undefined) {
+                country = array[i]['address']['address']['Address']['addressCountry'];
             }
-            if (array[i]['address']['Address']['addressLocality'] != undefined) {
-                town = array[i]['address']['Address']['addressLocality'];
+            if (array[i]['address']['address']['Address']['addressLocality'] != undefined) {
+                town = array[i]['address']['address']['Address']['addressLocality'];
             }
-            if (array[i]['address']['Address']['name'] != undefined) {
-                name = array[i]['address']['Address']['name'];
+            if (array[i]['address']['address']['Address']['name'] != undefined) {
+                name = array[i]['address']['address']['Address']['name'];
             }
         }
 

@@ -10463,7 +10463,6 @@ var fieldTrailJSON =
                                 ]
                             }
                         ]
-                        //exp area array
 
 
                     }
