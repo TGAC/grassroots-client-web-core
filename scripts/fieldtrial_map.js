@@ -21,7 +21,6 @@ function startFieldtrialGIS(jsonArray) {
 }
 
 function produceFieldtrialTable(data, fieldTrialName, team) {
-    console.log(data);
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
@@ -150,17 +149,23 @@ function displayFTLocations(array, fieldTrialName, team) {
                 name = array[i]['address']['address']['Address']['name'];
             }
         }
-
-
+        var id = array[i]['_id']['$oid'];
         var popup_note = '<b>Field Trail Name: </b>' + fieldTrialName + '<br/>'
             + '<b>Team: </b>' + team + '<br/>'
             + '<b>Sowing Date: </b>' + array[i]['sowing_date'] + '<br/>'
             + '<b>Harvest Date: </b>' + array[i]['harvest_date'] + '<br/>'
+            + '<u onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">Plots</u>'
         ;
         addPointer(la, lo, popup_note);
     }
     map.addLayer(markersGroup);
 
+
+}
+
+function plot_colorbox(id){
+    var plot_data = "test";
+    $.colorbox({width: "80%", html: plot_data});
 
 }
 
