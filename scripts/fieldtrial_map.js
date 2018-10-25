@@ -1,92 +1,49 @@
-
-
 function startFieldtrialGIS(jsonArray) {
 
-    var filtered_data_donor = [];
-    var filtered_data_breeder = [];
+    var filtered_data = [];
     jQuery('#status').html('');
+    var fieldTrialName = '';
+    var team = '';
     for (i = 0; i < jsonArray.length; i++) {
-        if (jsonArray[i]['data']['BreederAddress'] != undefined) {
-            if (jsonArray[i]['data']['BreederAddress']['location']['location'] != undefined) {
-                filtered_data_breeder.push(jsonArray[i]);
+        for (j = 0; j < jsonArray[i]['experimental_areas'].length; j++)
+            if (jsonArray[i]['experimental_areas'][j]['address'] != undefined) {
+                fieldTrialName = jsonArray[i]['so:name'];
+                team = jsonArray[i]['team'];
+                if (jsonArray[i]['data']['BreederAddress']['location']['centre'] != undefined) {
+                    filtered_data.push(jsonArray[i]['experimental_areas'][j]);
+                }
             }
-        }
-        if (jsonArray[i]['data']['DonorAddress'] != undefined) {
-            if (jsonArray[i]['data']['DonorAddress']['location']['location'] != undefined) {
-                filtered_data_donor.push(jsonArray[i]);
-            }
-        }
     }
     // removeTable();
-    produceTable(jsonArray);
-    displayYRLocations_new(filtered_data_breeder, 'Breeder');
-    displayYRLocations_new(filtered_data_donor, 'Donor');
+    produceFieldtrialTable(filtered_data, fieldTrialName, team);
+    displayFTLocations(filtered_data, fieldTrialName, team);
     renderLegend();
 }
 
-function produceFieldtrialTable(data) {
+function produceFieldtrialTable(data, fieldTrialName, team) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
-            {data: "data.dwc:recordNumber", title: "Record Number", "sDefaultContent": ""},
-            {data: "data.accession", title: "Accession", "sDefaultContent": ""},
+            {data: fieldTrialName, title: "Field Trial", "sDefaultContent": ""},
+            {data: team, title: "Team", "sDefaultContent": ""},
             {data: "data.ploidy", title: "Ploidy", "sDefaultContent": ""},
             {data: "data.dwc:scientificName", title: "Scientific Name", "sDefaultContent": ""},
             {data: "data.dwc:genus", title: "Genus", "sDefaultContent": ""},
             {data: "data.dwc:year", title: "Year", "sDefaultContent": ""},
             {data: "data.dwc:vernacularName", title: "Vernacular Name", "sDefaultContent": ""},
             {
-                title: "Donor",
+                title: "Address",
                 "render": function (data, type, full, meta) {
-                    var donorInfo = '';
-                    if (full['data']['DonorAddress'] !== undefined && full['data']['DonorAddress'] !== "undefined") {
-                        if (full['data']['DonorAddress']['Address'] !== undefined && full['data']['DonorAddress']['Address'] !== "undefined") {
+                    var addressInfo = '';
+                    if (full['address'] !== undefined && full['data']['address'] !== "undefined") {
+                        if (full['address']['Address'] !== undefined && full['address']['Address'] !== "undefined") {
                             donorInfo = '<span class=\"newstyle_link\"> ' + full['data']['DonorAddress']['Address']['name'] + '<br/>'
-                                + full['data']['DonorAddress']['Address']['addressLocality'] + '<br/>'
-                                + full['data']['DonorAddress']['Address']['addressCountry'] + '<br/>'
-                                + full['data']['DonorAddress']['Address']['postalCode'] + '</span>';
+                                + full['address']['Address']['addressLocality'] + '<br/>'
+                                + full['address']['Address']['addressCountry'] + '<br/>'
+                                + full['address']['Address']['postalCode'] + '</span>';
                         }
                     }
-                    return donorInfo;
-                }
-            },
-            {
-                title: "Breeder",
-                "render": function (data, type, full, meta) {
-                    var breederInfo = '';
-                    if (full['data']['BreederAddress'] !== undefined && full['data']['BreederAddress'] !== "undefined") {
-                        if (full['data']['DonorAddress']['Address'] !== undefined && full['data']['DonorAddress']['Address'] !== "undefined") {
-                            breederInfo = '<span class=\"newstyle_link\"> ' + full['data']['BreederAddress']['Address']['name'] + '<br/>'
-                                + full['data']['BreederAddress']['Address']['addressLocality'] + '<br/>'
-                                + full['data']['BreederAddress']['Address']['addressCountry'] + '<br/>'
-                                + full['data']['BreederAddress']['Address']['postalCode'] + '</span>';
-                        }
-                    }
-                    return breederInfo;
-                }
-            },
-
-            {
-                title: "View Record",
-                "render": function (data, type, full, meta) {
-                    if (full['data']['order_link'] !== undefined) {
-                        return '<a target="_blank" href="https://www.seedstor.ac.uk/search-infoaccession.php?idPlant=' + full['data']['dwc:recordNumber'] + '">View</a>';
-                    }
-                    else {
-                        return '';
-                    }
-                }
-            },
-
-            {
-                title: "Order",
-                "render": function (data, type, full, meta) {
-                    if (full['data']['order_link'] !== undefined) {
-                        return '<a target="_blank" href="' + full['data']['order_link']['url'] + '">Order</a>';
-                    }
-                    else {
-                        return '';
-                    }
+                    return addressInfo;
                 }
             }
         ]
@@ -95,29 +52,15 @@ function produceFieldtrialTable(data) {
 
     jQuery('#resultTable tbody').on('click', 'td', function () {
         var cellIdx = yrtable.cell(this).index();
-        var columnIdx = cellIdx['column'];
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        if (columnIdx == 7) {
-            if (json['data']['DonorAddress'] != undefined) {
-                if (json['data']['DonorAddress']['location']['location'] != undefined) {
-                    var la = json['data']['DonorAddress']['location']['location']['latitude'];
-                    var lo = json['data']['DonorAddress']['location']['location']['longitude'];
+            if (json['address'] != undefined) {
+                if (json['address']['location']['location'] != undefined) {
+                    var la = json['address']['location']['centre']['latitude'];
+                    var lo = json['address']['location']['centre']['longitude'];
                     map.setView([la, lo], 16, {animate: true});
                 }
             }
-
-
-        } else if (columnIdx == 8) {
-            if (json['data']['BreederAddress'] != undefined) {
-                if (json['data']['BreederAddress']['location']['location'] != undefined) {
-                    var la = json['data']['BreederAddress']['location']['location']['latitude'];
-                    var lo = json['data']['BreederAddress']['location']['location']['longitude'];
-                    map.setView([la, lo], 16, {animate: true});
-                }
-            }
-
-        }
         $(window).scrollTop($('#map').offset().top - 90);
 
     });
@@ -193,7 +136,7 @@ function ukcpvs_only() {
 }
 
 
-function displayYRLocations_new(array, type) {
+function displayFTLocations(array, fieldTrialName, team) {
     for (i = 0; i < array.length; i++) {
         var la = '';
         var lo = '';
@@ -202,54 +145,28 @@ function displayYRLocations_new(array, type) {
         var name = '';
 
 
-        if (type === 'Donor') {
-            la = array[i]['data']['DonorAddress']['location']['location']['latitude'];
-            lo = array[i]['data']['DonorAddress']['location']['location']['longitude'];
+        la = array[i]['address']['location']['centre']['latitude'];
+        lo = array[i]['address']['location']['centre']['longitude'];
 
-            if (array[i]['data']['DonorAddress']['Address'] != undefined) {
-                if (array[i]['data']['DonorAddress']['Address']['addressCountry'] != undefined) {
-                    country = array[i]['data']['DonorAddress']['Address']['addressCountry'];
-                }
-                if (array[i]['data']['DonorAddress']['Address']['addressLocality'] != undefined) {
-                    town = array[i]['data']['DonorAddress']['Address']['addressLocality'];
-                }
-                if (array[i]['data']['DonorAddress']['Address']['name'] != undefined) {
-                    name = array[i]['data']['DonorAddress']['Address']['name'];
-                }
+        if (array[i]['address']['Address'] != undefined) {
+            if (array[i]['address']['Address']['addressCountry'] != undefined) {
+                country = array[i]['address']['Address']['addressCountry'];
             }
-        } else if (type === 'Breeder') {
-            la = array[i]['data']['BreederAddress']['location']['location']['latitude'];
-            lo = array[i]['data']['BreederAddress']['location']['location']['longitude'];
-
-            if (array[i]['data']['BreederAddress']['Address'] != undefined) {
-                if (array[i]['data']['BreederAddress']['Address']['addressCountry'] != undefined) {
-                    country = array[i]['data']['BreederAddress']['Address']['addressCountry'];
-                }
-                if (array[i]['data']['BreederAddress']['Address']['addressLocality'] != undefined) {
-                    town = array[i]['data']['BreederAddress']['Address']['addressLocality'];
-                }
-                if (array[i]['data']['BreederAddress']['Address']['name'] != undefined) {
-                    name = array[i]['data']['BreederAddress']['Address']['name'];
-                }
+            if (array[i]['address']['Address']['addressLocality'] != undefined) {
+                town = array[i]['address']['Address']['addressLocality'];
             }
-            popup_note = '<h5> Breeder Information</h5>' + popup_note;
-
+            if (array[i]['address']['Address']['name'] != undefined) {
+                name = array[i]['address']['Address']['name'];
+            }
         }
 
-        var popup_note = '<b>Record Number: </b>' + array[i]['data']['dwc:recordNumber'] + '<br/>'
-            + '<b>Accession: </b>' + array[i]['data']['accession'] + '<br/>'
-            + '<b>Genus: </b>' + array[i]['data']['dwc:genus'] + '<br/>'
-            + '<b>Scientific Name: </b>' + array[i]['data']['dwc:scientificName'] + '<br/>'
-            + '<b>Year: </b>' + array[i]['data']['dwc:year'] + '<br/>'
-            + '<b>Vernacular Name: </b>' + array[i]['data']['dwc:vernacularName'] + '<br/>'
-            + '<b>Ploidy: </b>' + array[i]['data']['ploidy'] + '<br/>'
-            + '<b>Organisation: </b>' + name + '<br/>'
-            + '<b>Country: </b>' + country + '<br/>'
-            + '<b>Town: </b>' + town + '<br/>'
-            + '<a target="_blank" href="https://www.seedstor.ac.uk/search-infoaccession.php?idPlant=' + array[i]['data']['dwc:recordNumber'] + '">View record </a>' + ' | '
-            + '<a target="_blank" href="' + array[i]['data']['order_link']['url'] + '"> Order from SeedStor</a><br/>'
+
+        var popup_note = '<b>Field Trail Name: </b>' + fieldTrialName + '<br/>'
+            + '<b>Team: </b>' + team + '<br/>'
+            + '<b>Sowing Date: </b>' + array[i]['sowing_date'] + '<br/>'
+            + '<b>Harvest Date: </b>' + array[i]['harvest_date'] + '<br/>'
         ;
-        addPointer(la, lo, '<h5> ' + type + ' Information</h5>' + popup_note, type);
+        addPointer(la, lo, popup_note);
     }
     map.addLayer(markersGroup);
 
@@ -257,7 +174,7 @@ function displayYRLocations_new(array, type) {
 }
 
 
-function addPointer(la, lo, note, type) {
+function addPointer(la, lo, note) {
 
     var blueIcon = new L.Icon({
         iconUrl: 'scripts/leaflet/images/marker-icon-2x-blue.png',
@@ -331,12 +248,12 @@ function addPointer(la, lo, note, type) {
         shadowSize: [41, 41]
     });
     var markerLayer;
-    if (type === 'Breeder') {
-        markerLayer = L.marker([la, lo], {icon: greenIcon}).bindPopup(note);
-    }
-    else {
+    // if (type === 'Breeder') {
+    //     markerLayer = L.marker([la, lo], {icon: greenIcon}).bindPopup(note);
+    // }
+    // else {
         markerLayer = L.marker([la, lo]).bindPopup(note);
-    }
+    // }
     // markers.push(markerLayer);
     markersGroup.addLayer(markerLayer);
 

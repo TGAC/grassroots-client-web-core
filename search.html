@@ -39,7 +39,7 @@
     <script type="text/javascript" src="scripts/wis.js"></script>
     <script type="text/javascript" src="scripts/FileSaver.min.js"></script>
 
-    <script type="text/javascript" src="scripts/fieldtrial_map.js"></script>
+    <script type="text/javascript" src="scripts/gis_map.js"></script>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="scripts/leaflet/leaflet.css" />
@@ -74,8 +74,6 @@
     <!--<script src="https://grassroots.tools/vendor/jquery-easing/jquery.easing.min.js"></script>-->
     <link href="https://grassroots.tools/css/site.css" rel="stylesheet">
 
-    <!-- data file -->
-    <script type="text/javascript" src="scripts/wip_field_trial.js"></script>
 
 
 </head>
@@ -147,44 +145,17 @@
         </div>
 
         <script type="text/javascript">
-
-            var services = '{"operations": {"operation":"get_all_services"}}';
-            var selected_service_name;
-            var response = null;
-            var parameters;
-            var groups;
-            $(document).ready(function () {
-                $('#status').html('');
-                $('#form').html('');
-                $('#tableWrapper').html('<table id="resultTable"></table>');
-                // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-                markersGroup = new L.MarkerClusterGroup({});
-                map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
-
-                //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                //        maxZoom: 18
-                //    }).addTo(map);
-                L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
-                    attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
-                    subdomains: '1234',
-                    base: 'base',
-                    type: 'maptile',
-                    scheme: 'pedestrian.day',
-                    app_id: '1yM5jhYmACdjFG39Q7yP',
-                    app_code: 'ZAuXzelqWvL92h_jjEY_pA',
-                    mapID: 'newest',
-                    maxZoom: 20,
-                    language: 'eng',
-                    format: 'png8',
-                    size: '256'
-                }).addTo(map);
-
-                L.control.zoom({position: 'topright'}).addTo(map);
-
-                startFieldtrialGIS(fieldTrailJSON['results'][0]['results']);
-                // map.fitWorld({reset: true}).zoomIn();
-            });
+            // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
+            // var server_url = "/grassroots-test/5/controller";
+            // var services = '{"operations": {"operation":"get_all_services"}}';
+            // var selected_service_name;
+            // var response = null;
+            // var parameters;
+            // var groups;
+            // $(document).ready(function () {
+            //     // populateService('BlastN service');
+            //     get_all_services_as_table();
+            // });
 
 
         </script>
