@@ -1,6 +1,7 @@
 var plotsHTMLArray = {};
 var global_width = 0;
 var global_height = 0;
+var colorJSON = {};
 
 function startFieldtrialGIS(jsonArray) {
 
@@ -414,8 +415,19 @@ function formatPlot(plot) {
     }
 
     // return '<td>' + accession + '</td>';
-    return '<td bgcolor="' + stringToColour(accession) + '">' + accession + '</td>';
+    var replicate_index = plot['replicate_index'];
+    var color;
+    if (colorJSON[replicate_index]==undefined){
+       color = getRandomColor();
+       colorJSON[replicate_index] = color;
+    } else {
+        color = colorJSON[replicate_index];
+    }
+
+    return '<td bgcolor="' + color + '">' + replicate_index+ '/' + accession + '</td>';
 }
+
+
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -425,7 +437,7 @@ function getRandomColor() {
     }
     return color;
 }
-var stringToColour = function(str) {
+var stringToColor = function(str) {
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
