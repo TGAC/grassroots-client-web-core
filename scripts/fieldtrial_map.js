@@ -1,3 +1,7 @@
+var plotsHTMLArray = {};
+var global_width = 0;
+var global_height = 0;
+
 function startFieldtrialGIS(jsonArray) {
 
     var filtered_data = [];
@@ -17,6 +21,7 @@ function startFieldtrialGIS(jsonArray) {
     // removeTable();
     produceFieldtrialTable(filtered_data, fieldTrialName, team);
     displayFTLocations(filtered_data, fieldTrialName, team);
+    createPlotsHTML(filtered_data);
     // renderLegend();
 }
 
@@ -27,7 +32,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
             {
                 title: "Field Trial",
                 "render": function (data, type, full, meta) {
-                        return fieldTrialName;
+                    return fieldTrialName;
                 }
             },
             {
@@ -39,7 +44,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
             {
                 title: "Sowing Date",
                 "render": function (data, type, full, meta) {
-                    if (full['sowing_date'] != undefined ) {
+                    if (full['sowing_date'] != undefined) {
                         return full['sowing_date'];
                     }
                     else {
@@ -50,7 +55,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
             {
                 title: "Harvest Date",
                 "render": function (data, type, full, meta) {
-                    if (full['harvest_date'] != undefined ) {
+                    if (full['harvest_date'] != undefined) {
                         return full['harvest_date'];
                     }
                     else {
@@ -61,7 +66,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
             {
                 title: "Plots",
                 "render": function (data, type, full, meta) {
-                    if (full['_id'] != undefined ) {
+                    if (full['_id'] != undefined) {
                         var id = full['_id']['$oid'];
                         return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">Plot</u>';
                     }
@@ -93,13 +98,13 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
         var cellIdx = yrtable.cell(this).index();
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-            if (json['address'] != undefined) {
-                if (json['address']['address']['location']['location'] != undefined) {
-                    var la = json['address']['address']['location']['centre']['latitude'];
-                    var lo = json['address']['address']['location']['centre']['longitude'];
-                    map.setView([la, lo], 16, {animate: true});
-                }
+        if (json['address'] != undefined) {
+            if (json['address']['address']['location']['location'] != undefined) {
+                var la = json['address']['address']['location']['centre']['latitude'];
+                var lo = json['address']['address']['location']['centre']['longitude'];
+                map.setView([la, lo], 16, {animate: true});
             }
+        }
         $(window).scrollTop($('#map').offset().top - 90);
 
     });
@@ -205,8 +210,8 @@ function displayFTLocations(array, fieldTrialName, team) {
 
 }
 
-function plot_colorbox(id){
-    var plot_data = "test";
+function plot_colorbox(id) {
+    var plot_data = plotsHTMLArray[id];
     $.colorbox({width: "80%", html: plot_data});
 
 }
@@ -290,7 +295,7 @@ function addPointer(la, lo, note) {
     //     markerLayer = L.marker([la, lo], {icon: greenIcon}).bindPopup(note);
     // }
     // else {
-        markerLayer = L.marker([la, lo]).bindPopup(note);
+    markerLayer = L.marker([la, lo]).bindPopup(note);
     // }
     // markers.push(markerLayer);
     markersGroup.addLayer(markerLayer);
@@ -374,4 +379,42 @@ function checkFileBox(div_id) {
     }
 
 }
+
+function createPlotsHTML(array) {
+    for (i = 0; i < array.length; i++) {
+        var expAreaId = array[i]['_id']['$oid'];
+        var plots = array[i]['plots'];
+        var htmlarray = [];
+
+        var row = 1;
+        var column = 1;
+
+        for (j = 0; j < plots.length; j++) {
+
+            if (plots[j]['row_index'] === row) {
+                if (plots[j]['column_index'] === column) {
+                    var accession = "";
+                    for (r = 0; r < plots[j]['rows'].length; r++) {
+                        accession += " " + plots[j]['rows'][r]['material_s']['accession'];
+                    }
+
+                    htmlarray.push('<td>' + accession + '</td>');
+                    column++;
+                }
+            } else if (plots[j]['row_index'] > row) {
+                htmlarray.push('</tr><tr>');
+                var accession = "";
+                for (r = 0; r < plots[j]['rows'].length; r++) {
+                    accession += " " + plots[j]['rows'][r]['material_s']['accession'];
+                }
+
+                htmlarray.push('<td>' + accession + '</td>');
+                row++;
+                column = 2;
+            }
+        }
+        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table row flex-column-reverse flex-lg-row"><tr>' + htmlarray.join("") + '</tr></table></div>';
+    }
+}
+
 
