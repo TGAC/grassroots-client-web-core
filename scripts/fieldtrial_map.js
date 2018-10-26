@@ -393,28 +393,47 @@ function createPlotsHTML(array) {
 
             if (plots[j]['row_index'] === row) {
                 if (plots[j]['column_index'] === column) {
-                    var accession = "";
-                    for (r = 0; r < plots[j]['rows'].length; r++) {
-                        accession += " " + plots[j]['rows'][r]['material_s']['accession'];
-                    }
-
-                    htmlarray.push('<td>' + accession + '</td>');
+                    htmlarray.push(formatPlot(plots[j]));
                     column++;
                 }
             } else if (plots[j]['row_index'] > row) {
                 htmlarray.push('</tr><tr>');
-                var accession = "";
-                for (r = 0; r < plots[j]['rows'].length; r++) {
-                    accession += " " + plots[j]['rows'][r]['material_s']['accession'];
-                }
-
-                htmlarray.push('<td>' + accession + '</td>');
+                htmlarray.push(formatPlot(plots[j]));
                 row++;
                 column = 2;
             }
         }
-        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table row flex-column-reverse flex-lg-row"><tr>' + htmlarray.join("") + '</tr></table></div>';
+        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table row flex-column-reverse flex-lg-row"  style="margin:20px;"><tr>' + htmlarray.join("") + '</tr></table></div>';
     }
 }
 
+function formatPlot(plot) {
+    var accession = "";
+    for (r = 0; r < plot['rows'].length; r++) {
+        accession += " " + plot['rows'][r]['material_s']['accession'];
+    }
 
+    // return '<td>' + accession + '</td>';
+    return '<td bgcolor="' + stringToColour(accession) + '">' + accession + '</td>';
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+var stringToColour = function(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var colour = '#';
+    for (var i = 0; i < 3; i++) {
+        var value = (hash >> (i * 8)) & 0xFF;
+        colour += ('00' + value.toString(16)).substr(-2);
+    }
+    return colour;
+}
