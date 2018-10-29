@@ -1,7 +1,7 @@
 var plotsHTMLArray = {};
 var global_width = 0;
 var global_height = 0;
-var colorJSON = {};
+var colorJSON = {1:"##39CCCC", 2:"#FFDC00", 3:"#01FF70", 4:"#FF851B", 5:"#F012BE", 6:"#FF4136",7:"#3D9970", 8:"#2ECC40"};
 
 function startFieldtrialGIS(jsonArray) {
 
@@ -214,7 +214,6 @@ function displayFTLocations(array, fieldTrialName, team) {
 function plot_colorbox(id) {
     var plot_data = plotsHTMLArray[id];
     $.colorbox({width: "80%", html: plot_data});
-
 }
 
 
@@ -398,13 +397,18 @@ function createPlotsHTML(array) {
                     column++;
                 }
             } else if (plots[j]['row_index'] > row) {
-                htmlarray.push('</tr><tr>');
-                htmlarray.push(formatPlot(plots[j]));
+
                 row++;
                 column = 2;
+                htmlarray.push('</tr><tr>');
+                htmlarray.push('<td>'+row+'</td>');
+                htmlarray.push(formatPlot(plots[j]));
             }
         }
-        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table row flex-column-reverse flex-lg-row"  style="margin:20px;"><tr>' + htmlarray.join("") + '</tr></table></div>';
+        var tableString = '<td>1</td>'+htmlarray.join("");
+        var tableArray = tableString.split("</tr><tr>");
+        var reversedString = tableArray.reverse().join("</tr><tr>");
+        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="'+expAreaId+'" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
     }
 }
 
@@ -417,35 +421,34 @@ function formatPlot(plot) {
     // return '<td>' + accession + '</td>';
     var replicate_index = plot['replicate_index'];
     var color;
-    if (colorJSON[replicate_index]==undefined){
-       color = getRandomColor();
-       colorJSON[replicate_index] = color;
-    } else {
+    // if (colorJSON[replicate_index]==undefined){
+    //    color = getRandomColor();
+    //    colorJSON[replicate_index] = color;
+    // } else {
         color = colorJSON[replicate_index];
-    }
+    // }
 
     return '<td bgcolor="' + color + '">' + replicate_index+ '/' + accession + '</td>';
 }
-
-
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-var stringToColor = function(str) {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    var colour = '#';
-    for (var i = 0; i < 3; i++) {
-        var value = (hash >> (i * 8)) & 0xFF;
-        colour += ('00' + value.toString(16)).substr(-2);
-    }
-    return colour;
-}
+//
+// function getRandomColor() {
+//     var letters = '0123456789ABCDEF';
+//     var color = '#';
+//     for (var i = 0; i < 6; i++) {
+//         color += letters[Math.floor(Math.random() * 16)];
+//     }
+//     return color;
+// }
+//
+// var stringToColor = function(str) {
+//     var hash = 0;
+//     for (var i = 0; i < str.length; i++) {
+//         hash = str.charCodeAt(i) + ((hash << 5) - hash);
+//     }
+//     var colour = '#';
+//     for (var i = 0; i < 3; i++) {
+//         var value = (hash >> (i * 8)) & 0xFF;
+//         colour += ('00' + value.toString(16)).substr(-2);
+//     }
+//     return colour;
+// }
