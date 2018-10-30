@@ -11,7 +11,7 @@ var colorJSON = {
     7: "#3D9970",
     8: "#2ECC40"
 };
-var plots
+var plotsModalInfo = {};
 
 function startFieldtrialGIS(jsonArray) {
 
@@ -373,13 +373,51 @@ function formatPlot(plot) {
     // } else {
     color = colorJSON[replicate_index];
     // }
+    plotsModalInfo[plotId] = formatPlotModal(plot);
 
     return '<td bgcolor="' + color + '" onclick="plotModal(\''+plotId+'\')">' + replicate_index + '/' + accession + '</td>';
 }
 
-function plotModal(plot) {
-    $('#modal-body').html('test');
-
+function plotModal(plotId) {
+    $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
 
 }
+
+function formatPlotModal(plot) {
+    var htmlarray = [];
+
+    var replicate_index = plot['replicate_index'];
+    var color = colorJSON[replicate_index];
+
+    var accession = "";
+    var pedigree = '';
+    for (r = 0; r < plot['rows'].length; r++) {
+        accession += " " + plot['rows'][r]['material_s']['accession'];
+        pedigree += " " + plot['rows'][r]['material_s']['pedigree'];
+    }
+    htmlarray.push('<p>Accession: '+ accession+'</p>');
+
+    htmlarray.push('<p>Row: '+ plot['row_index']+'</p>');
+    htmlarray.push('<p>Column: '+plot['column_index'] +'</p>');
+    htmlarray.push('<p style="background-color:' + color + '" >Replicate: '+replicate_index +'</p>');
+    htmlarray.push('<p>Trial Design: '+plot['trial_desgin'] +'</p>');
+    htmlarray.push('<p>Sowing Date: '+plot['sowing_date'] +'</p>');
+    htmlarray.push('<p>Harvest Date: '+plot['harvest_date'] +'</p>');
+    htmlarray.push('<p>Pedigree: '+pedigree +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+    // htmlarray.push('<p>: '+plot[''] +'</p>');
+
+    return htmlarray.join("");
+
+
+}
+
