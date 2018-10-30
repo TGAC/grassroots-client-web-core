@@ -315,70 +315,7 @@ function popup(msg) {
         .openOn(map);
 }
 
-function mapFitBounds(list) {
-    map.fitBounds(list);
-}
 
-function randomNumberFromInterval(min, max) {
-    return Math.random() * (max - min + 1) + min;
-}
-
-
-function serializeXmlNode(xmlNode) {
-    if (typeof window.XMLSerializer != "undefined") {
-        return (new window.XMLSerializer()).serializeToString(xmlNode);
-    }
-    else if (typeof xmlNode.xml != "undefined") {
-        return xmlNode.xml;
-    }
-    return "";
-}
-
-function renderLegend() {
-    jQuery('#legend').show();
-    jQuery('#legend').html('');
-    // if (pie_view) {
-    var metajson = {
-        "lookup": {
-            "1": "Breeder",
-            "2": "Donor"
-        }
-    };
-
-    var data = d3.entries(metajson.lookup),
-        legenddiv = d3.select('#legend');
-
-    var heading = legenddiv.append('div')
-        .classed('legendheading', true)
-        .text("Marker types");
-
-    var legenditems = legenddiv.selectAll('.legenditem')
-        .data(data);
-
-    legenditems
-        .enter()
-        .append('div')
-        .attr('class', function (d) {
-            return 'lengend-' + d.key;
-        })
-        .classed({'legenditem': true})
-        .text(function (d) {
-            return d.value;
-        });
-    // }
-}
-
-
-function checkFileBox(div_id) {
-    if (document.getElementById(div_id).checked) {
-        bam_list.push(div_id);
-        console.log("add:" + div_id);
-    } else {
-        bam_list.splice(bam_list.indexOf(div_id), 1);
-        console.log("remove:" + div_id);
-    }
-
-}
 
 function createPlotsHTML(array) {
     for (i = 0; i < array.length; i++) {
@@ -430,25 +367,3 @@ function formatPlot(plot) {
 
     return '<td bgcolor="' + color + '">' + replicate_index+ '/' + accession + '</td>';
 }
-//
-// function getRandomColor() {
-//     var letters = '0123456789ABCDEF';
-//     var color = '#';
-//     for (var i = 0; i < 6; i++) {
-//         color += letters[Math.floor(Math.random() * 16)];
-//     }
-//     return color;
-// }
-//
-// var stringToColor = function(str) {
-//     var hash = 0;
-//     for (var i = 0; i < str.length; i++) {
-//         hash = str.charCodeAt(i) + ((hash << 5) - hash);
-//     }
-//     var colour = '#';
-//     for (var i = 0; i < 3; i++) {
-//         var value = (hash >> (i * 8)) & 0xFF;
-//         colour += ('00' + value.toString(16)).substr(-2);
-//     }
-//     return colour;
-// }

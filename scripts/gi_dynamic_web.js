@@ -163,6 +163,7 @@ function populateService(service_name) {
                 document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
                 document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
             }
+            $('.datepicker').datepicker();
         }
     });
 }
@@ -402,6 +403,13 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('<div class="form-group">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('</div>');
+        }
+        // date
+        else if (grassroots_type == "xsd:date") {
+            form_html.push('<div class="form-group">');
+            form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</div>');
         }
     }
