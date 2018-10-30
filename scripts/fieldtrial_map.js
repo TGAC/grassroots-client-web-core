@@ -1,7 +1,17 @@
 var plotsHTMLArray = {};
 var global_width = 0;
 var global_height = 0;
-var colorJSON = {1:"##39CCCC", 2:"#FFDC00", 3:"#01FF70", 4:"#FF851B", 5:"#F012BE", 6:"#FF4136",7:"#3D9970", 8:"#2ECC40"};
+var colorJSON = {
+    1: "##39CCCC",
+    2: "#FFDC00",
+    3: "#01FF70",
+    4: "#FF851B",
+    5: "#F012BE",
+    6: "#FF4136",
+    7: "#3D9970",
+    8: "#2ECC40"
+};
+var plots
 
 function startFieldtrialGIS(jsonArray) {
 
@@ -213,7 +223,10 @@ function displayFTLocations(array, fieldTrialName, team) {
 
 function plot_colorbox(id) {
     var plot_data = plotsHTMLArray[id];
+
+    // $('#modal-body').html(plot_data);
     $.colorbox({width: "80%", html: plot_data});
+  // $('#plotModal').modal('show');
 }
 
 
@@ -303,18 +316,12 @@ function addPointer(la, lo, note) {
 }
 
 
-function removeTable() {
-    jQuery('#resultTable').dataTable().fnDestroy();
-    jQuery('#tableWrapper').html('<table id="resultTable"></table>');
-}
-
 function popup(msg) {
     L.popup()
         .setLatLng([52.621615, 8.219])
         .setContent(msg)
         .openOn(map);
 }
-
 
 
 function createPlotsHTML(array) {
@@ -338,18 +345,20 @@ function createPlotsHTML(array) {
                 row++;
                 column = 2;
                 htmlarray.push('</tr><tr>');
-                htmlarray.push('<td>'+row+'</td>');
+                htmlarray.push('<td>' + row + '</td>');
                 htmlarray.push(formatPlot(plots[j]));
             }
         }
-        var tableString = '<td>1</td>'+htmlarray.join("");
+        var tableString = '<td>1</td>' + htmlarray.join("");
         var tableArray = tableString.split("</tr><tr>");
         var reversedString = tableArray.reverse().join("</tr><tr>");
-        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="'+expAreaId+'" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
+        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
     }
+
 }
 
 function formatPlot(plot) {
+    var plotId = plot['_id']['$oid'];
     var accession = "";
     for (r = 0; r < plot['rows'].length; r++) {
         accession += " " + plot['rows'][r]['material_s']['accession'];
@@ -362,8 +371,15 @@ function formatPlot(plot) {
     //    color = getRandomColor();
     //    colorJSON[replicate_index] = color;
     // } else {
-        color = colorJSON[replicate_index];
+    color = colorJSON[replicate_index];
     // }
 
-    return '<td bgcolor="' + color + '">' + replicate_index+ '/' + accession + '</td>';
+    return '<td bgcolor="' + color + '" onclick="plotModal(\''+plotId+'\')">' + replicate_index + '/' + accession + '</td>';
+}
+
+function plotModal(plot) {
+    $('#modal-body').html('test');
+
+    $('#plotModal').modal('show');
+
 }
