@@ -375,7 +375,7 @@ function formatPlot(plot) {
     // }
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
-    return '<td bgcolor="' + color + '" onclick="plotModal(\''+plotId+'\')">' + replicate_index + '/' + accession + '</td>';
+    return '<td style="cursor:pointer; background-color:' + color + '" onclick="plotModal(\''+plotId+'\')">' + replicate_index + '/' + accession + '</td>';
 }
 
 function plotModal(plotId) {
