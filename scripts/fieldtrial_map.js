@@ -226,7 +226,7 @@ function plot_colorbox(id) {
 
     // $('#modal-body').html(plot_data);
     $.colorbox({width: "80%", html: plot_data});
-  // $('#plotModal').modal('show');
+    // $('#plotModal').modal('show');
 }
 
 
@@ -375,7 +375,7 @@ function formatPlot(plot) {
     // }
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
-    return '<td style="cursor:pointer; background-color:' + color + '" onclick="plotModal(\''+plotId+'\')">' + replicate_index + '/' + accession + '</td>';
+    return '<td style="cursor:pointer; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
 }
 
 function plotModal(plotId) {
@@ -390,21 +390,39 @@ function formatPlotModal(plot) {
     var replicate_index = plot['replicate_index'];
     var color = colorJSON[replicate_index];
 
-    var accession = "";
+    var accession = '';
     var pedigree = '';
+    var phenotypearray = [];
+    phenotypearray.push('<table class="table "><thead><tr><th>Date</th><th>Value</th><th>Trail</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
     for (r = 0; r < plot['rows'].length; r++) {
         accession += " " + plot['rows'][r]['material']['accession'];
         pedigree += " " + plot['rows'][r]['material']['pedigree'];
+        if (plot['rows'][r]['observations'] != undefined) {
+            for (o = 0; o < plot['rows'][r]['observations'].length; o++) {
+                var observation = plot['rows'][r]['observations'][o];
+                phenotypearray.push('<tr>');
+                phenotypearray.push('<td>'+observation['date']+'</td>');
+                phenotypearray.push('<td>'+observation['value']+'</td>');
+                phenotypearray.push('<td>'+observation['phenotype']['trait']['so:name']+'</td>');
+                phenotypearray.push('<td>'+observation['phenotype']['measurement']['so:name']+'</td>');
+                phenotypearray.push('<td>'+observation['phenotype']['unit']['so:name']+'</td>');
+                phenotypearray.push('</tr>');
+            }
+        }
     }
-    htmlarray.push('<p>Accession: '+ accession+'</p>');
+    phenotypearray.push('</tbody></table>');
+    htmlarray.push('<p>Accession: ' + accession + '</p>');
 
-    htmlarray.push('<p>Row: '+ plot['row_index']+'</p>');
-    htmlarray.push('<p>Column: '+plot['column_index'] +'</p>');
-    htmlarray.push('<p style="background-color:' + color + '" >Replicate: '+replicate_index +'</p>');
-    htmlarray.push('<p>Trial Design: '+plot['trial_desgin'] +'</p>');
-    htmlarray.push('<p>Sowing Date: '+plot['sowing_date'] +'</p>');
-    htmlarray.push('<p>Harvest Date: '+plot['harvest_date'] +'</p>');
-    htmlarray.push('<p>Pedigree: '+pedigree +'</p>');
+    htmlarray.push('<p>Row: ' + plot['row_index'] + '</p>');
+    htmlarray.push('<p>Column: ' + plot['column_index'] + '</p>');
+    htmlarray.push('<p style="background-color:' + color + '" >Replicate: ' + replicate_index + '</p>');
+    htmlarray.push('<p>Trial Design: ' + plot['trial_desgin'] + '</p>');
+    htmlarray.push('<p>Sowing Date: ' + plot['sowing_date'] + '</p>');
+    htmlarray.push('<p>Harvest Date: ' + plot['harvest_date'] + '</p>');
+    htmlarray.push('<p>Pedigree: ' + pedigree + '</p>');
+    htmlarray.push('<hr/>');
+    htmlarray.push('<h3>Phenotype</h3>');
+    htmlarray.push(phenotypearray.join(""));
     // htmlarray.push('<p>: '+plot[''] +'</p>');
     // htmlarray.push('<p>: '+plot[''] +'</p>');
     // htmlarray.push('<p>: '+plot[''] +'</p>');
