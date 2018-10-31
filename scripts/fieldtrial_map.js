@@ -411,15 +411,14 @@ function formatPlotModal(plot) {
         }
     }
     phenotypearray.push('</tbody></table>');
-    htmlarray.push('<p>Accession: ' + accession + '</p>');
-
-    htmlarray.push('<p>Row: ' + plot['row_index'] + '</p>');
-    htmlarray.push('<p>Column: ' + plot['column_index'] + '</p>');
-    htmlarray.push('<p style="background-color:' + color + '" >Replicate: ' + replicate_index + '</p>');
-    htmlarray.push('<p>Trial Design: ' + plot['trial_desgin'] + '</p>');
-    htmlarray.push('<p>Sowing Date: ' + plot['sowing_date'] + '</p>');
-    htmlarray.push('<p>Harvest Date: ' + plot['harvest_date'] + '</p>');
-    htmlarray.push('<p>Pedigree: ' + pedigree + '</p>');
+    htmlarray.push('<p>Accession: ' + accession + '<br/>');
+    htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
+    htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
+    htmlarray.push('<span style="background-color:' + color + '" >Replicate: ' + replicate_index + '</span><br/>');
+    htmlarray.push('Trial Design: ' + plot['trial_desgin'] + '<br/>');
+    htmlarray.push('Sowing Date: ' + plot['sowing_date'] + '<br/>');
+    htmlarray.push('Harvest Date: ' + plot['harvest_date'] + '<br/>');
+    htmlarray.push('Pedigree: ' + pedigree + '<br/>');
     htmlarray.push('<hr/>');
     htmlarray.push('<h3>Phenotype</h3>');
     htmlarray.push(phenotypearray.join(""));
