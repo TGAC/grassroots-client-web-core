@@ -2,7 +2,7 @@ var plotsHTMLArray = {};
 var global_width = 0;
 var global_height = 0;
 var colorJSON = {
-    1: "##39CCCC",
+    1: "#39CCCC",
     2: "#FFDC00",
     3: "#01FF70",
     4: "#FF851B",
@@ -361,7 +361,7 @@ function formatPlot(plot) {
     var plotId = plot['_id']['$oid'];
     var accession = "";
     for (r = 0; r < plot['rows'].length; r++) {
-        accession += " " + plot['rows'][r]['material_s']['accession'];
+        accession += " " + plot['rows'][r]['material']['accession'];
     }
 
     // return '<td>' + accession + '</td>';
@@ -393,8 +393,8 @@ function formatPlotModal(plot) {
     var accession = "";
     var pedigree = '';
     for (r = 0; r < plot['rows'].length; r++) {
-        accession += " " + plot['rows'][r]['material_s']['accession'];
-        pedigree += " " + plot['rows'][r]['material_s']['pedigree'];
+        accession += " " + plot['rows'][r]['material']['accession'];
+        pedigree += " " + plot['rows'][r]['material']['pedigree'];
     }
     htmlarray.push('<p>Accession: '+ accession+'</p>');
 
