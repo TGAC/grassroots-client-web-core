@@ -393,7 +393,7 @@ function formatPlotModal(plot) {
     var accession = '';
     var pedigree = '';
     var phenotypearray = [];
-    phenotypearray.push('<table class="table "><thead><tr><th>Date</th><th>Value</th><th>Trail</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    phenotypearray.push('<table class="table "><thead><tr><th>Date</th><th>Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
     for (r = 0; r < plot['rows'].length; r++) {
         accession += " " + plot['rows'][r]['material']['accession'];
         pedigree += " " + plot['rows'][r]['material']['pedigree'];
