@@ -5,12 +5,12 @@ function startGIS(jsonArray) {
     jQuery('#status').html('');
     for (i = 0; i < jsonArray.length; i++) {
         if (jsonArray[i]['data']['BreederAddress'] != undefined) {
-            if (jsonArray[i]['data']['BreederAddress']['location']['location'] != undefined) {
+            if (jsonArray[i]['data']['BreederAddress']['location']['centre'] != undefined) {
                 filtered_data_breeder.push(jsonArray[i]);
             }
         }
         if (jsonArray[i]['data']['DonorAddress'] != undefined) {
-            if (jsonArray[i]['data']['DonorAddress']['location']['location'] != undefined) {
+            if (jsonArray[i]['data']['DonorAddress']['location']['centre'] != undefined) {
                 filtered_data_donor.push(jsonArray[i]);
             }
         }
@@ -98,9 +98,9 @@ function produceTable(data) {
         var json = yrtable.row(rowIdx).data();
         if (columnIdx == 7) {
             if (json['data']['DonorAddress'] != undefined) {
-                if (json['data']['DonorAddress']['location']['location'] != undefined) {
-                    var la = json['data']['DonorAddress']['location']['location']['latitude'];
-                    var lo = json['data']['DonorAddress']['location']['location']['longitude'];
+                if (json['data']['DonorAddress']['location']['centre'] != undefined) {
+                    var la = json['data']['DonorAddress']['location']['centre']['latitude'];
+                    var lo = json['data']['DonorAddress']['location']['centre']['longitude'];
                     map.setView([la, lo], 16, {animate: true});
                 }
             }
@@ -108,9 +108,9 @@ function produceTable(data) {
 
         } else if (columnIdx == 8) {
             if (json['data']['BreederAddress'] != undefined) {
-                if (json['data']['BreederAddress']['location']['location'] != undefined) {
-                    var la = json['data']['BreederAddress']['location']['location']['latitude'];
-                    var lo = json['data']['BreederAddress']['location']['location']['longitude'];
+                if (json['data']['BreederAddress']['location']['centre'] != undefined) {
+                    var la = json['data']['BreederAddress']['location']['centre']['latitude'];
+                    var lo = json['data']['BreederAddress']['location']['centre']['longitude'];
                     map.setView([la, lo], 16, {animate: true});
                 }
             }
@@ -127,12 +127,12 @@ function produceTable(data) {
         var search_data_donor = [];
         for (i = 0; i < searchData.length; i++) {
             if (searchData[i]['data']['BreederAddress'] != undefined) {
-                if (searchData[i]['data']['BreederAddress']['location']['location'] != undefined) {
+                if (searchData[i]['data']['BreederAddress']['location']['centre'] != undefined) {
                     search_data_breeder.push(searchData[i]);
                 }
             }
             if (searchData[i]['data']['DonorAddress'] != undefined) {
-                if (searchData[i]['data']['DonorAddress']['location']['location'] != undefined) {
+                if (searchData[i]['data']['DonorAddress']['location']['centre'] != undefined) {
                     search_data_donor.push(searchData[i]);
                 }
             }
@@ -201,8 +201,8 @@ function displayYRLocations_new(array, type) {
 
 
         if (type === 'Donor') {
-            la = array[i]['data']['DonorAddress']['location']['location']['latitude'];
-            lo = array[i]['data']['DonorAddress']['location']['location']['longitude'];
+            la = array[i]['data']['DonorAddress']['location']['centre']['latitude'];
+            lo = array[i]['data']['DonorAddress']['location']['centre']['longitude'];
 
             if (array[i]['data']['DonorAddress']['Address'] != undefined) {
                 if (array[i]['data']['DonorAddress']['Address']['addressCountry'] != undefined) {
@@ -216,8 +216,8 @@ function displayYRLocations_new(array, type) {
                 }
             }
         } else if (type === 'Breeder') {
-            la = array[i]['data']['BreederAddress']['location']['location']['latitude'];
-            lo = array[i]['data']['BreederAddress']['location']['location']['longitude'];
+            la = array[i]['data']['BreederAddress']['location']['centre']['latitude'];
+            lo = array[i]['data']['BreederAddress']['location']['centre']['longitude'];
 
             if (array[i]['data']['BreederAddress']['Address'] != undefined) {
                 if (array[i]['data']['BreederAddress']['Address']['addressCountry'] != undefined) {
