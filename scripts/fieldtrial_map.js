@@ -407,8 +407,18 @@ function formatPlotModal(plot) {
                 phenotypearray.push('<tr>');
                 phenotypearray.push('<td>' + observation['date'] + '</td>');
                 phenotypearray.push('<td>' + observation['value'] + '</td>');
-                phenotypearray.push('<td  class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'">' + observation['phenotype']['trait']['so:name'] + '</td>');
-                phenotypearray.push('<td  data-toggle="tooltip" title="'+observation['phenotype']['measurement']['so:description']+'">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')){
+                    phenotypearray.push('<td  class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/ontology/'+observation['phenotype']['trait']['so:sameAs']+'">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+
+                }else{
+                    phenotypearray.push('<td  class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'">' + observation['phenotype']['trait']['so:name'] + '</td>');
+                }
+                if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')){
+                    phenotypearray.push('<td  data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/ontology/'+observation['phenotype']['measurement']['so:sameAs']+'">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+
+                }else {
+                    phenotypearray.push('<td  data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                }
                 phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
                 phenotypearray.push('<td>' + corrected + '</td>');
                 phenotypearray.push('</tr>');
