@@ -13,7 +13,7 @@ var colorJSON = {
 };
 var plotsModalInfo = {};
 
-function startFieldtrialGIS(jsonArray) {
+function startFieldTrialGIS(jsonArray) {
 
     var filtered_data = [];
     jQuery('#status').html('');
@@ -148,7 +148,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
 }
 
 function removePointers() {
-    map.removeLayer(markersGroup);
+    map.removeLayer(markersGroup2);
     // if (pie_view) {
     //     markersGroup = new L.MarkerClusterGroup({
     //         maxClusterRadius: 2 * 30,
@@ -156,7 +156,7 @@ function removePointers() {
     //     });
     // }
     // else {
-    markersGroup = new L.MarkerClusterGroup();
+    markersGroup2 = new L.MarkerClusterGroup();
     // }
 }
 
@@ -178,10 +178,6 @@ function removePointers() {
 //
 //     });
 
-function ukcpvs_only() {
-    var column = yrtable.column(2);
-    column.search('^((?!Unknown).)*$', true, false).draw();
-}
 
 
 function displayFTLocations(array, fieldTrialName, team) {
@@ -214,9 +210,9 @@ function displayFTLocations(array, fieldTrialName, team) {
             + '<b>Harvest Date: </b>' + array[i]['harvest_date'] + '<br/>'
             + '<u class=\"newstyle_link\" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">Plots</u>'
         ;
-        addPointer(la, lo, popup_note);
+        addFTPointer(la, lo, popup_note);
     }
-    map.addLayer(markersGroup);
+    map.addLayer(markersGroup2);
 
 
 }
@@ -230,7 +226,7 @@ function plot_colorbox(id) {
 }
 
 
-function addPointer(la, lo, note) {
+function addFTPointer(la, lo, note) {
 
     var blueIcon = new L.Icon({
         iconUrl: 'scripts/leaflet/images/marker-icon-2x-blue.png',
@@ -311,17 +307,17 @@ function addPointer(la, lo, note) {
     markerLayer = L.marker([la, lo]).bindPopup(note);
     // }
     // markers.push(markerLayer);
-    markersGroup.addLayer(markerLayer);
+    markersGroup2.addLayer(markerLayer);
 
 }
 
 
-function popup(msg) {
-    L.popup()
-        .setLatLng([52.621615, 8.219])
-        .setContent(msg)
-        .openOn(map);
-}
+// function popup(msg) {
+//     L.popup()
+//         .setLatLng([52.621615, 8.219])
+//         .setContent(msg)
+//         .openOn(map);
+// }
 
 
 function createPlotsHTML(array) {
@@ -408,13 +404,13 @@ function formatPlotModal(plot) {
                 phenotypearray.push('<td>' + observation['date'] + '</td>');
                 phenotypearray.push('<td>' + observation['value'] + '</td>');
                 if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td  class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/ontology/'+observation['phenotype']['trait']['so:sameAs']+'">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+                    phenotypearray.push('<td  class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['trait']['so:sameAs']+'/">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
 
                 }else{
                     phenotypearray.push('<td  class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'">' + observation['phenotype']['trait']['so:name'] + '</td>');
                 }
                 if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td  data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/ontology/'+observation['phenotype']['measurement']['so:sameAs']+'">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                    phenotypearray.push('<td  data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['measurement']['so:sameAs']+'/">' + observation['phenotype']['measurement']['so:name'] + '</td>');
 
                 }else {
                     phenotypearray.push('<td  data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');

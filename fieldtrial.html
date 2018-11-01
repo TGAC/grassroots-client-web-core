@@ -125,9 +125,9 @@
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
     <div class="container" style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">
         <div id="back_link" style="visibility: hidden;"><a href="index.html"><< Back to all services list</a><br/></div>
-        <h2 id="title"></h2>
+        <h2 id="title">DFWFieldTrial search service</h2>
 
-        <p id="description"></p>
+        <p id="description">A service to search field trial data</p>
 
         <form id="form" role="form">
             <div class="list_service_table"><table id="listTable"></table></div>
@@ -183,7 +183,7 @@
                 $('#form').html('');
                 $('#tableWrapper').html('<table id="resultTable"></table>');
                 // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-                markersGroup = new L.MarkerClusterGroup({});
+                markersGroup2 = new L.MarkerClusterGroup({});
                 map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
                 //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -207,7 +207,7 @@
 
                 L.control.zoom({position: 'topright'}).addTo(map);
 
-                startFieldtrialGIS(fieldTrailJSON['results'][0]['results']);
+                startFieldTrialGIS(fieldTrailJSON['results'][0]['results']);
                 // map.fitWorld({reset: true}).zoomIn();
             });
 
