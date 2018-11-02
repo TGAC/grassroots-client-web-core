@@ -111,7 +111,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
         if (json['address'] != undefined) {
-            if (json['address']['address']['location']['location'] != undefined) {
+            if (json['address']['address']['location']['centre'] != undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
                 map.setView([la, lo], 16, {animate: true});
