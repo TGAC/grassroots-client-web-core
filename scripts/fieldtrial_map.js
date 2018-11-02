@@ -431,8 +431,8 @@ function formatPlotModal(plot) {
     htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
     htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
     htmlarray.push('<span style="background-color:' + color + '" >Replicate: ' + replicate_index + '</span><br/>');
-    htmlarray.push('Length: ' + plot['length'] + '<br/>');
-    htmlarray.push('Width: ' + plot['width'] + '<br/>');
+    htmlarray.push('Length: ' + plot['length'] + 'm<br/>');
+    htmlarray.push('Width: ' + plot['width'] + 'm<br/>');
     htmlarray.push('Trial Design: ' + plot['trial_desgin'] + '<br/>');
     htmlarray.push('Sowing Date: ' + plot['sowing_date'] + '<br/>');
     htmlarray.push('Harvest Date: ' + plot['harvest_date'] + '<br/>');
