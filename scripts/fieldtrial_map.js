@@ -415,7 +415,12 @@ function formatPlotModal(plot) {
                 }else {
                     phenotypearray.push('<td  data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
                 }
-                phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
+                if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')){
+                    phenotypearray.push('<td  data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['unit']['so:sameAs']+'/">' + observation['phenotype']['unit']['so:name'] + '</td>');
+
+                }else {
+                    phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
+                }
                 phenotypearray.push('<td>' + corrected + '</td>');
                 phenotypearray.push('</tr>');
             }
@@ -426,6 +431,8 @@ function formatPlotModal(plot) {
     htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
     htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
     htmlarray.push('<span style="background-color:' + color + '" >Replicate: ' + replicate_index + '</span><br/>');
+    htmlarray.push('Length: ' + plot['length'] + '<br/>');
+    htmlarray.push('Width: ' + plot['width'] + '<br/>');
     htmlarray.push('Trial Design: ' + plot['trial_desgin'] + '<br/>');
     htmlarray.push('Sowing Date: ' + plot['sowing_date'] + '<br/>');
     htmlarray.push('Harvest Date: ' + plot['harvest_date'] + '<br/>');
