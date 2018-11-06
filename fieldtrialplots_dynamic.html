@@ -8,8 +8,6 @@
 
     <title>Grassroots Infrastructure</title>
 
-
-    <link rel="stylesheet" href="styles/style.css" type="text/css"/>
     <!-- font awesome -->
     <link href="scripts/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 
@@ -19,6 +17,7 @@
     <script type="text/javascript" src="scripts/jquery/js/jquery.highlight.js"></script>
     <link rel="stylesheet" href="scripts/jquery/jquery-ui-1.11.4.custom/jquery-ui.min.css"
           type="text/css"/>
+    <script type="text/javascript" src="scripts/jquery/colorbox/jquery.colorbox-min.js"></script>
     <link rel="stylesheet" href="scripts/jquery/colorbox/colorbox.css"
           type="text/css"/>
 
@@ -26,9 +25,6 @@
     <script type="text/javascript" src="scripts/jquery/datatables/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="scripts/jquery/datatables/js/dataTables.searchHighlight.min.js"></script>
     <link rel="stylesheet" href="scripts/jquery/datatables/css/jquery.dataTables.min.css"
-          type="text/css"/>
-    <script type="text/javascript" src="scripts/jquery/colorbox/jquery.colorbox-min.js"></script>
-    <link rel="stylesheet" href="scripts/jquery/colorbox/colorbox.css"
           type="text/css"/>
 
 
@@ -42,7 +38,7 @@
     <script type="text/javascript" src="scripts/wis.js"></script>
     <script type="text/javascript" src="scripts/FileSaver.min.js"></script>
 
-    <script type="text/javascript" src="scripts/gis_map.js"></script>
+    <script type="text/javascript" src="scripts/fieldtrial_map.js"></script>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="scripts/leaflet/leaflet.css" />
@@ -68,12 +64,6 @@
           type="text/css">
 
     <link href="https://grassroots.tools/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- date picker -->
-    <script type="text/javascript" src="scripts/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="scripts/bootstrap-datepicker/css/bootstrap-datepicker.standalone.min.css" type="text/css"/>
-
-
     <!--<link href="https://grassroots.tools/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
     <!--<script src="https://grassroots.tools/vendor/bootstrap/js/bootstrap.min.js"></script>-->
 
@@ -83,8 +73,13 @@
     <!--<script src="https://grassroots.tools/vendor/jquery-easing/jquery.easing.min.js"></script>-->
     <link href="https://grassroots.tools/css/site.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="styles/style.css" type="text/css"/>
 
-
+    
+    <script type="text/javascript" src="scripts/d3/d3.min.js"></script>
+    <!-- data file -->
+    <!--<script type="text/javascript" src="scripts/json_now_including_plot_replicates.js"></script>-->
+    <script type="text/javascript" src="scripts/plot_phenotype_no_corrected.js"></script>
 
 
 </head>
@@ -129,10 +124,10 @@
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
     <div class="container" style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">
-        <div id="back_link" style="visibility: hidden;"><a href="index.html"><< Back to all services list</a><br/></div>
-        <h2 id="title"></h2>
+        <div id="back_link" ><a href="index.html"><< Back to all services list</a><br/></div>
+        <h2 id="title">DFWFieldTrial search service</h2>
 
-        <p id="description"></p>
+        <p id="description">A service to search field trial data</p>
 
         <form id="form" role="form">
             <div class="list_service_table"><table id="listTable"></table></div>
@@ -149,46 +144,117 @@
 
         <div id="result"></div>
 
-        <div id="map"></div>
+        <div id="plots" style="width:100%; overflow: scroll;"></div>
 
-        <div id="tableWrapper" style="margin-top:-45px;margin-left:-10px;">
-            <table id="resultTable"></table>
+        <!-- Modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
+            <div class="modal-dialog  modal-lg" role="document">
+                <div class="modal-content" style="z-index: 9999999;">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Plot details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!--<div id="plots"></div>-->
-
-        <!--&lt;!&ndash; Modal &ndash;&gt;-->
-        <!--<div class="modal" tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">-->
-            <!--<div class="modal-dialog  modal-lg" role="document">-->
-                <!--<div class="modal-content" style="z-index: 9999999;">-->
-                    <!--<div class="modal-header">-->
-                        <!--<h5 class="modal-title">Plot details</h5>-->
-                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-                            <!--<span aria-hidden="true">&times;</span>-->
-                        <!--</button>-->
-                    <!--</div>-->
-                    <!--<div class="modal-body" id="modal-body">-->
-
-                    <!--</div>-->
-                    <!--<div class="modal-footer">-->
-                        <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
         <script type="text/javascript">
-            // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
-            var services = '{"operations": {"operation":"get_all_services"}}';
-            var selected_service_name;
-            var response = null;
-            var parameters;
-            var groups;
             $(document).ready(function () {
-                // populateService('BlastN service');
-                get_all_services_as_table();
-            });
+                var id_param = null;
 
+                if ('URLSearchParams' in window) {
+                    // Browser supports URLSearchParams
+                    let params = new URLSearchParams (document.location.search.substring(1));
+                    id_param = params.get ("id"); 
+                }
+                
+                if (id_param != null) {
+                    var req_json = CreatePlotsRequestForExperimentalArea (id_param);
+                
+                    if (req_json) {
+                         $.ajax ({
+                            type: "POST",
+                            url: server_url,
+                            data: JSON.stringify (req_json),
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8"
+                        }).done (function (experimental_areas_json) {
+                            LoadTable (experimental_areas_json);
+                        }).fail (function (req, status, error) {
+                            console.info ("req " + "status " + status + " error " + error);
+                        });
+                    }
+                }
+          });
+
+        function LoadTable (experimental_area_json) {
+            var jsonArray = experimental_area_json['results'][0]['results'];
+            var filtered_data = [];
+            jQuery('#status').html('');
+            var fieldTrialName = '';
+            var team = '';
+            for (i = 0; i < jsonArray.length; i++) {
+                let exp_area = jsonArray[i]['data'];            
+
+                let plots_table = GeneratePlotsForExperimentalArea (exp_area);
+                $('#plots').html (plots_table);
+/*
+                for (j = 0; j < exp_areas_array.length; j++) {
+                    let address = exp_areas_array [j]['address'];
+
+                    if (address != undefined) {
+                        
+                        fieldTrialName = jsonArray [i]['data']['so:name'];
+                        team = jsonArray [i]['data']['team'];
+                        if (address ['address']['location']['centre'] != undefined) {
+                            filtered_data.push (exp_areas_array [j]);
+                        }
+                    }
+                }
+*/
+            }
+            console.log(JSON.stringify(plotsHTMLArray));
+
+        }
+
+        function GeneratePlotsForExperimentalArea (experimental_area_json) {
+            var expAreaId = experimental_area_json['_id']['$oid'];
+            var plots = experimental_area_json['plots'];
+            var htmlarray = [];
+
+            var row = 1;
+            var column = 1;
+
+            for (j = 0; j < plots.length; j++) {
+
+                if (plots[j]['row_index'] === row) {
+                    if (plots[j]['column_index'] === column) {
+                        htmlarray.push(formatPlot(plots[j]));
+                        column++;
+                    }
+                } else if (plots[j]['row_index'] > row) {
+
+                    row++;
+                    column = 2;
+                    htmlarray.push('</tr><tr>');
+                    htmlarray.push('<td>' + row + '</td>');
+                    htmlarray.push(formatPlot(plots[j]));
+                }
+            }
+            var tableString = '<td>1</td>' + htmlarray.join("");
+            var tableArray = tableString.split("</tr><tr>");
+            var reversedString = tableArray.reverse().join("</tr><tr>");
+
+            return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
+        }
 
         </script>
     </div>

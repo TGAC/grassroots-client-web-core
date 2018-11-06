@@ -79,8 +79,11 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
                 "render": function (data, type, full, meta) {
                     if (full['_id'] != undefined) {
                         var id = full['_id']['$oid'];
-                        // return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
-                        return '<a class=\"newstyle_link\" href="fieldtrialplots.html" target="_blank">View plots</a>';
+                        
+                        /* remove the quotes */
+                        id = id.replace (/"/g, "");
+                         //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
+                        return '<a class=\"newstyle_link\" href=\"fieldtrialplots_dynamic.html?id='+id+'\"  target=\"_blank\">View plots</a>';
                     }
                     else {
                         return '';
@@ -391,39 +394,36 @@ function formatPlotModal(plot) {
     var accession = '';
     var pedigree = '';
     var phenotypearray = [];
-    phenotypearray.push('<table class="table "><thead><tr><th>Date</th><th>Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Corrected</th></tr></thead><tbody>');
+    phenotypearray.push('<table class="table plots"><thead><tr><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
     for (r = 0; r < plot['rows'].length; r++) {
         accession += " " + plot['rows'][r]['material']['accession'];
         pedigree += " " + plot['rows'][r]['material']['pedigree'];
         if (plot['rows'][r]['observations'] != undefined) {
             for (o = 0; o < plot['rows'][r]['observations'].length; o++) {
                 var observation = plot['rows'][r]['observations'][o];
-                var corrected = 'raw';
-                if (observation['corrected']) {
-                    corrected = 'corrected';
-                }
+
                 phenotypearray.push('<tr>');
-                phenotypearray.push('<td style="font-size: 0.8rem;">' + observation['date'] + '</td>');
-                phenotypearray.push('<td style="font-size: 0.8rem;">' + observation['value'] + '</td>');
+                phenotypearray.push('<td>' + SafePrint (observation['date']) + '</td>');
+                phenotypearray.push('<td>' + SafePrint (observation['raw_value']) + '</td>');
+                phenotypearray.push('<td>' + SafePrint (observation['corrected_value']) + '</td>');
                 if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td style="font-size: 0.8rem;" class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['trait']['so:sameAs']+'/">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+                    phenotypearray.push('<td class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['trait']['so:sameAs']+'/">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
 
                 }else{
-                    phenotypearray.push('<td style="font-size: 0.8rem;" class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'">' + observation['phenotype']['trait']['so:name'] + '</td>');
+                    phenotypearray.push('<td class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'">' + observation['phenotype']['trait']['so:name'] + '</td>');
                 }
                 if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td style="font-size: 0.8rem;" data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['measurement']['so:sameAs']+'/">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['measurement']['so:sameAs']+'/">' + observation['phenotype']['measurement']['so:name'] + '</td>');
 
                 }else {
-                    phenotypearray.push('<td style="font-size: 0.8rem;" data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
                 }
-                if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td style="font-size: 0.8rem;" data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['unit']['so:sameAs']+'/">' + observation['phenotype']['unit']['so:name'] + '</td>');
+                if (observation['phenotype']['unit']['so:sameAs'].startsWith('CO')){
+                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['unit']['so:sameAs']+'/">' + observation['phenotype']['unit']['so:name'] + '</td>');
 
                 }else {
-                    phenotypearray.push('<td style="font-size: 0.8rem;">' + observation['phenotype']['unit']['so:name'] + '</td>');
+                    phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
                 }
-                phenotypearray.push('<td style="font-size: 0.8rem;">' + corrected + '</td>');
                 phenotypearray.push('</tr>');
             }
         }
@@ -435,9 +435,9 @@ function formatPlotModal(plot) {
     htmlarray.push('<span style="background-color:' + color + '" >Replicate: ' + replicate_index + '</span><br/>');
     htmlarray.push('Length: ' + plot['length'] + 'm<br/>');
     htmlarray.push('Width: ' + plot['width'] + 'm<br/>');
-    htmlarray.push('Trial Design: ' + plot['trial_desgin'] + '<br/>');
-    htmlarray.push('Sowing Date: ' + plot['sowing_date'] + '<br/>');
-    htmlarray.push('Harvest Date: ' + plot['harvest_date'] + '<br/>');
+    htmlarray.push('Trial Design: ' + SafePrint (plot['trial_desgin']) + '<br/>');
+    htmlarray.push('Sowing Date: ' + SafePrint (plot['sowing_date']) + '<br/>');
+    htmlarray.push('Harvest Date: ' + SafePrint (plot['harvest_date']) + '<br/>');
     htmlarray.push('Pedigree: ' + pedigree + '<br/>');
     htmlarray.push('<hr/>');
     htmlarray.push('<h5>Phenotype</h5>');
@@ -457,4 +457,49 @@ function formatPlotModal(plot) {
 
 
 }
+
+/**
+ * Get empty strings instead of undefeined variables
+ * 
+ * @param obj The object to check.
+ */
+function SafePrint (obj) {
+    if (obj === undefined) {
+        return "";
+     } else {
+        return obj;
+     }
+}
+
+
+function CreatePlotsRequestForExperimentalArea (exp_area_id) {
+
+    var request = 
+    {
+	    "services": [{
+		    "so:name": "DFWFieldTrial search service",
+		    "start_service": true,
+		    "parameter_set": {
+			    "parameters": [{
+				    "param": "Experimental Area to search for",
+				    "current_value": "5bcdc979618dc26d682e4a52",
+				    "grassroots_type": "xsd:string",
+				    "group": "Experimental Area"
+			    }, {
+				    "param": "Get all Plots for Experimental Area",
+				    "current_value": true,
+				    "grassroots_type": "xsd:boolean",
+				    "group": "Experimental Area"
+			    }]
+		    }
+	    }]
+    };
+
+    request['services'][0]['parameter_set']['parameters'][0]['current_value'] = exp_area_id;
+
+    return request;
+}
+
+
+
 

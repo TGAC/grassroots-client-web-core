@@ -237,3 +237,12 @@ table.dataTable span.column_highlight {
 .ftTableContent{
 
 }
+
+
+table.plots td {
+    font-size: 0.8rem;
+}
+
+.modal-dialog {
+    max-width: 100%;
+}
