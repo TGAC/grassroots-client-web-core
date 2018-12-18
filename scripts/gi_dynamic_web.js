@@ -289,7 +289,7 @@ function selected_option(default_value, current_value, select_bool) {
 function produce_one_parameter_form(parameter, repeatable, group_id) {
     var form_html = [];
     var param = parameter['param'];
-    var param_name = parameter['name'];
+    var param_name = parameter['so:name'];
     var display_name = param_name;
     if (display_name == undefined) {
         display_name = param;
