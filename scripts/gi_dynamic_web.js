@@ -2,7 +2,7 @@ var linked_services_global = {};
 var textareas = [];
 var synchronous = false;
 var repeatable_groups = {};
-var server_url = "/grassroots/controller";
+var server_url = "/grassroots-test/5/controller";;
 
 function get_all_services_as_table() {
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
@@ -70,8 +70,7 @@ function get_all_services_as_table() {
                             if (full['category']['application_subcategory'] != undefined) {
                                 return '<div title="' + full['category']['application_subcategory']['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, full['category']['application_subcategory']['so:sameAs']) + '" class="newstyle_link">' + full['category']['application_subcategory']['so:name'] + '</a></div>';
 
-                            }
-                            else {
+                            } else {
                                 return '';
                             }
                         }
@@ -160,6 +159,7 @@ function populateService(service_name) {
             synchronous = response['services'][0]['operation']['synchronous'];
             console.info(synchronous);
             produce_form('form', parameters, groups);
+            simpleOrAdvanced('show_simple');
             for (var i = 0; i < textareas.length; i++) {
                 document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
                 document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
@@ -174,11 +174,15 @@ function produce_form(div, parameters, groups) {
     if (groups.length > 0) {
         var parameters_added = [];
         for (var j = 0; j < groups.length; j++) {
+            var group_level='all';
+            if (groups[j]['level']!=undefined){
+                group_level = groups[j]['level'];
+            }
             if (groups[j]['repeatable']) {
                 var group_random_id = generate_random_id();
                 // repeatable stuff here
-                form_html.push('<fieldset>');
-                form_html.push('<legend>' + groups[j]['so:name'] + ' <span class="glyphicon glyphicon-plus pull-right" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
+                form_html.push('<fieldset class="'+group_level+'">');
+                form_html.push('<legend class="'+group_level+'">' + groups[j]['so:name'] + ' <span class="glyphicon glyphicon-plus pull-right" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
                 form_html.push('<div id="' + group_random_id + '">');
 
                 var this_group = {};
@@ -202,7 +206,7 @@ function produce_form(div, parameters, groups) {
                 form_html.push('</fieldset>');
             } else {
                 if (groups[j]['visible'] || groups[j]['visible'] == undefined) {
-                    form_html.push('<fieldset>');
+                    form_html.push('<fieldset class="'+group_level+'">');
                     form_html.push('<legend>' + groups[j]['so:name'] + '</legend>');
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
@@ -213,7 +217,7 @@ function produce_form(div, parameters, groups) {
                     form_html.push('</fieldset>');
                 } else {
                     var random_id = generate_random_id();
-                    form_html.push('<fieldset>');
+                    form_html.push('<fieldset class="'+group_level+'">');
                     form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['so:name'] + '</a></legend>');
 
                     form_html.push('<div id="' + random_id + '"  class="collapse">');
@@ -242,7 +246,7 @@ function produce_form(div, parameters, groups) {
         }
     }
 
-    form_html.push('<input id="submit_button" class="btn btn-default" type="button" onclick="submit_form();" value="Submit">');
+    form_html.push('<input id="submit_button" class="btn btn-light" type="button" onclick="submit_form();" value="Submit">');
 
     $('#' + div).html(form_html.join(' '));
     $('#' + div).validator({
@@ -291,6 +295,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         display_name = param;
     }
     var grassroots_type = parameter['grassroots_type'];
+    var level = parameter['level'];
     var type = parameter['type'];
     var description = parameter['so:description'];
     var current_value = '';
@@ -333,7 +338,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             // form_html.push(' <input type="radio" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'false" value="false" ' + selected_option(default_value, false, false) + '> False');
             // form_html.push('</label>');
             // form_html.push('</div>');
-            form_html.push('<div class="form-check">');
+            form_html.push('<div class="form-check ' + level + '">');
             form_html.push('<label class="form-check-label">');
             form_html.push(' <input type="checkbox" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> ');
             form_html.push(display_name + ' <small>' + description + '</small>');
@@ -347,7 +352,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             || grassroots_type == "params:unsigned_number"
             || grassroots_type == "params:negative_integer") {
 
-            form_html.push('<div class="form-group">');
+            form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</div>');
@@ -357,7 +362,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "xsd:string"
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
 
-            form_html.push('<div class="form-group">');
+            form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</div>');
@@ -365,7 +370,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         }
         // textarea
         else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
-            form_html.push('<div class="form-group">');
+            form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" rows="3">' + default_value + '</textarea>');
             form_html.push('</div>');
@@ -374,7 +379,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         }
         //fasta (textarea)
         else if (grassroots_type == "params:fasta") {
-            form_html.push('<div class="form-group">');
+            form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" rows="6" data-fasta required>' + default_value + '</textarea>');
             form_html.push('<div class="help-block with-errors">FASTA format required</div>');
@@ -384,7 +389,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         }
         //file
         else if (grassroots_type == "params:input_filename" || grassroots_type == "params:output_filename" || grassroots_type == "params:tabular") {
-            // form_html.push('<div class="form-group">');
+            // form_html.push('<div class="form-group '+level+'">');
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input type="file" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" />');
             // form_html.push('</div>');
@@ -394,21 +399,21 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         }
         // password
         else if (grassroots_type == "params:password") {
-            form_html.push('<div class="form-group">');
+            form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
             form_html.push('</div>');
         }
         // directory
         else if (grassroots_type == "params:directory") {
-            form_html.push('<div class="form-group">');
+            form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
             form_html.push('</div>');
         }
         // date
         else if (grassroots_type == "xsd:date") {
-            form_html.push('<div class="form-group">');
+            form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</div>');
@@ -418,7 +423,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     else {
         var outfmt_html = [];
         var enums = parameter['enum'];
-        form_html.push('<div class="form-group">');
+        form_html.push('<div class="form-group ' + level + '">');
         form_html.push('<label title="' + description + '">' + display_name + '</label>');
         form_html.push('<select class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '">');
         for (var j = 0; j < enums.length; j++) {
@@ -431,7 +436,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             outfmt_html.push('<option value="' + this_enum['value'] + '">' + option_text + '</option>');
         }
 
-        if ((selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') && param == 'outfmt') {
+        if ((selected_service_name === 'BlastN service' || selected_service_name === 'BlastP service' || selected_service_name === 'BlastX service') && param === 'outfmt') {
             $('#output_format').html(outfmt_html.join(' '));
         }
         form_html.push('</select>');
@@ -439,6 +444,17 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
     }
     return form_html.join(' ');
+}
+
+function simpleOrAdvanced(string){
+    if (string==='show_simple'){
+        $('.advanced').hide();
+        $('.simple').show();
+
+    } else if (string==='show_advanced'){
+        $('.simple').hide();
+        $('.advanced').show();
+    }
 }
 
 function submit_form() {
@@ -535,7 +551,7 @@ function submit_form() {
             } else if (selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
                 $('#status').html('');
                 $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-            }  else if (selected_service_name == 'Germplasm Research Unit seeds service' ) {
+            } else if (selected_service_name == 'Germplasm Research Unit seeds service') {
                 $('#status').html('');
                 $('#form').html('');
                 $('#tableWrapper').html('<table id="resultTable"></table>');
@@ -566,14 +582,14 @@ function submit_form() {
 
                 startGIS(json['results'][0]['results']);
                 map.fitWorld({reset: true}).zoomIn();
-            } else if (selected_service_name == 'DFWFieldTrial search service'){
+            } else if (selected_service_name == 'DFWFieldTrial search service') {
                 $('#status').html('');
                 $('#form').html('');
                 $('#tableWrapper').html('<table id="resultTable"></table>');
                 // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
                 markersGroup2 = new L.MarkerClusterGroup({});
                 map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
-                
+
                 //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
                 //        maxZoom: 18
@@ -592,9 +608,9 @@ function submit_form() {
                     format: 'png8',
                     size: '256'
                 }).addTo(map);
-                
+
                 L.control.zoom({position: 'topright'}).addTo(map);
-                
+
                 startFieldTrialGIS(json['results'][0]['results']);
                 //window.location.href='fieldtrial.html';
 
@@ -646,16 +662,14 @@ function checkResult(each_result) {
                             $('#result').html("Done");
                             downloadFile(json[0]['results'][0]['data'], selected_service_name);
                         }
-                    }
-                    else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
+                    } else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
                         jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"images/ajax-loader.gif\"/>');
                         var timer;
                         clearTimeout(timer);
                         timer = setTimeout(function () {
                             checkResult(each_result);
                         }, 6500);
-                    }
-                    else {
+                    } else {
                         jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['errors']);
                         Utils.ui.reenableButton('submit_button', 'Submit');
                     }
@@ -962,8 +976,7 @@ function handleFileSelect(evt) {
             $('#' + String(evt.target.id)).trigger("change");
         }
         r.readAsText(f);
-    }
-    else {
+    } else {
         alert("Failed to load file");
     }
 }
