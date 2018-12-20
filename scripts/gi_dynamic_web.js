@@ -246,7 +246,7 @@ function produce_form(div, parameters, groups) {
         }
     }
 
-    form_html.push('<input id="submit_button" class="btn btn-light" type="button" onclick="submit_form();" value="Submit">');
+    form_html.push('<input id="submit_button" class="btn btn-secondary" type="button" onclick="submit_form();" value="Submit">');
 
     $('#' + div).html(form_html.join(' '));
     $('#' + div).validator({
@@ -339,9 +339,10 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             // form_html.push('</label>');
             // form_html.push('</div>');
             form_html.push('<div class="form-check ' + level + '">');
-            form_html.push('<label class="form-check-label">');
+            form_html.push('<label class="form-check-label"  title="' + description + '">');
             form_html.push(' <input type="checkbox" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> ');
-            form_html.push(display_name + ' <small>' + description + '</small>');
+            // form_html.push(display_name + ' <small>' + description + '</small>');
+            form_html.push(display_name);
             form_html.push('</label>');
             form_html.push('</div>');
 
