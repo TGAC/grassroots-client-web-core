@@ -164,7 +164,7 @@ function populateService(service_name) {
                 document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
                 document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
             }
-            $('.datepicker').datepicker();
+            $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
         }
     });
 }
