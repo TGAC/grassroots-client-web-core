@@ -483,13 +483,11 @@ function CreatePlotsRequestForExperimentalArea (exp_area_id) {
 			    "parameters": [{
 				    "param": "Study to search for",
 				    "current_value": "5bcdc979618dc26d682e4a52",
-				    "grassroots_type": "xsd:string",
-				    "group": "Experimental Area"
+				    "grassroots_type": "xsd:string"
 			    }, {
 				    "param": "Get all Plots for Study",
 				    "current_value": true,
-				    "grassroots_type": "xsd:boolean",
-				    "group": "Experimental Area"
+				    "grassroots_type": "xsd:boolean"
 			    }]
 		    }
 	    }]
