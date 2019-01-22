@@ -26,13 +26,15 @@
 
 (function($){
     $.fn.load_msa = function(exons_genes_and_contigs){
+        console.log(exons_genes_and_contigs);
         var element = this;
         $.each($(element).find("tr.odd"),  function( key, value ) {
 
             var msa_div = "msa-" + value.id;
             // var url = "get_mask?id="+id+"&marker="+value.id;
             console.log("load_msa");
-            biojs.io.fasta.parse(exons_genes_and_contigs, function(seqs){
+            var seqs = biojs.io.fasta.parse(exons_genes_and_contigs);
+                console.log("inside parse");
                 console.log("parsed seq: " + seqs);
                 if(seqs){
                     var div_obj = document.getElementById(msa_div);
@@ -172,7 +174,6 @@
                     console.log("before render");
                     msa.render();
                 }
-            });
         });
     }
 })(jQuery);
