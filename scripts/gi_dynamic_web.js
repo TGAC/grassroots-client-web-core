@@ -154,6 +154,10 @@ function populateService(service_name) {
             console.info(JSON.stringify(json));
             $('#title').html(response['services'][0]['so:name']);
             $('#description').html(response['services'][0]['so:description']);
+            if (response['services'][0]['operation']['so:url'] != undefined){
+                var infoLink = response['services'][0]['operation']['so:url'];
+                $('#moreinfo').html('For more information, go to <a href="'+infoLink+'" target="_blank">'+ infoLink + '</a>');
+            }
             parameters = response['services'][0]['operation']['parameter_set']['parameters'];
             groups = response['services'][0]['operation']['parameter_set']['groups'];
             synchronous = response['services'][0]['operation']['synchronous'];
