@@ -246,3 +246,7 @@ table.plots td {
 .modal-dialog {
     max-width: 100%;
 }
+
+.form-check-label {
+    padding-left: 0px ! important;
+}
