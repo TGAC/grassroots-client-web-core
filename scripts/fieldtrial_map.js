@@ -20,12 +20,12 @@ function startFieldTrialGIS(jsonArray) {
     var fieldTrialName = '';
     var team = '';
     for (i = 0; i < jsonArray.length; i++) {
-        for (j = 0; j < jsonArray[i]['data']['experimental_areas'].length; j++)
-            if (jsonArray[i]['data']['experimental_areas'][j]['address'] != undefined) {
+        for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
+            if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
                 fieldTrialName = jsonArray[i]['data']['so:name'];
                 team = jsonArray[i]['data']['team'];
-                if (jsonArray[i]['data']['experimental_areas'][j]['address']['address']['location']['centre'] != undefined) {
-                    filtered_data.push(jsonArray[i]['data']['experimental_areas'][j]);
+                if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
+                    filtered_data.push(jsonArray[i]['data']['studies'][j]);
                 }
             }
     }
