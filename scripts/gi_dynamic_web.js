@@ -161,7 +161,7 @@ function populateService(service_name) {
             parameters = response['services'][0]['operation']['parameter_set']['parameters'];
             groups = response['services'][0]['operation']['parameter_set']['groups'];
             synchronous = response['services'][0]['operation']['synchronous'];
-            console.info(synchronous);
+            console.info('synchronous'+synchronous);
             produce_form('form', parameters, groups);
             simpleOrAdvanced('show_simple');
             for (var i = 0; i < textareas.length; i++) {
@@ -328,6 +328,9 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         if (parameter['default_value'] != undefined) {
             default_value = parameter['default_value'];
         }
+        if (parameter['default_value'] != undefined && (grassroots_type == "params:unsigned_integer" || grassroots_type == "xsd:double") ) {
+            default_value = parseFloat(parameter['default_value'].toFixed(3));
+        }
     }
 
     if (parameter['enum'] == undefined) {
@@ -352,10 +355,17 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
 
         }
-        // input form numbers
-        else if (grassroots_type == "params:signed_integer" || grassroots_type == "params:unsigned_integer" || grassroots_type == "xsd:double"
-            || grassroots_type == "params:unsigned_number"
-            || grassroots_type == "params:negative_integer") {
+        // input form integer
+        else if (grassroots_type == "params:signed_integer" || grassroots_type == "params:unsigned_integer" || grassroots_type == "params:negative_integer") {
+
+            form_html.push('<div class="form-group ' + level + '">');
+            form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('</div>');
+
+        }
+        // input form float
+        else if (grassroots_type == "params:unsigned_integer" || grassroots_type == "xsd:double") {
 
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
@@ -487,7 +497,7 @@ function submit_form() {
         var value = form[i]['value'];
         var parameter = {};
         parameter['param'] = param;
-        parameter['grassroots_type'] = grassroots_type;
+        // parameter['grassroots_type'] = grassroots_type;
         if (group != 'none') {
             if (name[4] == 0) {
                 parameter['group'] = repeatable_groups[group]['group'];
@@ -500,6 +510,8 @@ function submit_form() {
             parameter['current_value'] = JSON.parse(value);
         } else if (type == 'integer') {
             parameter['current_value'] = parseInt(value);
+        } else if (type == 'number') {
+            parameter['current_value'] = parseFloat(value.toFixed(3));
         } else {
             parameter['current_value'] = value;
         }
