@@ -740,15 +740,21 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                         result_html.push('</p>');
 
                         if (hit['linked_services'] != null) {
-                            result_html.push('<p>Linked Services: ');
-                            for (var linki = 0; linki < hit['linked_services'].length; linki++) {
-                                var link_service_json = hit['linked_services'][linki];
-                                var link_service_id = generate_random_id();
-                                linked_services_global[link_service_id] = link_service_json;
-                                result_html.push(' | <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['so:name'] + '</a><span id="' + link_service_id + 'status"></span> |');
+                            if(hit['linked_services']['services'].length>0) {
+                                result_html.push('<p>Linked Services: ');
+                                for (var linki = 0; linki < hit['linked_services']['services'].length; linki++) {
+                                    var link_service_json = hit['linked_services']['services'][linki];
+                                    var link_service_id = generate_random_id();
+                                    linked_services_global[link_service_id] = link_service_json;
+                                    if (linki>0){
+                                        result_html.push(' | ');
+                                    }
 
+                                    result_html.push(' <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['so:name'] + '</a><span id="' + link_service_id + 'status"></span> ');
+
+                                }
+                                result_html.push('</p>');
                             }
-                            result_html.push('</p>');
                         }
 
 
