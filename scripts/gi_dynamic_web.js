@@ -903,12 +903,12 @@ function run_linked_service(id) {
     $('#' + id + 'status').html('<img src="images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
 
-    var lined_service_request_json = linked_services_global[id];
-    console.info(JSON.stringify(lined_service_request_json));
+    var linked_service_request_json = linked_services_global[id];
+    console.info(JSON.stringify({"services": [linked_service_request_json]}));
 
     $.ajax({
         url: server_url,
-        data: JSON.stringify({"services": [lined_service_request_json]}),
+        data: JSON.stringify({"services": [linked_service_request_json]}),
         // data: JSON.stringify(lined_service_request_json),
         type: "POST",
         dataType: "json",
