@@ -168,6 +168,7 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
+                $('#plots').html ('<img src="images/ajax-loader.gif"/>')
                 var id_param = null;
 
                 if ('URLSearchParams' in window) {
@@ -178,6 +179,7 @@
                 
                 if (id_param != null) {
                     var req_json = CreatePlotsRequestForExperimentalArea (id_param);
+
                 
                     if (req_json) {
                          $.ajax ({
