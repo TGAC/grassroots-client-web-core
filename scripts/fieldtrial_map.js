@@ -32,7 +32,7 @@ function startFieldTrialGIS(jsonArray) {
     // removeTable();
     produceFieldtrialTable(filtered_data, fieldTrialName, team);
     displayFTLocations(filtered_data, fieldTrialName, team);
-    createPlotsHTML(filtered_data);
+    // createPlotsHTML(filtered_data);
     // renderLegend();
 }
 
