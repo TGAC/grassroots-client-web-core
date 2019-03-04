@@ -2,7 +2,8 @@ var linked_services_global = {};
 var textareas = [];
 var synchronous = false;
 var repeatable_groups = {};
-var server_url = "/grassroots-test/5/controller";;
+var server_url = "/grassroots-test/5/controller";
+;
 
 function get_all_services_as_table() {
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
@@ -154,14 +155,14 @@ function populateService(service_name) {
             console.info(JSON.stringify(json));
             $('#title').html(response['services'][0]['so:name']);
             $('#description').html(response['services'][0]['so:description']);
-            if (response['services'][0]['operation']['so:url'] != undefined){
+            if (response['services'][0]['operation']['so:url'] != undefined) {
                 var infoLink = response['services'][0]['operation']['so:url'];
-                $('#moreinfo').html('For more information, go to <a href="'+infoLink+'" target="_blank">'+ infoLink + '</a>');
+                $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
             }
             parameters = response['services'][0]['operation']['parameter_set']['parameters'];
             groups = response['services'][0]['operation']['parameter_set']['groups'];
             synchronous = response['services'][0]['operation']['synchronous'];
-            console.info('synchronous'+synchronous);
+            console.info('synchronous' + synchronous);
             produce_form('form', parameters, groups);
             simpleOrAdvanced('show_simple');
             for (var i = 0; i < textareas.length; i++) {
@@ -178,15 +179,15 @@ function produce_form(div, parameters, groups) {
     if (groups.length > 0) {
         var parameters_added = [];
         for (var j = 0; j < groups.length; j++) {
-            var group_level='all';
-            if (groups[j]['level']!=undefined){
+            var group_level = 'all';
+            if (groups[j]['level'] != undefined) {
                 group_level = groups[j]['level'];
             }
             if (groups[j]['repeatable']) {
                 var group_random_id = generate_random_id();
                 // repeatable stuff here
-                form_html.push('<fieldset class="'+group_level+'">');
-                form_html.push('<legend class="'+group_level+'">' + groups[j]['so:name'] + ' <span class="glyphicon glyphicon-plus pull-right" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
+                form_html.push('<fieldset class="' + group_level + '">');
+                form_html.push('<legend class="' + group_level + '">' + groups[j]['so:name'] + ' <span class="glyphicon glyphicon-plus pull-right" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
                 form_html.push('<div id="' + group_random_id + '">');
 
                 var this_group = {};
@@ -210,7 +211,7 @@ function produce_form(div, parameters, groups) {
                 form_html.push('</fieldset>');
             } else {
                 if (groups[j]['visible'] || groups[j]['visible'] == undefined) {
-                    form_html.push('<fieldset class="'+group_level+'">');
+                    form_html.push('<fieldset class="' + group_level + '">');
                     form_html.push('<legend>' + groups[j]['so:name'] + '</legend>');
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
@@ -221,7 +222,7 @@ function produce_form(div, parameters, groups) {
                     form_html.push('</fieldset>');
                 } else {
                     var random_id = generate_random_id();
-                    form_html.push('<fieldset class="'+group_level+'">');
+                    form_html.push('<fieldset class="' + group_level + '">');
                     form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['so:name'] + '</a></legend>');
 
                     form_html.push('<div id="' + random_id + '"  class="collapse">');
@@ -328,7 +329,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         if (parameter['default_value'] != undefined) {
             default_value = parameter['default_value'];
         }
-        if (parameter['default_value'] != undefined && (grassroots_type == "params:unsigned_integer" || grassroots_type == "xsd:double") ) {
+        if (parameter['default_value'] != undefined && (grassroots_type == "params:unsigned_integer" || grassroots_type == "xsd:double")) {
             default_value = parseFloat(parameter['default_value'].toFixed(3));
         }
     }
@@ -461,12 +462,12 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     return form_html.join(' ');
 }
 
-function simpleOrAdvanced(string){
-    if (string==='show_simple'){
+function simpleOrAdvanced(string) {
+    if (string === 'show_simple') {
         $('.advanced').hide();
         $('.simple').show();
 
-    } else if (string==='show_advanced'){
+    } else if (string === 'show_advanced') {
         $('.simple').hide();
         $('.advanced').show();
     }
@@ -536,108 +537,131 @@ function submit_form() {
         type: "POST",
         dataType: "json",
         success: function (json) {
-            Utils.ui.reenableButton('submit_button', 'Submit');
-            // response = json;
-            console.info(JSON.stringify(json));
-            //            if (synchronous){
-            if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
-                $('#status').html('');
-                $('#result').html('');
-                $('#output_format_div').show();
-                // get each job and place html
-                for (var i = 0; i < json['results'].length; i++) {
-                    var each_result = json['results'][i];
-                    var uuid = each_result['job_uuid'];
-                    var dbname = each_result['so:name'];
-                    $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
-
-                    checkResult(each_result);
-                }
-            } else if (selected_service_name == 'Polymarker service') {
-                $('#status').html('');
-                $('#result').html('');
-                for (var i = 0; i < json['results'].length; i++) {
-                    var each_result = json['results'][i];
-                    var uuid = each_result['job_uuid'];
-                    var dbname = each_result['so:name'];
-                    $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
-
-                    checkResult(each_result);
-                }
-
-            } else if (selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
-                $('#status').html('');
-                $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-            } else if (selected_service_name == 'Germplasm Research Unit seeds service') {
-                $('#status').html('');
-                $('#form').html('');
-                $('#tableWrapper').html('<table id="resultTable"></table>');
-                // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-                markersGroup = new L.MarkerClusterGroup({});
-                map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
-
-                //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                //        maxZoom: 18
-                //    }).addTo(map);
-                L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
-                    attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
-                    subdomains: '1234',
-                    base: 'base',
-                    type: 'maptile',
-                    scheme: 'pedestrian.day',
-                    app_id: '1yM5jhYmACdjFG39Q7yP',
-                    app_code: 'ZAuXzelqWvL92h_jjEY_pA',
-                    mapID: 'newest',
-                    maxZoom: 20,
-                    language: 'eng',
-                    format: 'png8',
-                    size: '256'
-                }).addTo(map);
-
-                L.control.zoom({position: 'topright'}).addTo(map);
-
-                startGIS(json['results'][0]['results']);
-                map.fitWorld({reset: true}).zoomIn();
-            } else if (selected_service_name == 'DFWFieldTrial search service') {
-                $('#status').html('');
-                $('#form').html('');
-                $('#tableWrapper').html('<table id="resultTable"></table>');
-                // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-                markersGroup2 = new L.MarkerClusterGroup({});
-                map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
-
-                //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                //        maxZoom: 18
-                //    }).addTo(map);
-                L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
-                    attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
-                    subdomains: '1234',
-                    base: 'base',
-                    type: 'maptile',
-                    scheme: 'pedestrian.day',
-                    app_id: '1yM5jhYmACdjFG39Q7yP',
-                    app_code: 'ZAuXzelqWvL92h_jjEY_pA',
-                    mapID: 'newest',
-                    maxZoom: 20,
-                    language: 'eng',
-                    format: 'png8',
-                    size: '256'
-                }).addTo(map);
-
-                L.control.zoom({position: 'topright'}).addTo(map);
-
-                startFieldTrialGIS(json['results'][0]['results']);
-                //window.location.href='fieldtrial.html';
-
-            } else {
-                $('#status').html('');
-                $('#result').html("Done");
-                downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
-            }
+            display_result(json);
         }
     });
+}
+
+function get_api_result(service, previousID) {
+    selected_service_name = service;
+    $('#title').html(service);
+    $('#status').html('<img src="images/ajax-loader.gif"/>');
+    $.ajax({
+        url: server_url + '/service/' + encodeURIComponent(service) + '?Previous%20results=' + previousID,
+        // type: "GET",
+        dataType: "json",
+        cache: true,
+        success: function (json) {
+            display_result(json);
+        }
+    });
+
+
+}
+
+
+function display_result(json) {
+    Utils.ui.reenableButton('submit_button', 'Submit');
+    // response = json;
+    console.info(JSON.stringify(json));
+    //            if (synchronous){
+    if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
+        $('#status').html('');
+        $('#result').html('');
+        $('#output_format_div').show();
+        // get each job and place html
+        for (var i = 0; i < json['results'].length; i++) {
+            var each_result = json['results'][i];
+            var uuid = each_result['job_uuid'];
+            var dbname = each_result['so:name'];
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
+
+            checkResult(each_result);
+        }
+    } else if (selected_service_name == 'Polymarker service') {
+        $('#status').html('');
+        $('#result').html('');
+        for (var i = 0; i < json['results'].length; i++) {
+            var each_result = json['results'][i];
+            var uuid = each_result['job_uuid'];
+            var dbname = each_result['so:name'];
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
+
+            checkResult(each_result);
+        }
+
+    } else if (selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
+        $('#status').html('');
+        $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+    } else if (selected_service_name == 'Germplasm Research Unit seeds service') {
+        $('#status').html('');
+        $('#form').html('');
+        $('#tableWrapper').html('<table id="resultTable"></table>');
+        // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+        markersGroup = new L.MarkerClusterGroup({});
+        map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+
+        //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+        //        maxZoom: 18
+        //    }).addTo(map);
+        L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
+            attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
+            subdomains: '1234',
+            base: 'base',
+            type: 'maptile',
+            scheme: 'pedestrian.day',
+            app_id: '1yM5jhYmACdjFG39Q7yP',
+            app_code: 'ZAuXzelqWvL92h_jjEY_pA',
+            mapID: 'newest',
+            maxZoom: 20,
+            language: 'eng',
+            format: 'png8',
+            size: '256'
+        }).addTo(map);
+
+        L.control.zoom({position: 'topright'}).addTo(map);
+
+        startGIS(json['results'][0]['results']);
+        map.fitWorld({reset: true}).zoomIn();
+    } else if (selected_service_name == 'DFWFieldTrial search service') {
+        $('#status').html('');
+        $('#form').html('');
+        $('#tableWrapper').html('<table id="resultTable"></table>');
+        // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+        markersGroup2 = new L.MarkerClusterGroup({});
+        map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+
+        //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+        //        maxZoom: 18
+        //    }).addTo(map);
+        L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
+            attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
+            subdomains: '1234',
+            base: 'base',
+            type: 'maptile',
+            scheme: 'pedestrian.day',
+            app_id: '1yM5jhYmACdjFG39Q7yP',
+            app_code: 'ZAuXzelqWvL92h_jjEY_pA',
+            mapID: 'newest',
+            maxZoom: 20,
+            language: 'eng',
+            format: 'png8',
+            size: '256'
+        }).addTo(map);
+
+        L.control.zoom({position: 'topright'}).addTo(map);
+
+        startFieldTrialGIS(json['results'][0]['results']);
+        //window.location.href='fieldtrial.html';
+
+    } else {
+        $('#status').html('');
+        $('#result').html("Done");
+        downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
+    }
+
 }
 
 function checkResult(each_result) {
@@ -740,13 +764,13 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                         result_html.push('</p>');
 
                         if (hit['linked_services'] != null) {
-                            if(hit['linked_services']['services'].length>0) {
+                            if (hit['linked_services']['services'].length > 0) {
                                 result_html.push('<p>Linked Services: ');
                                 for (var linki = 0; linki < hit['linked_services']['services'].length; linki++) {
                                     var link_service_json = hit['linked_services']['services'][linki];
                                     var link_service_id = generate_random_id();
                                     linked_services_global[link_service_id] = link_service_json;
-                                    if (linki>0){
+                                    if (linki > 0) {
                                         result_html.push(' | ');
                                     }
 
@@ -766,6 +790,30 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                             result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
                             //result_html.push('<p>'+  +'</p>');
                             result_html.push('<hr/>');
+
+                            result_html.push('<p>Polymorphisms:</p>');
+                            result_html.push('<p>');
+                            for (var ip = 0; ip < hsp['polymorphisms'].length; ip++) {
+                                var polymorphism = hsp['polymorphisms'][ip];
+                                if (polymorphism['linked_services'] != undefined) {
+                                    if (polymorphism['linked_services']['services'] != undefined) {
+                                        for (var linkip = 0; linki < polymorphism['linked_services']['services'].length; linkip++) {
+                                            var polymorphism_link_service_json = polymorphism['linked_services']['services'][linkip];
+                                            var polymorphism_link_service_id = generate_random_id();
+                                            // save in memory for post request
+                                            linked_services_global[polymorphism_link_service_id] = polymorphism_link_service_json;
+
+                                            result_html.push('<a href="services_get.html?service="' + polymorphism_link_service_json['so:name']);
+                                            result_html.push(polymorphism['locus']['faldo:begin']['faldo:position']);
+                                            result_html.push('</a> | ');
+
+                                        }
+                                    }
+                                }
+                            }
+                            result_html.push('</p>');
+                            result_html.push('<hr/>');
+
 
                             result_html.push('<div class="note">');
                             result_html.push('<p class="blastPosition">Query from: ' + hsp['query_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['query_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['query_location']['faldo:begin']['@type']) + '</p>');
@@ -799,9 +847,9 @@ function display_polymarker_table(jsonResult) {
         startLine: 1
     });
     csv_table.bind("loadComplete", function () {
-    console.log("bind table");
-    csv_table_selector.jExpand();
-    csv_table_selector.load_msa(exons_genes_and_contigs);
+        console.log("bind table");
+        csv_table_selector.jExpand();
+        csv_table_selector.load_msa(exons_genes_and_contigs);
     });
     // $('#statusTable').jExpand();
 
