@@ -967,8 +967,8 @@ function run_linked_service(id) {
             console.info(JSON.stringify(json));
 
             downloadFile(json['results'][0]['results'][0]['data'], id);
-            jQuery('#' + id + 'status').html('');
-            jQuery('#' + id).attr('onclick', 'run_linked_service(\'' + id + '\')');
+            $('#' + id + 'status').html('');
+            $('#' + id).attr('onclick', 'run_linked_service(\'' + id + '\')');
         }
     });
 }
@@ -991,8 +991,8 @@ function run_linked_service_with_redirect(id) {
             console.info(JSON.stringify(json));
             var uuid = json['results'][0]['job_uuid'];
             window.open("services_get.html?service=" + encodeURI(service_name) + '&Previous%20results=' + uuid, '_blank');
-
-            $('#' + id + 'status').html();
+            $('#' + id + 'status').html('');
+            $('#' + id).attr('onclick', 'run_linked_service_with_redirect(\'' + id + '\')');
 
         }
     });
