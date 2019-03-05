@@ -801,11 +801,13 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                                         for (var linkip = 0; linkip < polymorphism['linked_services']['services'].length; linkip++) {
                                             var polymorphism_link_service_json = polymorphism['linked_services']['services'][linkip];
                                             var polymorphism_link_service_id = generate_random_id();
+                                            var sequence_difference = '[' + polymorphism['sequence_difference']['query'] + '/' + polymorphism['sequence_difference']['hit'] + ']';
                                             // save in memory for post request
                                             linked_services_global[polymorphism_link_service_id] = polymorphism_link_service_json;
 
                                             result_html.push(' <a href="javascript:;" id="' + polymorphism_link_service_id + '" onclick="run_linked_service_with_redirect(\''
-                                                + polymorphism_link_service_id + '\')">Location: ' + polymorphism['locus']['faldo:begin']['faldo:position'] + ' </a><span id="' + polymorphism_link_service_id + 'status"></span> |');
+                                                + polymorphism_link_service_id + '\')">Locus: ' + polymorphism['locus']['faldo:begin']['faldo:position'] + ' '
+                                                + sequence_difference + ' </a><span id="' + polymorphism_link_service_id + 'status"></span> |');
 
 
                                         }
@@ -978,22 +980,22 @@ function run_linked_service_with_redirect(id) {
 
     var linked_service_request_json = linked_services_global[id];
     console.info(JSON.stringify({"services": [linked_service_request_json]}));
-    var service_name =linked_service_request_json['so:name'];
+    var service_name = linked_service_request_json['so:name'];
 
-        $.ajax({
-            url: server_url,
-            data: JSON.stringify({"services": [linked_service_request_json]}),
-            type: "POST",
-            dataType: "json",
-            success: function (json) {
-                console.info(JSON.stringify(json));
-                var uuid = json['results'][0]['job_uuid'];
-                window.open("services_get.html?service=" + encodeURI(service_name) + '&Previous%20results=' + uuid, '_blank');
+    $.ajax({
+        url: server_url,
+        data: JSON.stringify({"services": [linked_service_request_json]}),
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            console.info(JSON.stringify(json));
+            var uuid = json['results'][0]['job_uuid'];
+            window.open("services_get.html?service=" + encodeURI(service_name) + '&Previous%20results=' + uuid, '_blank');
 
-                $('#' + id + 'status').html();
+            $('#' + id + 'status').html();
 
-            }
-        });
+        }
+    });
 }
 
 function downloadFile(text, filename) {
