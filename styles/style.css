@@ -255,6 +255,6 @@ table.plots td {
     display: block;
     margin-top: 0;
     margin-bottom: 1rem;
-    font: 15px Console, monospace;
+    font: 15px Courier, monospace;
     color: #212529;
 }
