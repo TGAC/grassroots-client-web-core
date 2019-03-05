@@ -882,13 +882,13 @@ function get_faldo_strand(faldo_type) {
 
 function alignment_formatter(qseq, midline, hseq) {
     var alignment_html = [];
-    alignment_html.push('<pre>');
+    alignment_html.push('<div class=".pre-format">');
     for (var i = 0; i < qseq.length; i++) {
         alignment_html.push(qseq[i] + '<br/>');
         alignment_html.push(midline[i] + '<br/>');
         alignment_html.push(hseq[i] + '<br/>');
     }
-    alignment_html.push('</pre>');
+    alignment_html.push('</div>');
 
     return alignment_html.join(' ');
 
