@@ -552,7 +552,14 @@ function get_api_result(service, previousID) {
         dataType: "json",
         cache: true,
         success: function (json) {
-            display_result(json);
+            var status_text_key = json['results'][0]['status_text'];
+            if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+                display_result(json);
+            } else {
+                setTimeout(function() {
+                    location.reload();
+                }, 5000);
+            }
         }
     });
 
