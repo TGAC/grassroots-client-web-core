@@ -800,29 +800,32 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                             result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
                             //result_html.push('<p>'+  +'</p>');
                             result_html.push('<hr/>');
+                            if (hsp['polymorphisms']!=undefined) {
+                                if (hsp['polymorphisms'].length > 0) {
+                                    result_html.push('<p>Polymorphisms (Polymarker):</p>');
+                                    result_html.push('<p>');
+                                    for (var ip = 0; ip < hsp['polymorphisms'].length; ip++) {
+                                        var polymorphism = hsp['polymorphisms'][ip];
+                                        console.log(JSON.stringify(polymorphism));
+                                        if (polymorphism['linked_services'] != undefined) {
+                                            if (polymorphism['linked_services']['services'] != undefined) {
+                                                for (var linkip = 0; linkip < polymorphism['linked_services']['services'].length; linkip++) {
+                                                    var polymorphism_link_service_json = polymorphism['linked_services']['services'][linkip];
+                                                    var polymorphism_link_service_id = generate_random_id();
+                                                    var sequence_difference = '[' + polymorphism['sequence_difference']['query'] + '/' + polymorphism['sequence_difference']['hit'] + ']';
+                                                    // save in memory for post request
+                                                    linked_services_global[polymorphism_link_service_id] = polymorphism_link_service_json;
+                                                    var polymorphism_position = polymorphism['locus']['faldo:begin']['faldo:position'];
+                                                    result_html.push(' <a href="javascript:;" id="' + polymorphism_link_service_id + '"'
+                                                        + ' onmouseover="mouseover_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
+                                                        + ' onmouseout="mouseout_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
+                                                        + ' onclick="run_linked_service_with_redirect(\''
+                                                        + polymorphism_link_service_id + '\')">Locus: ' + polymorphism_position + ' '
+                                                        + sequence_difference + ' </a><span id="' + polymorphism_link_service_id + 'status"></span> |');
 
-                            result_html.push('<p>Polymorphisms (Polymarker):</p>');
-                            result_html.push('<p>');
-                            for (var ip = 0; ip < hsp['polymorphisms'].length; ip++) {
-                                var polymorphism = hsp['polymorphisms'][ip];
-                                console.log(JSON.stringify(polymorphism));
-                                if (polymorphism['linked_services'] != undefined) {
-                                    if (polymorphism['linked_services']['services'] != undefined) {
-                                        for (var linkip = 0; linkip < polymorphism['linked_services']['services'].length; linkip++) {
-                                            var polymorphism_link_service_json = polymorphism['linked_services']['services'][linkip];
-                                            var polymorphism_link_service_id = generate_random_id();
-                                            var sequence_difference = '[' + polymorphism['sequence_difference']['query'] + '/' + polymorphism['sequence_difference']['hit'] + ']';
-                                            // save in memory for post request
-                                            linked_services_global[polymorphism_link_service_id] = polymorphism_link_service_json;
-                                            var polymorphism_position = polymorphism['locus']['faldo:begin']['faldo:position'];
-                                            result_html.push(' <a href="javascript:;" id="' + polymorphism_link_service_id + '"'
-                                                + ' onmouseover="mouseover_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
-                                                + ' onmouseout="mouseout_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
-                                                + ' onclick="run_linked_service_with_redirect(\''
-                                                + polymorphism_link_service_id + '\')">Locus: ' + polymorphism_position + ' '
-                                                + sequence_difference + ' </a><span id="' + polymorphism_link_service_id + 'status"></span> |');
 
-
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -854,11 +857,13 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
 
 function mouseover_locus(hit_num, hsp_num, polymorphism_position) {
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'q').addClass('highlightSNP');
+    $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'm').addClass('highlightSNP');
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'h').addClass('highlightSNP');
 }
 
 function mouseout_locus(hit_num, hsp_num, polymorphism_position) {
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'q').removeClass('highlightSNP');
+    $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'm').removeClass('highlightSNP');
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'h').removeClass('highlightSNP');
 }
 
@@ -911,7 +916,7 @@ function alignment_formatter(qseq, midline, hseq, hit_num, hsp_num) {
         // alignment_html.push(midline[i] + '<br/>');
         // alignment_html.push(hseq[i] + '<br/>');
         alignment_html.push(add_span_with_position(qseq[i], i, hit_num, hsp_num, 'q') + '<br/>');
-        alignment_html.push(midline[i] + '<br/>');
+        alignment_html.push(add_span_with_position(midline[i], i, hit_num, hsp_num, 'm') + '<br/>');
         alignment_html.push(add_span_with_position(hseq[i], i, hit_num, hsp_num, 'h') + '<br/>');
     }
     alignment_html.push('</div>');
