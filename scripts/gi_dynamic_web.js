@@ -556,7 +556,7 @@ function get_api_result(service, previousID) {
             if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
                 display_result(json);
             } else {
-                setTimeout(function() {
+                setTimeout(function () {
                     location.reload();
                 }, 5000);
             }
@@ -762,12 +762,14 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
 
                 if (query_result['hits'].length > 0) {
                     for (var j = 0; j < query_result['hits'].length; j++) {
+
                         var hit = query_result['hits'][j];
+                        var hit_num = hit['hit_num'];
                         var scaffold_name = hit['scaffolds'][0]['scaffold'];
 
                         result_html.push('<div class="blastResultBox ui-corner-all">')
 
-                        result_html.push('<p>Hit ' + hit['hit_num'] + ' : ' + scaffold_name + ' | <b>Hit Sequence Length: </b>' + hit['sequence_length']);
+                        result_html.push('<p>Hit ' + hit_num + ' : ' + scaffold_name + ' | <b>Hit Sequence Length: </b>' + hit['sequence_length']);
                         result_html.push('</p>');
 
                         if (hit['linked_services'] != null) {
@@ -791,7 +793,8 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
 
                         for (var y = 0; y < hit['hsps'].length; y++) {
                             var hsp = hit['hsps'][y];
-                            result_html.push('<p>Hsp: ' + hsp['hsp_num'] + '</p>');
+                            var hsp_num = hsp['hsp_num'];
+                            result_html.push('<p>Hsp: ' + hsp_num + '</p>');
                             // result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
                             result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + '</p>');
                             result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
@@ -811,9 +814,12 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                                             var sequence_difference = '[' + polymorphism['sequence_difference']['query'] + '/' + polymorphism['sequence_difference']['hit'] + ']';
                                             // save in memory for post request
                                             linked_services_global[polymorphism_link_service_id] = polymorphism_link_service_json;
-
-                                            result_html.push(' <a href="javascript:;" id="' + polymorphism_link_service_id + '" onclick="run_linked_service_with_redirect(\''
-                                                + polymorphism_link_service_id + '\')">Locus: ' + polymorphism['locus']['faldo:begin']['faldo:position'] + ' '
+                                            var polymorphism_position = polymorphism['locus']['faldo:begin']['faldo:position'];
+                                            result_html.push(' <a href="javascript:;" id="' + polymorphism_link_service_id + '"'
+                                                + ' onmouseover="mouseover_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
+                                                + ' onmouseout="mouseout_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
+                                                + ' onclick="run_linked_service_with_redirect(\''
+                                                + polymorphism_link_service_id + '\')">Locus: ' + polymorphism_position + ' '
                                                 + sequence_difference + ' </a><span id="' + polymorphism_link_service_id + 'status"></span> |');
 
 
@@ -827,7 +833,7 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
 
                             result_html.push('<div class="note">');
                             result_html.push('<p class="blastPosition">Query from: ' + hsp['query_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['query_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['query_location']['faldo:begin']['@type']) + '</p>');
-                            result_html.push(alignment_formatter(hsp['query_sequence'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hit_sequence'].match(/.{1,100}/g)));
+                            result_html.push(alignment_formatter(hsp['query_sequence'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hit_sequence'].match(/.{1,100}/g), hit['hit_num'], hsp['hsp_num']));
                             result_html.push('<p class="blastPosition">Hit from: ' + hsp['hit_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['hit_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['hit_location']['faldo:begin']['@type']) + '</p>');
                             result_html.push('</div>');
                         }
@@ -844,6 +850,16 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
         }
     }
     return result_html.join(' ');
+}
+
+function mouseover_locus(hit_num, hsp_num, polymorphism_position) {
+    $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'q').addClass('highlightSNP');
+    $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'h').addClass('highlightSNP');
+}
+
+function mouseout_locus(hit_num, hsp_num, polymorphism_position) {
+    $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'q').removeClass('highlightSNP');
+    $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'h').removeClass('highlightSNP');
 }
 
 function display_polymarker_table(jsonResult) {
@@ -887,18 +903,30 @@ function get_faldo_strand(faldo_type) {
     return strand;
 }
 
-function alignment_formatter(qseq, midline, hseq) {
+function alignment_formatter(qseq, midline, hseq, hit_num, hsp_num) {
     var alignment_html = [];
     alignment_html.push('<div class="pre-format">');
     for (var i = 0; i < qseq.length; i++) {
-        alignment_html.push(qseq[i] + '<br/>');
+        // alignment_html.push(qseq[i] + '<br/>');
+        // alignment_html.push(midline[i] + '<br/>');
+        // alignment_html.push(hseq[i] + '<br/>');
+        alignment_html.push(add_span_with_position(qseq[i], i, hit_num, hsp_num, 'q') + '<br/>');
         alignment_html.push(midline[i] + '<br/>');
-        alignment_html.push(hseq[i] + '<br/>');
+        alignment_html.push(add_span_with_position(hseq[i], i, hit_num, hsp_num, 'h') + '<br/>');
     }
     alignment_html.push('</div>');
 
     return alignment_html.join(' ');
 
+}
+
+function add_span_with_position(seq, row_index, hit_num, hsp_num, qORh) {
+    var chars = seq.split('');
+    var html = [];
+    $.each(chars, function (i, el) {
+        html.push('<span id="' + hit_num + '-' + hsp_num + '-' + (i + 1 + (row_index * 100)) + qORh + '">' + el + '</span>');
+    });
+    return html.join('');
 }
 
 function remove_strange_char(str) {
