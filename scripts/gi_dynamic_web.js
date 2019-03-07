@@ -798,7 +798,7 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                             //result_html.push('<p>'+  +'</p>');
                             result_html.push('<hr/>');
 
-                            result_html.push('<p>Polymorphisms:</p>');
+                            result_html.push('<p>Polymorphisms (Polymarker):</p>');
                             result_html.push('<p>');
                             for (var ip = 0; ip < hsp['polymorphisms'].length; ip++) {
                                 var polymorphism = hsp['polymorphisms'][ip];
