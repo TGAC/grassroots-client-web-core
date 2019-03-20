@@ -1127,78 +1127,78 @@ function handleDragOver(evt) {
 }
 
 // deprecated
-function display_blast_result_jsonout(json) {
-    var result_html = [];
-    result_html.push('<br/><br/><hr/><br/>');
-
-    for (var i = 0; i < json['results'].length; i++) {
-        var blast_result_string = json['results'][i]['results'][0]['data'];
-        var uuid = json['job_uuid'];
-        var description = json['results'][i]['so:description'];
-        var db = json['results'][i]['so:name'];
-
-        blast_result_string = blast_result_string.replace(/\\n/g, "\\n")
-            .replace(/\\'/g, "\\'")
-            .replace(/\\"/g, '\\"')
-            .replace(/\\&/g, "\\&")
-            .replace(/\\r/g, "\\r")
-            .replace(/\\t/g, "\\t")
-            .replace(/\\b/g, "\\b")
-            .replace(/\\\\/g, "\\")
-            .replace(/\\f/g, "\\f");
-        blast_result_string = blast_result_string.replace(/[\u0000-\u0019]+/g, "");
-
-        var blast_result_json = JSON.parse(blast_result_string);
-        console.log(blast_result_json['BlastOutput2'].length);
-        console.log(JSON.stringify(blast_result_json));
-
-        result_html.push('<fieldset>');
-        result_html.push('<legend>' + description + '</legend>');
-        for (var j = 0; j < blast_result_json['BlastOutput2'].length; j++) {
-            var query_result = blast_result_json['BlastOutput2'][j]['report']['results'];
-            var query_title = query_result['search']['query_title'];
-            if (query_title == 'undefined'){
-                query_title = '';
-            }
-            var query_line = query_result['search']['query_id'] + ': ' + query_title;
-            result_html.push('<p><b>' + query_line + '</b></p>');
-
-            if (query_result['search']['hits'].length > 0) {
-                for (var x = 0; x < query_result['search']['hits'].length; x++) {
-                    result_html.push('<div class="blastResultBox ui-corner-all">')
-                    var hit = query_result['search']['hits'][x];
-
-                    result_html.push('<p>' + hit['num'] + ': ' + hit['description'][0]['id'] + '</p>');
-
-                    for (var y = 0; y < hit['hsps'].length; y++) {
-                        var hsp = hit['hsps'][y];
-                        result_html.push('<p>Hsp: ' + hsp['num'] + '</p>');
-                        result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Hit Length: </b>' + hit['len'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
-                        result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
-                        //result_html.push('<p>'+  +'</p>');
-                        result_html.push('<hr/>');
-
-                        result_html.push('<div class="note">');
-                        result_html.push('<p class="blastPosition">Query from: ' + hsp['hit_from'] + ' to: ' + hsp['hit_to'] + ' Strand: ' + hsp['hit_strand'] + '</p>');
-                        result_html.push(alignment_formatter(hsp['qseq'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hseq'].match(/.{1,100}/g)));
-                        result_html.push('</div>');
-                    }
-                    result_html.push('</div>')
-                }
-            } else {
-                result_html.push('<p>No hits found</p>')
-            }
-
-
-        }
-
-
-        result_html.push('</fieldset>');
-
-    }
-    //$('#form').html('');
-    $('#result').html(result_html.join(' '));
-}
+// function display_blast_result_jsonout(json) {
+//     var result_html = [];
+//     result_html.push('<br/><br/><hr/><br/>');
+//
+//     for (var i = 0; i < json['results'].length; i++) {
+//         var blast_result_string = json['results'][i]['results'][0]['data'];
+//         var uuid = json['job_uuid'];
+//         var description = json['results'][i]['so:description'];
+//         var db = json['results'][i]['so:name'];
+//
+//         blast_result_string = blast_result_string.replace(/\\n/g, "\\n")
+//             .replace(/\\'/g, "\\'")
+//             .replace(/\\"/g, '\\"')
+//             .replace(/\\&/g, "\\&")
+//             .replace(/\\r/g, "\\r")
+//             .replace(/\\t/g, "\\t")
+//             .replace(/\\b/g, "\\b")
+//             .replace(/\\\\/g, "\\")
+//             .replace(/\\f/g, "\\f");
+//         blast_result_string = blast_result_string.replace(/[\u0000-\u0019]+/g, "");
+//
+//         var blast_result_json = JSON.parse(blast_result_string);
+//         console.log(blast_result_json['BlastOutput2'].length);
+//         console.log(JSON.stringify(blast_result_json));
+//
+//         result_html.push('<fieldset>');
+//         result_html.push('<legend>' + description + '</legend>');
+//         for (var j = 0; j < blast_result_json['BlastOutput2'].length; j++) {
+//             var query_result = blast_result_json['BlastOutput2'][j]['report']['results'];
+//             var query_title = query_result['search']['query_title'];
+//             if (query_title == 'undefined'){
+//                 query_title = '';
+//             }
+//             var query_line = query_result['search']['query_id'] + ': ' + query_title;
+//             result_html.push('<p><b>' + query_line + '</b></p>');
+//
+//             if (query_result['search']['hits'].length > 0) {
+//                 for (var x = 0; x < query_result['search']['hits'].length; x++) {
+//                     result_html.push('<div class="blastResultBox ui-corner-all">')
+//                     var hit = query_result['search']['hits'][x];
+//
+//                     result_html.push('<p>' + hit['num'] + ': ' + hit['description'][0]['id'] + '</p>');
+//
+//                     for (var y = 0; y < hit['hsps'].length; y++) {
+//                         var hsp = hit['hsps'][y];
+//                         result_html.push('<p>Hsp: ' + hsp['num'] + '</p>');
+//                         result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Hit Length: </b>' + hit['len'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
+//                         result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
+//                         //result_html.push('<p>'+  +'</p>');
+//                         result_html.push('<hr/>');
+//
+//                         result_html.push('<div class="note">');
+//                         result_html.push('<p class="blastPosition">Query from: ' + hsp['hit_from'] + ' to: ' + hsp['hit_to'] + ' Strand: ' + hsp['hit_strand'] + '</p>');
+//                         result_html.push(alignment_formatter(hsp['qseq'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hseq'].match(/.{1,100}/g)));
+//                         result_html.push('</div>');
+//                     }
+//                     result_html.push('</div>')
+//                 }
+//             } else {
+//                 result_html.push('<p>No hits found</p>')
+//             }
+//
+//
+//         }
+//
+//
+//         result_html.push('</fieldset>');
+//
+//     }
+//     //$('#form').html('');
+//     $('#result').html(result_html.join(' '));
+// }
 
 function isInArray(value, array) {
     return array.indexOf(value) > -1;
