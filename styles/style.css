@@ -196,6 +196,7 @@ table.dataTable span.column_highlight {
 #legend {
     position: absolute;
     top: 275px;
+    /*top:355px;*/
     /*left: 1130px;*/
     /*right: 10px;*/
     padding: 5px;

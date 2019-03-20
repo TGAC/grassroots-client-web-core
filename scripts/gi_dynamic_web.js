@@ -757,7 +757,11 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
             for (var dbi = 0; dbi < each_db_result['results'][0]['data']['blast_search_results']['reports'].length; dbi++) {
 
                 var query_result = each_db_result['results'][0]['data']['blast_search_results']['reports'][dbi];
-                var query_line = query_result['query_id'] + ': ' + query_result['query_title'];
+                var query_title = '';
+                if (query_result['query_title'] != undefined){
+                    query_title = query_result['query_title'];
+                }
+                var query_line = query_result['query_id'] + ': ' + query_title;
                 result_html.push('<p><b>' + query_line + '</b></p>');
 
                 if (query_result['hits'].length > 0) {
@@ -1151,8 +1155,12 @@ function display_blast_result_jsonout(json) {
         result_html.push('<fieldset>');
         result_html.push('<legend>' + description + '</legend>');
         for (var j = 0; j < blast_result_json['BlastOutput2'].length; j++) {
-            var query_result = blast_result_json['BlastOutput2'][j]['report']['results']
-            var query_line = query_result['search']['query_id'] + ': ' + query_result['search']['query_title'];
+            var query_result = blast_result_json['BlastOutput2'][j]['report']['results'];
+            var query_title = query_result['search']['query_title'];
+            if (query_title == 'undefined'){
+                query_title = '';
+            }
+            var query_line = query_result['search']['query_id'] + ': ' + query_title;
             result_html.push('<p><b>' + query_line + '</b></p>');
 
             if (query_result['search']['hits'].length > 0) {
