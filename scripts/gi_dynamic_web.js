@@ -357,7 +357,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
         }
         // input form integer
-        else if (grassroots_type == "params:signed_integer" || grassroots_type == "params:unsigned_integer" || grassroots_type == "params:negative_integer") {
+        else if (grassroots_type == "params:signed_integer" || grassroots_type == "params:unsigned_integer" || grassroots_type == "params:negative_integer" || grassroots_type == "params:unsigned_number") {
 
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
@@ -429,6 +429,13 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         }
         // date
         else if (grassroots_type == "xsd:date") {
+            form_html.push('<div class="form-group ' + level + '">');
+            form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('</div>');
+        }
+        // tabular
+        else if (grassroots_type == "params:tabular") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
             form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
