@@ -3,7 +3,7 @@ var textareas = [];
 var synchronous = false;
 var repeatable_groups = {};
 var server_url = "/grassroots-test/5/controller";
-;
+var datatable_param_list = [];
 
 function get_all_services_as_table() {
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
@@ -170,6 +170,10 @@ function populateService(service_name) {
                 document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
             }
             $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
+            for (var idt = 0; idt < Object.keys(datatable_param_list).length; idt++) {
+                var datatableId = Object.keys(datatable_param_list)[idt];
+                $('#'+datatableId).DataTable();
+            }
         }
     });
 }
@@ -436,9 +440,17 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         }
         // tabular
         else if (grassroots_type == "params:tabular") {
+            console.log('in tabular');
+            var cHeading = parameter['store']['Column Headings'];
+            var each_table_obj = {}
+            each_table_obj[param] = cHeading;
+            datatable_param_list.push(each_table_obj);
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('<table id="' + param + '" class="display datatable_param">');
+            form_html.push(table_thead_formatter(cHeading));
+            // form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('</table>');
             form_html.push('</div>');
         }
     }
@@ -467,6 +479,25 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
     }
     return form_html.join(' ');
+}
+
+function table_thead_formatter(cHeadings){
+console.log('table here');
+    var thead_html = [];
+    thead_html.push('<thead>');
+    // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
+    for (var i=0;i < cHeadings.length; i++){
+        thead_html.push('<th>'+cHeadings[i]['param']+'</th>');
+    }
+    thead_html.push('</thead>');
+    return thead_html.join(' ');
+}
+
+function add_new_row(table_id){
+    var t =$('#'+table_id).DataTable();
+    t.row.add([
+        '',
+    ])
 }
 
 function simpleOrAdvanced(string) {
