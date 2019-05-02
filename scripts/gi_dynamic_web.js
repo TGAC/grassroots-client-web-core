@@ -645,7 +645,7 @@ function display_result(json) {
     } else if (selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
         $('#status').html('');
         $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-    } else if (selected_service_name == 'Germplasm Research Unit seeds service') {
+    } else if (selected_service_name == 'Search GRU seedbank') {
         $('#status').html('');
         $('#form').html('');
         $('#tableWrapper').html('<table id="resultTable"></table>');
