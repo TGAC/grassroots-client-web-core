@@ -170,8 +170,8 @@ function populateService(service_name) {
                 document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
             }
             $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
-            for (var idt = 0; idt < Object.keys(datatable_param_list).length; idt++) {
-                var datatableId = Object.keys(datatable_param_list)[idt];
+            for (var idt = 0; idt < datatable_param_list.length; idt++) {
+                var datatableId = datatable_param_list[idt]['table_id'];
                 $('#'+datatableId).DataTable();
             }
         }
@@ -442,8 +442,9 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:tabular") {
             console.log('in tabular');
             var cHeading = parameter['store']['Column Headings'];
-            var each_table_obj = {}
-            each_table_obj[param] = cHeading;
+            var each_table_obj = {};
+            each_table_obj['table_id'] = param;
+            each_table_obj['cHeadingArray'] = cHeading;
             datatable_param_list.push(each_table_obj);
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<table id="' + param + '" class="display datatable_param">');
@@ -493,8 +494,14 @@ console.log('table here');
     return thead_html.join(' ');
 }
 
-function add_new_row(table_id){
+function table_add_new_row(table_id){
     var t =$('#'+table_id).DataTable();
+    var cHeadArray = [];
+    for (var i=0; i < datatable_param_list.length; i++) {
+        if (datatable_param_list[i]['table_id'] === table_id) {
+            cHeadArray = datatable_param_list[i]['cHeadingArray'];
+        }
+    }
     t.row.add([
         '',
     ])
