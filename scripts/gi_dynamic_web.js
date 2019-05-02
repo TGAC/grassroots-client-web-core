@@ -172,7 +172,8 @@ function populateService(service_name) {
             $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
             for (var idt = 0; idt < datatable_param_list.length; idt++) {
                 var datatableId = datatable_param_list[idt]['table_id'];
-                $('#'+datatableId).DataTable();
+                $('#'+datatableId).DataTable({scrollX: true});
+                table_add_new_row(datatableId);
             }
         }
     });
@@ -408,7 +409,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
         }
         //file
-        else if (grassroots_type == "params:input_filename" || grassroots_type == "params:output_filename" || grassroots_type == "params:tabular") {
+        else if (grassroots_type == "params:input_filename" || grassroots_type == "params:output_filename" ) {
             // form_html.push('<div class="form-group '+level+'">');
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input type="file" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" />');
@@ -440,14 +441,14 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         }
         // tabular
         else if (grassroots_type == "params:tabular") {
-            console.log('in tabular');
             var cHeading = parameter['store']['Column Headings'];
             var each_table_obj = {};
-            each_table_obj['table_id'] = param;
-            each_table_obj['cHeadingArray'] = cHeading;
+
+            each_table_obj['table_id'] = param.replace(/ /g,"_");
+            each_table_obj['cHeadings'] = cHeading;
             datatable_param_list.push(each_table_obj);
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<table id="' + param + '" class="display datatable_param">');
+            form_html.push('<table id="' + param.replace(/ /g,"_") + '" class="display datatable_param">');
             form_html.push(table_thead_formatter(cHeading));
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
@@ -483,7 +484,6 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 }
 
 function table_thead_formatter(cHeadings){
-console.log('table here');
     var thead_html = [];
     thead_html.push('<thead>');
     // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
@@ -496,15 +496,17 @@ console.log('table here');
 
 function table_add_new_row(table_id){
     var t =$('#'+table_id).DataTable();
-    var cHeadArray = [];
+    var cHeadings = [];
     for (var i=0; i < datatable_param_list.length; i++) {
         if (datatable_param_list[i]['table_id'] === table_id) {
-            cHeadArray = datatable_param_list[i]['cHeadingArray'];
+            cHeadings = datatable_param_list[i]['cHeadings'];
         }
     }
-    t.row.add([
-        '',
-    ])
+    var row_array = [];
+    for (var r=0;r < cHeadings.length; r++){
+        row_array.push('<input  type="text" value="'+cHeadings[r]['type']+'"/>');
+    }
+    t.row.add(row_array).draw();
 }
 
 function simpleOrAdvanced(string) {
