@@ -472,7 +472,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             outfmt_html.push('<option value="' + this_enum['value'] + '">' + option_text + '</option>');
         }
 
-        if ((selected_service_name === 'BlastN service' || selected_service_name === 'BlastP service' || selected_service_name === 'BlastX service') && param === 'outfmt') {
+        if ((selected_service_name === 'BlastN' || selected_service_name === 'BlastP' || selected_service_name === 'BlastX') && param === 'outfmt') {
             $('#output_format').html(outfmt_html.join(' '));
         }
         form_html.push('</select>');
@@ -731,7 +731,8 @@ function checkResult(each_result) {
             $('#' + uuid).html(JSON.stringify(each_result['results'][0]['data']));
         }
     } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
-        $('#' + uuid).html('Job ' + status_text_key + ': <br/>' + each_result['errors']['error']);
+        $('#' + uuid).html('Job ' + status_text_key);
+        //+ ': <br/>' + each_result['errors']['error']);
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
@@ -790,7 +791,7 @@ function display_blast_result_grassroots_markup(json) {
 function display_each_blast_result_grasroots_markup(each_db_result) {
 
     var result_html = [];
-    if (each_db_result['service_name'] == 'BlastN service') {
+    if (each_db_result['service_name'] == 'BlastN') {
         //            var each_db_result = json['results'][i];
         var uuid = each_db_result['job_uuid'];
         if (each_db_result['status_text'] == 'Succeeded') {
@@ -1008,7 +1009,7 @@ function downloadJobFromServer(id) {
     var previousjob_request_json = {
         "services": [{
             "start_service": true,
-            "so:name": "BlastN service",
+            "so:name": "BlastN",
             "parameter_set": {
                 "parameters": [{
                     "param": "job_id",
