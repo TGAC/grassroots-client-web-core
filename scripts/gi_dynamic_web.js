@@ -557,7 +557,7 @@ function submit_form() {
         } else if (type == 'integer') {
             parameter['current_value'] = parseInt(value);
         } else if (type == 'number') {
-            parameter['current_value'] = parseFloat(value.toFixed(3));
+            parameter['current_value'] = parseFloat(value);
         } else {
             parameter['current_value'] = value;
         }
@@ -617,7 +617,7 @@ function display_result(json) {
     // response = json;
     console.info(JSON.stringify(json));
     //            if (synchronous){
-    if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
+    if (selected_service_name == 'BlastN' || selected_service_name == 'BlastP' || selected_service_name == 'BlastX') {
         $('#status').html('');
         $('#result').html('');
         $('#output_format_div').show();
@@ -630,7 +630,7 @@ function display_result(json) {
 
             checkResult(each_result);
         }
-    } else if (selected_service_name == 'Polymarker service') {
+    } else if (selected_service_name == 'Polymarker') {
         $('#status').html('');
         $('#result').html('');
         for (var i = 0; i < json['results'].length; i++) {
@@ -721,9 +721,9 @@ function checkResult(each_result) {
     var status_text_key = each_result['status_text'];
     if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
         Utils.ui.reenableButton('submit_button', 'Submit');
-        if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
+        if (selected_service_name == 'BlastN' || selected_service_name == 'BlastP' || selected_service_name == 'BlastX') {
             $('#' + uuid).html(display_each_blast_result_grasroots_markup(each_result));
-        } else if (selected_service_name == 'Polymarker service') {
+        } else if (selected_service_name == 'Polymarker') {
             $('#' + uuid).html(display_polymarker_table(each_result));
         } else {
             $('#status').html('');
@@ -743,12 +743,12 @@ function checkResult(each_result) {
                     console.info(JSON.stringify(json));
                     status_text_key = json[0]['status_text'];
                     if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
-                        if (selected_service_name == 'BlastN service' || selected_service_name == 'BlastP service' || selected_service_name == 'BlastX service') {
+                        if (selected_service_name == 'BlastN' || selected_service_name == 'BlastP' || selected_service_name == 'BlastX') {
                             Utils.ui.reenableButton('submit_button', 'Submit');
                             $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
-                        } else if (selected_service_name == 'Polymarker service') {
+                        } else if (selected_service_name == 'Polymarker') {
                             $('#' + uuid).html(display_polymarker_table(json[0]));
-                        } else if (selected_service_name == 'Germplasm Research Unit seeds service' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
+                        } else if (selected_service_name == 'Search GRU seedbank' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
                             $('#' + uuid).html(JSON.stringify(json[0]['results'][0]['data']));
                         } else {
                             $('#status').html('');
