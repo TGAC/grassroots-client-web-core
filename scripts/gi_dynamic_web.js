@@ -510,6 +510,7 @@ function table_thead_formatter(cHeadings){
 
 function table_add_new_row(table_id){
     var t =$('#'+table_id).DataTable();
+    var row_index = t.rows().count();
     var cHeadings = [];
     for (var i=0; i < datatable_param_list.length; i++) {
         if (datatable_param_list[i]['table_id'] === table_id) {
@@ -517,8 +518,10 @@ function table_add_new_row(table_id){
         }
     }
     var row_array = [];
+    var real_param = table_id.replace(/_/g," ");
     for (var r=0;r < cHeadings.length; r++){
-        row_array.push('<input  type="text" value="'+cHeadings[r]['type']+'"/>');
+        var grassroots_type = cHeadings[r]['type'];
+        row_array.push('<input type="text" name="tabular^'+real_param+'^'+row_index+'" value=""/>');
     }
     t.row.add(row_array).draw(false);
 }
