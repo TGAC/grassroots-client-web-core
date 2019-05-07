@@ -172,8 +172,9 @@ function populateService(service_name) {
             $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
             for (var idt = 0; idt < datatable_param_list.length; idt++) {
                 var datatableId = datatable_param_list[idt]['table_id'];
-                $('#'+datatableId).DataTable({
-                    scrollX: true
+                $('#' + datatableId).DataTable({
+                    scrollX: true,
+                    "paging": false
                     // dom: '<lBr<t>ip>',
                     // buttons: [
                     //     {
@@ -420,7 +421,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
         }
         //file
-        else if (grassroots_type == "params:input_filename" || grassroots_type == "params:output_filename" ) {
+        else if (grassroots_type == "params:input_filename" || grassroots_type == "params:output_filename") {
             // form_html.push('<div class="form-group '+level+'">');
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input type="file" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" />');
@@ -454,14 +455,14 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:tabular") {
             var cHeading = parameter['store']['Column Headings'];
             var each_table_obj = {};
-            var table_id = param.replace(/ /g,"_");
+            var table_id = param.replace(/ /g, "_");
 
             each_table_obj['table_id'] = table_id;
             each_table_obj['cHeadings'] = cHeading;
             datatable_param_list.push(each_table_obj);
             form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
-            form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\''+table_id+'\')">Add row</button>');
+            form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push(table_thead_formatter(cHeading));
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
@@ -497,31 +498,32 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     return form_html.join(' ');
 }
 
-function table_thead_formatter(cHeadings){
+function table_thead_formatter(cHeadings) {
     var thead_html = [];
     thead_html.push('<thead>');
     // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
-    for (var i=0;i < cHeadings.length; i++){
-        thead_html.push('<th>'+cHeadings[i]['param']+'</th>');
+    for (var i = 0; i < cHeadings.length; i++) {
+        thead_html.push('<th>' + cHeadings[i]['param'] + '</th>');
     }
     thead_html.push('</thead>');
     return thead_html.join(' ');
 }
 
-function table_add_new_row(table_id){
-    var t =$('#'+table_id).DataTable();
+function table_add_new_row(table_id) {
+    var t = $('#' + table_id).DataTable();
     var row_index = t.rows().count();
     var cHeadings = [];
-    for (var i=0; i < datatable_param_list.length; i++) {
+    for (var i = 0; i < datatable_param_list.length; i++) {
         if (datatable_param_list[i]['table_id'] === table_id) {
             cHeadings = datatable_param_list[i]['cHeadings'];
         }
     }
     var row_array = [];
-    var real_param = table_id.replace(/_/g," ");
-    for (var r=0;r < cHeadings.length; r++){
-        var grassroots_type = cHeadings[r]['type'];
-        row_array.push('<input type="text" name="tabular^'+real_param+'^'+row_index+'" value=""/>');
+    var real_param = table_id.replace(/_/g, " ");
+    for (var r = 0; r < cHeadings.length; r++) {
+        var column_param = cHeadings[r]['param'];
+        var column_grassroots_type = cHeadings[r]['type'];
+        row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value=""/>');
     }
     t.row.add(row_array).draw(false);
 }
@@ -553,34 +555,67 @@ function submit_form() {
     var services_array = [];
     var parameter_set = {};
 
+    for (var idt = 0; idt < datatable_param_list.length; idt++) {
+
+        var parameter = {};
+        var datatableId = datatable_param_list[idt]['table_id'];
+        var this_table_array = [];
+        var current_value_array=[];
+        var real_param = datatableId.replace(/_/g, " ");
+        parameter['param'] = real_param;
+        var this_table = $('#' + datatableId).DataTable();
+        this_table_array = this_table.$('input, select').serializeArray();
+        var row_length = this_table.rows().count();
+        for(var rowsi=0;rowsi<row_length;rowsi++) {
+            var row_object = {};
+            for (var ttai = 0; ttai < this_table_array.length; ttai++) {
+                var name = this_table_array[ttai]['name'].split('^');
+                var column_name = name[3];
+                if (name[2] == rowsi){
+                    row_object[column_name] = this_table_array[ttai]['value'];
+                }
+
+            }
+            current_value_array.push(row_object);
+            console.log(JSON.stringify(current_value_array));
+        }
+        parameter['current_value'] = current_value_array;
+        parameters.push(parameter);
+
+    }
+
     for (var i = 0; i < form.length; i++) {
         var name = form[i]['name'].split('^');
-        var param = name[0];
-        var grassroots_type = name[1];
-        var type = name[2];
-        var group = name[3];
-        var value = form[i]['value'];
-        var parameter = {};
-        parameter['param'] = param;
-        // parameter['grassroots_type'] = grassroots_type;
-        if (group != 'none') {
-            if (name[4] == 0) {
-                parameter['group'] = repeatable_groups[group]['group'];
-            } else {
-                parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
-            }
-        }
-
-        if (type == 'boolean') {
-            parameter['current_value'] = JSON.parse(value);
-        } else if (type == 'integer') {
-            parameter['current_value'] = parseInt(value);
-        } else if (type == 'number') {
-            parameter['current_value'] = parseFloat(value);
+        if (name[0] === 'tabular') {
+            //do nothing? DataTable().serializeArray() takes over
         } else {
-            parameter['current_value'] = value;
+            var param = name[0];
+            var grassroots_type = name[1];
+            var type = name[2];
+            var group = name[3];
+            var value = form[i]['value'];
+            var parameter = {};
+            parameter['param'] = param;
+            // parameter['grassroots_type'] = grassroots_type;
+            if (group != 'none') {
+                if (name[4] == 0) {
+                    parameter['group'] = repeatable_groups[group]['group'];
+                } else {
+                    parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+                }
+            }
+
+            if (type == 'boolean') {
+                parameter['current_value'] = JSON.parse(value);
+            } else if (type == 'integer') {
+                parameter['current_value'] = parseInt(value);
+            } else if (type == 'number') {
+                parameter['current_value'] = parseFloat(value);
+            } else {
+                parameter['current_value'] = value;
+            }
+            parameters.push(parameter);
         }
-        parameters.push(parameter);
     }
 
     submit_job['start_service'] = true;
@@ -729,10 +764,17 @@ function display_result(json) {
 
     } else {
         $('#status').html('');
-        $('#result').html("Done");
-        downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
-    }
+        var status_text_key = json['results'][0]['status_text'];
+        if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+            $('#result').html("Done");
+            downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
+        } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
+            $('#result').html('Job ' + status_text_key);
+            //+ ': <br/>' + each_result['errors']['error']);
+            Utils.ui.reenableButton('submit_button', 'Submit');
+        }
 
+    }
 }
 
 function checkResult(each_result) {
@@ -823,7 +865,7 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
 
                 var query_result = each_db_result['results'][0]['data']['blast_search_results']['reports'][dbi];
                 var query_title = '';
-                if (query_result['query_title'] != undefined){
+                if (query_result['query_title'] != undefined) {
                     query_title = query_result['query_title'];
                 }
                 var query_line = query_result['query_id'] + ': ' + query_title;
@@ -869,7 +911,7 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
                             result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
                             //result_html.push('<p>'+  +'</p>');
                             result_html.push('<hr/>');
-                            if (hsp['polymorphisms']!=undefined) {
+                            if (hsp['polymorphisms'] != undefined) {
                                 if (hsp['polymorphisms'].length > 0) {
                                     result_html.push('<p>Polymorphisms (Polymarker):</p>');
                                     result_html.push('<p>');
