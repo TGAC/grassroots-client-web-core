@@ -172,7 +172,18 @@ function populateService(service_name) {
             $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
             for (var idt = 0; idt < datatable_param_list.length; idt++) {
                 var datatableId = datatable_param_list[idt]['table_id'];
-                $('#'+datatableId).DataTable({scrollX: true});
+                $('#'+datatableId).DataTable({
+                    scrollX: true
+                    // dom: '<lBr<t>ip>',
+                    // buttons: [
+                    //     {
+                    //         text: 'Add Row',
+                    //         action: function ( e, dt, node, config ) {
+                    //             table_add_new_row(datatableId);
+                    //         }
+                    //     }
+                    // ]
+                });
                 table_add_new_row(datatableId);
             }
         }
@@ -443,17 +454,20 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:tabular") {
             var cHeading = parameter['store']['Column Headings'];
             var each_table_obj = {};
+            var table_id = param.replace(/ /g,"_");
 
-            each_table_obj['table_id'] = param.replace(/ /g,"_");
+            each_table_obj['table_id'] = table_id;
             each_table_obj['cHeadings'] = cHeading;
             datatable_param_list.push(each_table_obj);
-            form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<table id="' + param.replace(/ /g,"_") + '" class="display datatable_param">');
+            form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
+            form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
+            form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\''+table_id+'\')">Add row</button>');
+            form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push(table_thead_formatter(cHeading));
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</table>');
-            form_html.push('</div>');
+            form_html.push('</div><hr/>');
         }
     }
     //select with options
@@ -506,7 +520,7 @@ function table_add_new_row(table_id){
     for (var r=0;r < cHeadings.length; r++){
         row_array.push('<input  type="text" value="'+cHeadings[r]['type']+'"/>');
     }
-    t.row.add(row_array).draw();
+    t.row.add(row_array).draw(false);
 }
 
 function simpleOrAdvanced(string) {

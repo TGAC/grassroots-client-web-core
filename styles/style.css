@@ -264,3 +264,11 @@ table.plots td {
 .highlightSNP {
     background-color: #FD3207;
 }
+
+.new_row_button{
+    position: absolute;
+    margin-top: -5px;
+    margin-left:200px;
+    z-index: 9999;
+
+}
