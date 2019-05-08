@@ -123,13 +123,15 @@
         <p id="description"></p>
 
         <p id="moreinfo"></p>
-        <label class="radio-inline" style="margin-right: 20px;"><input type="radio" name="simpleadvanced"
-                                                                       value="show_simple"
-                                                                       onclick="simpleOrAdvanced(this.value)" checked>
-            Simple options </label>
-        <label class="radio-inline"><input type="radio" name="simpleadvanced" value="show_advanced"
-                                           onclick="simpleOrAdvanced(this.value)"> Advanced options</label>
-
+        <div id="simpleAdvanceWrapper">
+            <label class="radio-inline" style="margin-right: 20px;"><input type="radio" name="simpleadvanced"
+                                                                           value="show_simple"
+                                                                           onclick="simpleOrAdvanced(this.value)"
+                                                                           checked>
+                Simple options </label>
+            <label class="radio-inline"><input type="radio" name="simpleadvanced" value="show_advanced"
+                                               onclick="simpleOrAdvanced(this.value)"> Advanced options</label>
+        </div>
         <form id="form" role="form">
             <div class="list_service_table">
                 <table id="listTable"></table>

@@ -700,6 +700,7 @@ function display_result(json) {
         $('#status').html('');
         $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
     } else if (selected_service_name == 'Search GRU seedbank') {
+        $('#simpleAdvanceWrapper').hide();
         $('#status').html('');
         $('#form').html('');
         $('#tableWrapper').html('<table id="resultTable"></table>');
@@ -731,6 +732,7 @@ function display_result(json) {
         startGIS(json['results'][0]['results']);
         map.fitWorld({reset: true}).zoomIn();
     } else if (selected_service_name == 'DFWFieldTrial search service') {
+        $('#simpleAdvanceWrapper').hide();
         $('#status').html('');
         $('#form').html('');
         $('#tableWrapper').html('<table id="resultTable"></table>');
