@@ -2,7 +2,6 @@ var linked_services_global = {};
 var textareas = [];
 var synchronous = false;
 var repeatable_groups = {};
-var server_url = "/grassroots-test/5/controller";
 var datatable_param_list = [];
 
 function get_all_services_as_table() {
