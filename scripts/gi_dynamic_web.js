@@ -185,6 +185,9 @@ function populateService(service_name) {
                     // ]
                 });
                 table_add_new_row(datatableId);
+
+                document.getElementById(datatableId).addEventListener('dragover', handleDragOver, false);
+                document.getElementById(datatableId).addEventListener('drop', handleXlsxFileSelect, false);
             }
         }
     });
@@ -508,6 +511,10 @@ function table_thead_formatter(cHeadings) {
     return thead_html.join(' ');
 }
 
+function table_add_rows(table_id,json){
+
+}
+
 function table_add_new_row(table_id) {
     var t = $('#' + table_id).DataTable();
     var row_index = t.rows().count();
@@ -559,18 +566,18 @@ function submit_form() {
         var parameter = {};
         var datatableId = datatable_param_list[idt]['table_id'];
         var this_table_array = [];
-        var current_value_array=[];
+        var current_value_array = [];
         var real_param = datatableId.replace(/_/g, " ");
         parameter['param'] = real_param;
         var this_table = $('#' + datatableId).DataTable();
         this_table_array = this_table.$('input, select').serializeArray();
         var row_length = this_table.rows().count();
-        for(var rowsi=0;rowsi<row_length;rowsi++) {
+        for (var rowsi = 0; rowsi < row_length; rowsi++) {
             var row_object = {};
             for (var ttai = 0; ttai < this_table_array.length; ttai++) {
                 var name = this_table_array[ttai]['name'].split('^');
                 var column_name = name[3];
-                if (name[2] == rowsi){
+                if (name[2] == rowsi) {
                     row_object[column_name] = this_table_array[ttai]['value'];
                 }
 
@@ -1232,6 +1239,40 @@ function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+}
+
+function handleXlsxFileSelect(evt) {
+
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    var files = evt.dataTransfer.files; // FileList object.
+
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    var f = files[0];
+    output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+        f.size, ' bytes, last modified: ',
+        f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+        '</li>');
+    //var f = files[0];
+    if (f) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var data = e.target.result;
+            data = new Uint8Array(data);
+            // console.log(XLSX.utils.sheet_to_csv((XLSX.read(data, {type: 'array'}))));
+            //  console.log(((XLSX.read(data, {type: 'array'}))));
+             var workbook = XLSX.read(data, {type: 'array'});
+             var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+             var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
+             // table_add_rows(evt.target.id,json);
+            // console.log(JSON.stringify(json));
+        };
+        reader.readAsArrayBuffer(f);
+    } else {
+        alert("Failed to load file");
+    }
 }
 
 // deprecated
