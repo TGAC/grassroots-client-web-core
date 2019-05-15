@@ -540,9 +540,13 @@ function table_add_rows_csv(table_id_drop, csv){
     var t = $('#' + table_id).DataTable();
     var row_index = t.rows().count();
 
-    // for (var rs = 1; rs < json.length; rs++) {
-    //     t.row.add(json[rs]).draw(false);
-    // }
+
+    console.log(row_index);
+    if (row_index == 1){
+        console.log('deleting first row...');
+        t.row(0).remove().draw();
+        row_index = 0;
+    }
 
 
     var cHeadings = [];
@@ -565,13 +569,9 @@ function table_add_rows_csv(table_id_drop, csv){
                 row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="'+sheet_value+'"/>');
         }
         t.row.add(row_array).draw(false);
+        row_index++;
     }
 
-    console.log(row_index);
-    if (row_index == 1){
-        console.log('deleting first row...');
-        t.row(0).remove().draw();
-    }
 
 
 }
