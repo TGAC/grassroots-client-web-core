@@ -173,7 +173,8 @@ function populateService(service_name) {
                 var datatableId = datatable_param_list[idt]['table_id'];
                 $('#' + datatableId).DataTable({
                     scrollX: true,
-                    "paging": false
+                    "paging": false,
+                    "aaSorting": []
                     // dom: '<lBr<t>ip>',
                     // buttons: [
                     //     {
