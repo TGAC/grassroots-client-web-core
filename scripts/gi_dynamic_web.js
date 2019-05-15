@@ -531,6 +531,51 @@ function table_add_rows(table_id_drop,json){
 
 }
 
+function table_add_rows_csv(table_id_drop, csv){
+    var json = CSVJSON.csv2json(csv, {});
+    console.log(JSON.stringify(json));
+    var name = table_id_drop.split('^');
+    var table_id = name[0];
+
+    var t = $('#' + table_id).DataTable();
+    var row_index = t.rows().count();
+
+    // for (var rs = 1; rs < json.length; rs++) {
+    //     t.row.add(json[rs]).draw(false);
+    // }
+
+
+    var cHeadings = [];
+    for (var i = 0; i < datatable_param_list.length; i++) {
+        if (datatable_param_list[i]['table_id'] === table_id) {
+            cHeadings = datatable_param_list[i]['cHeadings'];
+        }
+    }
+    for (var rs = 0; rs < json.length; rs++) {
+        var sheet_row_json = json[rs]
+        var row_array = [];
+        var real_param = table_id.replace(/_/g, " ");
+        for (var r = 0; r < cHeadings.length; r++) {
+            var column_param = cHeadings[r]['param'];
+            var column_grassroots_type = cHeadings[r]['type'];
+            var sheet_value = "";
+            if (sheet_row_json[column_param] != undefined){
+                sheet_value = sheet_row_json[column_param];
+            }
+                row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="'+sheet_value+'"/>');
+        }
+        t.row.add(row_array).draw(false);
+    }
+
+    console.log(row_index);
+    if (row_index == 1){
+        console.log('deleting first row...');
+        t.row(0).remove().draw();
+    }
+
+
+}
+
 function table_add_new_row(table_id) {
     var t = $('#' + table_id).DataTable();
     var row_index = t.rows().count();
@@ -1277,10 +1322,12 @@ function handleXlsxFileSelect(evt) {
             // console.log(XLSX.utils.sheet_to_csv((XLSX.read(data, {type: 'array'}))));
             //  console.log(((XLSX.read(data, {type: 'array'}))));
              var workbook = XLSX.read(data, {type: 'array'});
-             // var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
-             var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
+             var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+             // var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
              console.log('tableid: '+ table_id);
-             table_add_rows(table_id,json);
+             // table_add_rows(table_id,json);
+            console.log('csv: '+ csv.trim());
+            table_add_rows_csv(table_id,csv.trim());
 
         };
         reader.readAsArrayBuffer(f);
