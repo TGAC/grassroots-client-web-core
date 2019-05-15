@@ -556,7 +556,7 @@ function table_add_rows_csv(table_id_drop, csv) {
         }
     }
     for (var rs = 0; rs < json.length; rs++) {
-        var sheet_row_json = json[rs]
+        var sheet_row_json = json[rs];
         var row_array = [];
         var real_param = table_id.replace(/_/g, " ");
         for (var r = 0; r < cHeadings.length; r++) {
