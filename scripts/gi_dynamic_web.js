@@ -518,13 +518,14 @@ function table_add_rows(table_id_drop,json){
 
     var t = $('#' + table_id).DataTable();
     var row_index = t.rows().count();
-// remove first empty row
-    if (row_index == 0){
-        var row = t.find('tr').eq(0);
-        t.fnDeleteRow(row[0]);
-    }
+
     for (var rs = 1; rs < json.length; rs++) {
         t.row.add(json[rs]).draw(false);
+    }
+    console.log(row_index);
+    if (row_index == 1){
+        console.log('deleting first row...');
+        t.row(0).remove().draw();
     }
 
 }
