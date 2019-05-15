@@ -186,8 +186,8 @@ function populateService(service_name) {
                 });
                 table_add_new_row(datatableId);
 
-                document.getElementById(datatableId).addEventListener('dragover', handleDragOver, false);
-                document.getElementById(datatableId).addEventListener('drop', handleXlsxFileSelect, false);
+                document.getElementById(datatableId+'^drop').addEventListener('dragover', handleDragOver, false);
+                document.getElementById(datatableId+'^drop').addEventListener('drop', handleXlsxFileSelect, false);
             }
         }
     });
@@ -464,6 +464,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             datatable_param_list.push(each_table_obj);
             form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
+            form_html.push('<div class="sheet-drop" id="' + table_id + '^drop">Drop a spreadsheet file here to populate the table below</div>');
             form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push(table_thead_formatter(cHeading));
@@ -511,7 +512,20 @@ function table_thead_formatter(cHeadings) {
     return thead_html.join(' ');
 }
 
-function table_add_rows(table_id,json){
+function table_add_rows(table_id_drop,json){
+    var name = table_id_drop.split('^');
+    var table_id = name[0];
+
+    var t = $('#' + table_id).DataTable();
+    var row_index = t.rows().count();
+// remove first empty row
+    if (row_index == 0){
+        var row = t.find('tr').eq(0);
+        t.fnDeleteRow(row[0]);
+    }
+    for (var rs = 1; rs < json.length; rs++) {
+        t.row.add(json[rs]).draw(false);
+    }
 
 }
 
@@ -1247,14 +1261,11 @@ function handleXlsxFileSelect(evt) {
     evt.preventDefault();
 
     var files = evt.dataTransfer.files; // FileList object.
+    var table_id = evt.target.id;
 
     // files is a FileList of File objects. List some properties.
-    var output = [];
     var f = files[0];
-    output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-        f.size, ' bytes, last modified: ',
-        f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-        '</li>');
+
     //var f = files[0];
     if (f) {
         var reader = new FileReader();
@@ -1264,10 +1275,11 @@ function handleXlsxFileSelect(evt) {
             // console.log(XLSX.utils.sheet_to_csv((XLSX.read(data, {type: 'array'}))));
             //  console.log(((XLSX.read(data, {type: 'array'}))));
              var workbook = XLSX.read(data, {type: 'array'});
-             var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+             // var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
              var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
-             // table_add_rows(evt.target.id,json);
-            // console.log(JSON.stringify(json));
+             console.log('tableid: '+ table_id);
+             table_add_rows(table_id,json);
+
         };
         reader.readAsArrayBuffer(f);
     } else {
