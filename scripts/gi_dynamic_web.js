@@ -187,8 +187,8 @@ function populateService(service_name) {
                 });
                 table_add_new_row(datatableId);
 
-                document.getElementById(datatableId+'^drop').addEventListener('dragover', handleDragOver, false);
-                document.getElementById(datatableId+'^drop').addEventListener('drop', handleXlsxFileSelect, false);
+                document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
+                document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
             }
         }
     });
@@ -513,7 +513,7 @@ function table_thead_formatter(cHeadings) {
     return thead_html.join(' ');
 }
 
-function table_add_rows(table_id_drop,json){
+function table_add_rows(table_id_drop, json) {
     var name = table_id_drop.split('^');
     var table_id = name[0];
 
@@ -524,14 +524,14 @@ function table_add_rows(table_id_drop,json){
         t.row.add(json[rs]).draw(false);
     }
     console.log(row_index);
-    if (row_index == 1){
+    if (row_index == 1) {
         console.log('deleting first row...');
         t.row(0).remove().draw();
     }
 
 }
 
-function table_add_rows_csv(table_id_drop, csv){
+function table_add_rows_csv(table_id_drop, csv) {
     var json = CSVJSON.csv2json(csv, {});
     console.log(JSON.stringify(json));
     var name = table_id_drop.split('^');
@@ -542,7 +542,7 @@ function table_add_rows_csv(table_id_drop, csv){
 
 
     console.log(row_index);
-    if (row_index == 1){
+    if (row_index == 1) {
         console.log('deleting first row...');
         t.row(0).remove().draw();
         row_index = 0;
@@ -563,17 +563,14 @@ function table_add_rows_csv(table_id_drop, csv){
             var column_param = cHeadings[r]['param'];
             var column_grassroots_type = cHeadings[r]['type'];
             var sheet_value = "";
-            if (sheet_row_json[column_param] != undefined){
+            if (sheet_row_json[column_param] != undefined) {
                 sheet_value = sheet_row_json[column_param];
             }
-                row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="'+sheet_value+'"/>');
+            row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/>');
         }
         t.row.add(row_array).draw(false);
         row_index++;
     }
-
-
-
 }
 
 function table_add_new_row(table_id) {
@@ -1321,13 +1318,13 @@ function handleXlsxFileSelect(evt) {
             data = new Uint8Array(data);
             // console.log(XLSX.utils.sheet_to_csv((XLSX.read(data, {type: 'array'}))));
             //  console.log(((XLSX.read(data, {type: 'array'}))));
-             var workbook = XLSX.read(data, {type: 'array'});
-             var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
-             // var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
-             console.log('tableid: '+ table_id);
-             // table_add_rows(table_id,json);
-            console.log('csv: '+ csv.trim());
-            table_add_rows_csv(table_id,csv.trim());
+            var workbook = XLSX.read(data, {type: 'array'});
+            var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+            // var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
+            console.log('tableid: ' + table_id);
+            // table_add_rows(table_id,json);
+            console.log('csv: ' + csv.trim());
+            table_add_rows_csv(table_id, csv.trim());
 
         };
         reader.readAsArrayBuffer(f);
