@@ -397,12 +397,17 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         // input form text
         else if (grassroots_type == "xsd:string"
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
-
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
-            form_html.push('</div>');
 
+            if (selected_service_name == "Search Field Trials" && param == "FT Keyword Search") {
+                // ajax stuff here
+                form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '" onkeyup="do_ajax_search();"/>');
+                form_html.push('<div id="ajax_result"></div>');
+            } else {
+                form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            }
+            form_html.push('</div>');
         }
         // textarea
         else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
@@ -502,13 +507,116 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     return form_html.join(' ');
 }
 
+function do_ajax_search() {
+    var input = $('#ft_ajax_search').val();
+    $('#ajax_result').html(input);
+
+    var submit_json = {
+        "services": [
+            {
+                "start_service": true,
+                "so:name": "Search Field Trials",
+                "parameter_set": {
+                    "parameters": [
+
+                        {
+                            "param": "FT Keyword Search",
+                            "current_value": input + "*"
+                        },
+                        {
+                            "param": "FT Facet",
+                            "current_value": "Treatment"
+                        }
+                    ]
+                }
+            }
+        ]
+    };
+
+    $.ajax({
+        url: server_url,
+        data: JSON.stringify(submit_json),
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            console.log(JSON.stringify(json));
+            var result_array = json['results'][0]['results'];
+            if (result_array == undefined) {
+                $('#ajax_result').html("No result found");
+            } else {
+                $('#ajax_result').html(format_treatment_ajax_result(result_array));
+                $('#treatment_result').DataTable();
+            }
+        }
+    });
+}
+
+function format_treatment_ajax_result(array){
+    var html = [];
+
+    html.push('<table class="display" id="treatment_result">');
+    html.push('<thead>');
+    html.push('<tr>');
+    html.push('<th>Trait name</th>');
+    html.push('<th>Trait Ontology</th>');
+    html.push('<th>Trait Description</th>');
+    html.push('<th>Trait Abbreviation</th>');
+    html.push('<th>Measurement Name</th>');
+    html.push('<th>Measurement Ontology</th>');
+    html.push('<th>Unit Name</th>');
+    html.push('<th>Unit Ontology</th>');
+    html.push('</tr>');
+    html.push('</thead>');
+
+
+    html.push('<tbody>');
+    for (var i = 0; i < array.length; i++) {
+        var trait = array[i]['data']['trait'];
+        var measurement = array[i]['data']['measurement'];
+        var unit = array[i]['data']['unit'];
+        html.push('<tr>');
+        html.push('<td>');
+        html.push(trait['so:name']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(trait['so:sameAs']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(trait['so:description']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(trait['abbreviation']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(measurement['so:name']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(measurement['so:sameAs']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(unit['so:name']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(unit['so:sameAs']);
+        html.push('</td>');
+        html.push('</tr>');
+    }
+    html.push('</tbody>');
+    html.push('</table>');
+
+
+    return html.join(' ');
+}
+
 function table_thead_formatter(cHeadings) {
     var thead_html = [];
     thead_html.push('<thead>');
+    thead_html.push('<tr>');
     // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
     for (var i = 0; i < cHeadings.length; i++) {
         thead_html.push('<th>' + cHeadings[i]['param'] + '</th>');
     }
+    thead_html.push('</tr>');
     thead_html.push('</thead>');
     return thead_html.join(' ');
 }
@@ -795,7 +903,7 @@ function display_result(json) {
 
         startGIS(json['results'][0]['results']);
         map.fitWorld({reset: true}).zoomIn();
-    } else if (selected_service_name == 'DFWFieldTrial search service') {
+    } else if (selected_service_name == 'Search Field Trials') {
         $('#simpleAdvanceWrapper').hide();
         $('#status').html('');
         $('#form').html('');
@@ -876,7 +984,7 @@ function checkResult(each_result) {
                             $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
                         } else if (selected_service_name == 'Polymarker') {
                             $('#' + uuid).html(display_polymarker_table(json[0]));
-                        } else if (selected_service_name == 'Search GRU seedbank' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
+                        } else if (selected_service_name == 'Search GRU seedbank' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Search Field Trials') {
                             $('#' + uuid).html(JSON.stringify(json[0]['results'][0]['data']));
                         } else {
                             $('#status').html('');
