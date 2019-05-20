@@ -509,6 +509,8 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
 function do_ajax_search() {
     var input = $('#ft_ajax_search').val();
+    var page_number = $('input[name="FT Results Page Number^params:unsigned_integer^integer^none"]').val();
+    var page_size = $('input[name="FT Results Page Size^params:unsigned_integer^integer^none"]').val();
     $('#ajax_result').html(input);
 
     var submit_json = {
@@ -526,6 +528,14 @@ function do_ajax_search() {
                         {
                             "param": "FT Facet",
                             "current_value": "Treatment"
+                        },
+                        {
+                            "param": "FT Results Page Number",
+                            "current_value": parseInt(page_number)
+                        },
+                        {
+                            "param": "FT Results Page Size",
+                            "current_value": parseInt(page_size)
                         }
                     ]
                 }
