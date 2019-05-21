@@ -142,56 +142,71 @@ function ontology_links(context_json, ontology_ref) {
 
 function populateService(service_name) {
     $('#back_link').css('visibility', 'visible');
+    $('#title').html('Search Treatment');
+    $('#description').html('Search field trial treatment');
+    $('#simpleAdvanceWrapper').hide();
     selected_service_name = service_name;
     console.log(selected_service_name);
-    $.ajax({
-        url: server_url,
-        data: '{"services": ["' + service_name + '"], "operations": {"operation": "get_named_service"}}',
-        type: "POST",
-        dataType: "json",
-        success: function (json) {
-            response = json;
-            console.info(JSON.stringify(json));
-            $('#title').html(response['services'][0]['so:name']);
-            $('#description').html(response['services'][0]['so:description']);
-            if (response['services'][0]['operation']['so:url'] != undefined) {
-                var infoLink = response['services'][0]['operation']['so:url'];
-                $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
-            }
-            parameters = response['services'][0]['operation']['parameter_set']['parameters'];
-            groups = response['services'][0]['operation']['parameter_set']['groups'];
-            synchronous = response['services'][0]['operation']['synchronous'];
-            console.info('synchronous' + synchronous);
-            produce_form('form', parameters, groups);
-            simpleOrAdvanced('show_simple');
-            for (var i = 0; i < textareas.length; i++) {
-                document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
-                document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
-            }
-            $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
-            for (var idt = 0; idt < datatable_param_list.length; idt++) {
-                var datatableId = datatable_param_list[idt]['table_id'];
-                $('#' + datatableId).DataTable({
-                    scrollX: true,
-                    "paging": false,
-                    "aaSorting": []
-                    // dom: '<lBr<t>ip>',
-                    // buttons: [
-                    //     {
-                    //         text: 'Add Row',
-                    //         action: function ( e, dt, node, config ) {
-                    //             table_add_new_row(datatableId);
-                    //         }
-                    //     }
-                    // ]
-                });
-                table_add_new_row(datatableId);
+    if (selected_service_name == 'Search Treatment') {
+        var form_html = [];
+        form_html.push('<label title="Search the field trial data">Search</label>');
 
-                document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
-                document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
+        // ajax stuff here
+        form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="search_treatment_ajax" value="" onkeyup="do_ajax_search();"/>');
+        form_html.push('<div id="ajax_result"></div>');
+        form_html.push('</div>');
+        $('#form').html(form_html.join(' '));
+
+    } else {
+        $.ajax({
+            url: server_url,
+            data: '{"services": ["' + service_name + '"], "operations": {"operation": "get_named_service"}}',
+            type: "POST",
+            dataType: "json",
+            success: function (json) {
+                response = json;
+                console.info(JSON.stringify(json));
+                $('#title').html(response['services'][0]['so:name']);
+                $('#description').html(response['services'][0]['so:description']);
+                if (response['services'][0]['operation']['so:url'] != undefined) {
+                    var infoLink = response['services'][0]['operation']['so:url'];
+                    $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
+                }
+                parameters = response['services'][0]['operation']['parameter_set']['parameters'];
+                groups = response['services'][0]['operation']['parameter_set']['groups'];
+                synchronous = response['services'][0]['operation']['synchronous'];
+                console.info('synchronous' + synchronous);
+                produce_form('form', parameters, groups);
+                simpleOrAdvanced('show_simple');
+                for (var i = 0; i < textareas.length; i++) {
+                    document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
+                    document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
+                }
+                $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
+                for (var idt = 0; idt < datatable_param_list.length; idt++) {
+                    var datatableId = datatable_param_list[idt]['table_id'];
+                    $('#' + datatableId).DataTable({
+                        scrollX: true,
+                        "paging": false,
+                        "aaSorting": []
+                        // dom: '<lBr<t>ip>',
+                        // buttons: [
+                        //     {
+                        //         text: 'Add Row',
+                        //         action: function ( e, dt, node, config ) {
+                        //             table_add_new_row(datatableId);
+                        //         }
+                        //     }
+                        // ]
+                    });
+                    table_add_new_row(datatableId);
+
+                    document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
+                    document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function produce_form(div, parameters, groups) {
@@ -400,13 +415,13 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
 
-            if (selected_service_name == "Search Field Trials" && param == "FT Keyword Search") {
-                // ajax stuff here
-                form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '" onkeyup="do_ajax_search();"/>');
-                form_html.push('<div id="ajax_result"></div>');
-            } else {
-                form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
-            }
+            // if (selected_service_name == "Search Field Trials" && param == "FT Keyword Search" ) {
+            //     // ajax stuff here
+            //     form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '" onkeyup="do_ajax_search();"/>');
+            //     form_html.push('<div id="ajax_result"></div>');
+            // } else {
+            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            // }
             form_html.push('</div>');
         }
         // textarea
@@ -509,59 +524,69 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
 function do_ajax_search() {
     var input = $('#ft_ajax_search').val();
-    var page_number = $('input[name="FT Results Page Number^params:unsigned_integer^integer^none"]').val();
-    var page_size = $('input[name="FT Results Page Size^params:unsigned_integer^integer^none"]').val();
-    $('#ajax_result').html(input);
 
-    var submit_json = {
-        "services": [
-            {
-                "start_service": true,
-                "so:name": "Search Field Trials",
-                "parameter_set": {
-                    "parameters": [
+    if (input.length > 1) {
 
-                        {
-                            "param": "FT Keyword Search",
-                            "current_value": input + "*"
-                        },
-                        {
-                            "param": "FT Facet",
-                            "current_value": "Treatment"
-                        },
-                        {
-                            "param": "FT Results Page Number",
-                            "current_value": parseInt(page_number)
-                        },
-                        {
-                            "param": "FT Results Page Size",
-                            "current_value": parseInt(page_size)
-                        }
-                    ]
+        $('#ajax_result').html('Searching <img src=\"images/ajax-loader.gif\"/>');
+        var timer;
+
+        var submit_json = {
+            "services": [
+                {
+                    "start_service": true,
+                    "so:name": "Search Field Trials",
+                    "parameter_set": {
+                        "parameters": [
+
+                            {
+                                "param": "FT Keyword Search",
+                                "current_value": input + "*"
+                            },
+                            {
+                                "param": "FT Facet",
+                                "current_value": "Treatment"
+                            },
+                            {
+                                "param": "FT Results Page Number",
+                                "current_value": 0
+                            },
+                            {
+                                "param": "FT Results Page Size",
+                                "current_value": 500
+                            }
+                        ]
+                    }
                 }
-            }
-        ]
-    };
+            ]
+        };
 
-    $.ajax({
-        url: server_url,
-        data: JSON.stringify(submit_json),
-        type: "POST",
-        dataType: "json",
-        success: function (json) {
-            console.log(JSON.stringify(json));
-            var result_array = json['results'][0]['results'];
-            if (result_array == undefined) {
-                $('#ajax_result').html("No result found");
-            } else {
-                $('#ajax_result').html(format_treatment_ajax_result(result_array));
-                $('#treatment_result').DataTable();
-            }
-        }
-    });
+        clearTimeout(timer);
+
+        timer = setTimeout(function () {
+            $.ajax({
+                url: server_url,
+                data: JSON.stringify(submit_json),
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    console.log(JSON.stringify(json));
+                    var result_array = json['results'][0]['results'];
+                    if (result_array == undefined) {
+                        $('#ajax_result').html("No result found");
+                    } else {
+                        $('#ajax_result').html(format_treatment_ajax_result(result_array));
+                        $('#treatment_result').DataTable();
+                    }
+                }
+            });
+        }, 0);
+    } else {
+        $('#ajax_result').html('Enter a longer search query.');
+    }
+
 }
 
-function format_treatment_ajax_result(array){
+function format_treatment_ajax_result(array) {
     var html = [];
 
     html.push('<table class="display" id="treatment_result">');
