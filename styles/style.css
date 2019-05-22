@@ -287,3 +287,7 @@ table.plots td {
     color: #bbb;
     margin-bottom: 20px;
 }
+
+#ajax_result{
+    margin-top:20px;
+}
