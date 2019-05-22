@@ -881,7 +881,6 @@ function display_result(json) {
     if (selected_service_name == 'BlastN' || selected_service_name == 'BlastP' || selected_service_name == 'BlastX') {
         $('#status').html('');
         $('#result').html('');
-        $('#output_format_div').show();
         // get each job and place html
         for (var i = 0; i < json['results'].length; i++) {
             var each_result = json['results'][i];
@@ -891,6 +890,8 @@ function display_result(json) {
 
             checkResult(each_result);
         }
+        $('#output_format_div').show();
+        changeDownloadFormat();
     } else if (selected_service_name == 'Polymarker') {
         $('#status').html('');
         $('#result').html('');
@@ -1046,7 +1047,6 @@ function checkResult(each_result) {
 
 function display_blast_result_grassroots_markup(json) {
 
-    $('#output_format_div').show();
     var result_html = [];
     result_html.push('<br/><br/><hr/><br/>');
 
@@ -1056,6 +1056,8 @@ function display_blast_result_grassroots_markup(json) {
     $('#form').html('');
     window.scrollTo(0, 0);
     $('#result').html(result_html.join(' '));
+    $('#output_format_div').show();
+    changeDownloadFormat();
 }
 
 function display_each_blast_result_grasroots_markup(each_db_result) {
