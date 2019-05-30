@@ -291,3 +291,21 @@ table.plots td {
 #ajax_result{
     margin-top:20px;
 }
+
+#message {
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    left: 25%;
+    background: #18bc9c;
+    border: 1px solid #ccc;
+    font-size: 150%;
+    padding: 15px 50px;
+    z-index: 99999;
+}
+#message p {
+    margin: 0;
+    padding: 0 40px 0 20px;
+    text-align: center;
+    color: white;
+}

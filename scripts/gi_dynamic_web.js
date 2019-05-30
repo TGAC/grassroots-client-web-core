@@ -575,7 +575,16 @@ function do_ajax_search() {
                         $('#ajax_result').html("No result found");
                     } else {
                         $('#ajax_result').html(format_treatment_ajax_result(result_array));
-                        $('#treatment_result').DataTable();
+                        var datatable = $('#treatment_result').DataTable();
+
+                        $('#treatment_result tbody').on('click', 'tr', function () {
+                            var data = datatable.row(this).data();
+                            copyToClipboard(JSON.stringify(data));
+                            $('#message').show();
+                            $('#message').animate({ opacity: 1.0 }, 500).fadeOut();
+                            console.log(data);
+                        });
+
                     }
                 }
             });
@@ -585,6 +594,26 @@ function do_ajax_search() {
     }
 
 }
+
+function copyToClipboard(text) {
+
+    var textArea = document.createElement( "textarea" );
+    textArea.value = text;
+    document.body.appendChild( textArea );
+
+    textArea.select();
+
+    try {
+        var successful = document.execCommand( 'copy' );
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Copying text command was ' + msg);
+    } catch (err) {
+        console.log('Oops, unable to copy');
+    }
+
+    document.body.removeChild( textArea );
+}
+
 
 function format_treatment_ajax_result(array) {
     var html = [];
