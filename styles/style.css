@@ -293,7 +293,7 @@ table.plots td {
 }
 
 #message {
-    position: absolute;
+    position: fixed;
     top: 50%;
     width: 50%;
     left: 25%;
