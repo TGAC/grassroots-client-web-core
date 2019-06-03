@@ -575,7 +575,7 @@ function do_ajax_search() {
                         $('#ajax_result').html("No result found");
                     } else {
                         $('#ajax_result').html(format_treatment_ajax_result(result_array));
-                        var datatable = $('#treatment_result').DataTable();
+                        var datatable = $('#treatment_result').DataTable({"searching": false});
 
                         $('#treatment_result tbody').on('click', 'tr', function () {
                             var data = datatable.row(this).data();
@@ -629,6 +629,8 @@ function format_treatment_ajax_result(array) {
     html.push('<th>Measurement Ontology</th>');
     html.push('<th>Unit Name</th>');
     html.push('<th>Unit Ontology</th>');
+    html.push('<th>Variable Name</th>');
+    html.push('<th>Variable Ontology</th>');
     html.push('</tr>');
     html.push('</thead>');
 
@@ -638,6 +640,7 @@ function format_treatment_ajax_result(array) {
         var trait = array[i]['data']['trait'];
         var measurement = array[i]['data']['measurement'];
         var unit = array[i]['data']['unit'];
+        var variable = array[i]['data']['variable'];
         html.push('<tr>');
         html.push('<td>');
         html.push(trait['so:name']);
@@ -662,6 +665,12 @@ function format_treatment_ajax_result(array) {
         html.push('</td>');
         html.push('<td>');
         html.push(unit['so:sameAs']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(variable['so:name']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(variable['so:sameAs']);
         html.push('</td>');
         html.push('</tr>');
     }
