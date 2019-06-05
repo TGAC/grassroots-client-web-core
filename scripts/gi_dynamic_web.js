@@ -142,12 +142,13 @@ function ontology_links(context_json, ontology_ref) {
 
 function populateService(service_name) {
     $('#back_link').css('visibility', 'visible');
-    $('#title').html('Search Treatment');
-    $('#description').html('Search field trial treatment');
-    $('#simpleAdvanceWrapper').hide();
+    // $('#title').html('Search Treatment');
+    // $('#description').html('Search field trial treatment');
+    // $('#simpleAdvanceWrapper').hide();
     selected_service_name = service_name;
-    console.log(selected_service_name);
     if (selected_service_name == 'Search Treatment') {
+        $('#title').html('Search Treatment');
+        $('#description').html('Search field trial treatment');
         var form_html = [];
         form_html.push('<label title="Search the field trial data">Search</label>');
 
@@ -414,14 +415,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-
-            // if (selected_service_name == "Search Field Trials" && param == "FT Keyword Search" ) {
-            //     // ajax stuff here
-            //     form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '" onkeyup="do_ajax_search();"/>');
-            //     form_html.push('<div id="ajax_result"></div>');
-            // } else {
             form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
-            // }
             form_html.push('</div>');
         }
         // textarea
@@ -576,12 +570,13 @@ function do_ajax_search() {
                     } else {
                         $('#ajax_result').html(format_treatment_ajax_result(result_array));
                         var datatable = $('#treatment_result').DataTable({"searching": false});
+                        simpleOrAdvanced('show_simple');
 
                         $('#treatment_result tbody').on('click', 'tr', function () {
                             var data = datatable.row(this).data();
                             copyToClipboard(JSON.stringify(data));
                             $('#message').show();
-                            $('#message').animate({ opacity: 1.0 }, 500).fadeOut();
+                            $('#message').animate({opacity: 1.0}, 500).fadeOut();
                             console.log(data);
                         });
 
@@ -597,21 +592,21 @@ function do_ajax_search() {
 
 function copyToClipboard(text) {
 
-    var textArea = document.createElement( "textarea" );
+    var textArea = document.createElement("textarea");
     textArea.value = text;
-    document.body.appendChild( textArea );
+    document.body.appendChild(textArea);
 
     textArea.select();
 
     try {
-        var successful = document.execCommand( 'copy' );
+        var successful = document.execCommand('copy');
         var msg = successful ? 'successful' : 'unsuccessful';
         console.log('Copying text command was ' + msg);
     } catch (err) {
         console.log('Oops, unable to copy');
     }
 
-    document.body.removeChild( textArea );
+    document.body.removeChild(textArea);
 }
 
 
@@ -774,13 +769,29 @@ function table_add_new_row(table_id) {
 }
 
 function simpleOrAdvanced(string) {
-    if (string === 'show_simple') {
-        $('.advanced').hide();
-        $('.simple').show();
+    if (selected_service_name === 'Search Treatment') {
+        var treatment_table = $('#treatment_result').DataTable();
+        if (string === 'show_simple') {
+            treatment_table.column(1).visible( false );
+            treatment_table.column(5).visible( false );
+            treatment_table.column(7).visible( false );
+            treatment_table.column(9).visible( false );
+        } else if (string === 'show_advanced') {
+            treatment_table.column(1).visible( true );
+            treatment_table.column(5).visible( true );
+            treatment_table.column(7).visible( true );
+            treatment_table.column(9).visible( true );
+        }
 
-    } else if (string === 'show_advanced') {
-        $('.simple').hide();
-        $('.advanced').show();
+    } else {
+        if (string === 'show_simple') {
+            $('.advanced').hide();
+            $('.simple').show();
+
+        } else if (string === 'show_advanced') {
+            $('.simple').hide();
+            $('.advanced').show();
+        }
     }
 }
 
