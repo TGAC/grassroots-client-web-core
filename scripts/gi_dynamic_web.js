@@ -569,7 +569,10 @@ function do_ajax_search() {
                         $('#ajax_result').html("No result found");
                     } else {
                         $('#ajax_result').html(format_treatment_ajax_result(result_array));
-                        var datatable = $('#treatment_result').DataTable({"searching": false});
+                        var datatable = $('#treatment_result').DataTable({
+                            "searching": false,
+                            "aaSorting": []
+                        });
                         simpleOrAdvanced('show_simple');
 
                         $('#treatment_result tbody').on('click', 'tr', function () {
