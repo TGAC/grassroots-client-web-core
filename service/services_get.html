@@ -9,55 +9,55 @@
     <title>Grassroots Infrastructure</title>
 
 
-    <link rel="stylesheet" href="styles/style.css" type="text/css"/>
+    <link rel="stylesheet" href="dynamic/styles/style.css" type="text/css"/>
     <!-- font awesome -->
-    <link href="scripts/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="dynamic/scripts/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 
     <!-- jQuery -->
-    <script type="text/javascript" src="scripts/jquery/js/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="scripts/jquery/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="scripts/jquery/js/jquery.highlight.js"></script>
-    <link rel="stylesheet" href="scripts/jquery/jquery-ui-1.11.4.custom/jquery-ui.min.css"
+    <script type="text/javascript" src="dynamic/scripts/jquery/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/jquery/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="dynamic/scripts/jquery/jquery-ui-1.11.4.custom/jquery-ui.min.css"
           type="text/css"/>
-    <script type="text/javascript" src="scripts/jquery/colorbox/jquery.colorbox-min.js"></script>
-    <link rel="stylesheet" href="scripts/jquery/colorbox/colorbox.css"
+    <link rel="stylesheet" href="dynamic/scripts/jquery/colorbox/colorbox.css"
           type="text/css"/>
 
     <!-- datatables -->
-    <script type="text/javascript" src="scripts/jquery/datatables/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="scripts/jquery/datatables/js/dataTables.searchHighlight.min.js"></script>
-    <link rel="stylesheet" href="scripts/jquery/datatables/css/jquery.dataTables.min.css"
+    <script type="text/javascript" src="dynamic/scripts/jquery/datatables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/jquery/datatables/js/dataTables.buttons.min.js"></script>
+    <link rel="stylesheet" href="dynamic/scripts/jquery/datatables/css/jquery.dataTables.min.css"
           type="text/css"/>
 
 
     <!-- bootstrap -->
-    <script src="scripts/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="scripts/bootstrap/js/validator.js" type="text/javascript"></script>
+    <script src="dynamic/scripts/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="dynamic/scripts/bootstrap/js/validator.js" type="text/javascript"></script>
     <!--<link href="scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>-->
 
     <!-- wis -->
-    <script type="text/javascript" src="scripts/gi_dynamic_web.js"></script>
-    <script type="text/javascript" src="scripts/wis.js"></script>
-    <script type="text/javascript" src="scripts/FileSaver.min.js"></script>
+    <script type="text/javascript" src="config/config.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/gi_dynamic_web.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/fieldtrial_map.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/wis.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/FileSaver.min.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/gis_map.js"></script>
 
-    <script type="text/javascript" src="scripts/fieldtrial_map.js"></script>
 
+    <script src="dynamic/scripts/d3/d3.min.js" type="text/javascript"></script>
     <!-- Leaflet -->
-    <link rel="stylesheet" href="scripts/leaflet/leaflet.css" />
-    <script src="scripts/leaflet/leaflet.js"></script>
+    <link rel="stylesheet" href="dynamic/scripts/leaflet/leaflet.css"/>
+    <script src="dynamic/scripts/leaflet/leaflet.js"></script>
 
     <!-- Leaflet markercluster -->
-    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.css" />
-    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.Default.css" />
-    <script src="scripts/leaflet.markercluster/leaflet.markercluster.js"></script>
-
+    <link rel="stylesheet" href="dynamic/scripts/leaflet.markercluster/MarkerCluster.css"/>
+    <link rel="stylesheet" href="dynamic/scripts/leaflet.markercluster/MarkerCluster.Default.css"/>
+    <script src="dynamic/scripts/leaflet.markercluster/leaflet.markercluster.js"></script>
     <!-- polymarker -->
-    <script type="text/javascript" src="scripts/marker.js"></script>
-    <script type="text/javascript" src="scripts/biojs_io_fasta.min.js"></script>
-    <script type="text/javascript" src="scripts/msa.min.gz.js"></script>
-    <script type="text/javascript" src="scripts/jquery/js/jquery.csvToTable.js"></script>
-    <link rel="stylesheet" href="scripts/jquery/css/csvtable.css" type="text/css"/>
-    <link rel="stylesheet" href="styles/msa.min.gz.css" type="text/css"/>
+    <script type="text/javascript" src="dynamic/scripts/marker.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/biojs_io_fasta.min.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/msa.min.gz.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/jquery/js/jquery.csvToTable.js"></script>
+    <link rel="stylesheet" href="dynamic/scripts/jquery/css/csvtable.css" type="text/css"/>
+    <link rel="stylesheet" href="dynamic/styles/msa.min.gz.css" type="text/css"/>
 
 
     <!-- new style bit -->
@@ -74,12 +74,6 @@
 
     <!--<script src="https://grassroots.tools/vendor/jquery-easing/jquery.easing.min.js"></script>-->
     <link href="https://grassroots.tools/css/site.css" rel="stylesheet">
-
-
-    <script type="text/javascript" src="scripts/d3/d3.min.js"></script>
-    <!-- data file -->
-    <!--<script type="text/javascript" src="scripts/json_now_including_plot_replicates.js"></script>-->
-    <script type="text/javascript" src="scripts/plot_phenotype_no_corrected.js"></script>
 
 
 </head>
@@ -123,14 +117,18 @@
 <!--content-->
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
-    <div class="container" style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">
-        <div id="back_link" ><a href="index.html"><< Back to all services list</a><br/></div>
-        <h2 id="title">DFWFieldTrial search service</h2>
+    <div class="container">
+        <div id="back_link" style="visibility: hidden;"><a href="index.html"><< Back to all services list</a><br/></div>
+        <h2 id="title"></h2>
 
-        <p id="description">A service to search field trial data</p>
+        <p id="description"></p>
+
+        <p id="moreinfo"></p>
 
         <form id="form" role="form">
-            <div class="list_service_table"><table id="listTable"></table></div>
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
         </form>
         <div id="status"></div>
         <div id="output_format_div" style="display:none; float:right;">
@@ -144,52 +142,13 @@
 
         <div id="result"></div>
 
-        <div id="plots" style="width:100%; overflow: scroll;"></div>
+        <div id="map"></div>
 
-        <!-- Modal -->
-        <div class="modal" tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
-            <div class="modal-dialog  modal-lg" role="document">
-                <div class="modal-content" style="z-index: 9999999;">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Plot details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="modal-body">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
+        <div id="tableWrapper">
+            <table id="resultTable"></table>
         </div>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var jsonArray = fieldTrailJSON['results'][0]['results'];
-                var filtered_data = [];
-                jQuery('#status').html('');
-                var fieldTrialName = '';
-                var team = '';
-                for (i = 0; i < jsonArray.length; i++) {
-                    for (j = 0; j < jsonArray[i]['data']['experimental_areas'].length; j++)
-                        if (jsonArray[i]['data']['experimental_areas'][j]['address'] != undefined) {
-                            fieldTrialName = jsonArray[i]['data']['so:name'];
-                            team = jsonArray[i]['data']['team'];
-                            if (jsonArray[i]['data']['experimental_areas'][j]['address']['address']['location']['centre'] != undefined) {
-                                filtered_data.push(jsonArray[i]['data']['experimental_areas'][j]);
-                            }
-                        }
-                }
-                createPlotsHTML(filtered_data);
-                $('#plots').html(plotsHTMLArray['5bcdc979618dc26d682e4a52']);
-                console.log(JSON.stringify(plotsHTMLArray));
-            });
-
-
-        </script>
+        <div id="legend" style="display: none"></div>
     </div>
 </section>
 
@@ -244,6 +203,39 @@
         </div>
     </div>
 </footer>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(this).scrollTop(0);
+        if (getUrlParameter('service') != null) {
+            var serviceName = getUrlParameter('service');
+            var previousID = getUrlParameter('Previous results');
+            console.log(serviceName+' '+previousID);
+            get_api_result(serviceName, previousID);
+        }
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+</script>
 
 </body>
 </html>
