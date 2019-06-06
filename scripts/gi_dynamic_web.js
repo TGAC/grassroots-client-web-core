@@ -521,7 +521,7 @@ function do_ajax_search() {
 
     if (input.length > 1) {
 
-        $('#ajax_result').html('Searching <img src=\"images/ajax-loader.gif\"/>');
+        $('#ajax_result').html('Searching <img src=\"/dynamic-web-test/images/ajax-loader.gif\"/>');
         var timer;
 
         var submit_json = {
@@ -799,7 +799,7 @@ function simpleOrAdvanced(string) {
 }
 
 function submit_form() {
-    $('#status').html('<img src="images/ajax-loader.gif"/>');
+    $('#status').html('<img src="/dynamic-web-test/images/ajax-loader.gif"/>');
     Utils.ui.disableButton('submit_button');
     var form = jQuery('#form').serializeArray();
     form = form.concat(
@@ -903,7 +903,7 @@ function submit_form() {
 function get_api_result(service, previousID) {
     selected_service_name = service;
     $('#title').html(service);
-    $('#status').html('<img src="images/ajax-loader.gif"/>');
+    $('#status').html('<img src="/dynamic-web-test/images/ajax-loader.gif"/>');
     $.ajax({
         url: server_url + '/service/' + encodeURIComponent(service) + '?Previous%20results=' + previousID,
         // type: "GET",
@@ -938,7 +938,7 @@ function display_result(json) {
             var each_result = json['results'][i];
             var uuid = each_result['job_uuid'];
             var dbname = each_result['so:name'];
-            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"/dynamic-web-test/images/ajax-loader.gif\"/></div></div></br></fieldset>');
 
             checkResult(each_result);
         }
@@ -951,7 +951,7 @@ function display_result(json) {
             var each_result = json['results'][i];
             var uuid = each_result['job_uuid'];
             var dbname = each_result['so:name'];
-            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"images/ajax-loader.gif\"/></div></div></br></fieldset>');
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"/dynamic-web-test/images/ajax-loader.gif\"/></div></div></br></fieldset>');
 
             checkResult(each_result);
         }
@@ -1080,7 +1080,7 @@ function checkResult(each_result) {
                             downloadFile(json[0]['results'][0]['data'], selected_service_name);
                         }
                     } else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
-                        jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"images/ajax-loader.gif\"/>');
+                        jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"/dynamic-web-test/images/ajax-loader.gif\"/>');
                         var timer;
                         clearTimeout(timer);
                         timer = setTimeout(function () {
@@ -1326,7 +1326,7 @@ function changeDownloadFormat() {
 }
 
 function downloadJobFromServer(id) {
-    $('#' + id + 'status').html('<img src="images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="/dynamic-web-test/images/ajax-loader.gif"/>');
     $('#' + id + 'dl').removeAttr('onclick');
     var outfmt = $('#output_format').val();
 
@@ -1365,7 +1365,7 @@ function downloadJobFromServer(id) {
 
 
 function run_linked_service(id) {
-    $('#' + id + 'status').html('<img src="images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="/dynamic-web-test/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
 
     var linked_service_request_json = linked_services_global[id];
@@ -1389,7 +1389,7 @@ function run_linked_service(id) {
 
 
 function run_linked_service_with_redirect(id) {
-    $('#' + id + 'status').html('<img src="images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="/dynamic-web-test/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
 
     var linked_service_request_json = linked_services_global[id];
