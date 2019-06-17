@@ -160,9 +160,10 @@ function populateService(service_name) {
         $('#description').html('Search field trial treatment');
         var form_html = [];
 
-        form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
-
-        form_html.push('<label title="Search the field trial data">Search</label>');
+        // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
+        form_html.push('<label title="Search the field trial data">Search treatment in the box below <i class="fas fa-arrow-right"></i>' +
+            ' Click result row to copy it to clipboard <i class="fas fa-arrow-right"></i>' +
+            ' Paste into your field trial spread sheet.</label>');
 
         // ajax stuff here
         form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="search_treatment_ajax" value="" onkeyup="do_ajax_search();"/>');
