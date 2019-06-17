@@ -1,0 +1,4 @@
+
+RewriteEngine On
+
+RewriteRule    ^service/(.*)$    service/index.html?service=$1   [NC,L]
