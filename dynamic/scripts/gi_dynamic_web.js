@@ -159,6 +159,9 @@ function populateService(service_name) {
         $('#title').html('Search Treatment');
         $('#description').html('Search field trial treatment');
         var form_html = [];
+
+        form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
+
         form_html.push('<label title="Search the field trial data">Search</label>');
 
         // ajax stuff here
@@ -586,7 +589,7 @@ function do_ajax_search() {
 
                         $('#treatment_result tbody').on('click', 'tr', function () {
                             var data = datatable.row(this).data();
-                            copyToClipboard(JSON.stringify(data));
+                            copyToClipboard(data[8]);
                             $('#message').show();
                             $('#message').animate({opacity: 1.0}, 500).fadeOut();
                             console.log(data);
