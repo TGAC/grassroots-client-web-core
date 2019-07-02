@@ -529,8 +529,23 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     return form_html.join(' ');
 }
 
+function isOdd(n) {
+    return Math.abs(n % 2) == 1;
+}
+
 function do_ajax_search() {
     var input = $('#ft_ajax_search').val();
+
+    var input_tail = "";
+
+    if (isOdd((input.match(/\"/g) || []).length)){
+        input_tail = "\"";
+    }
+    if (((input.match(/\"/g) || []).length) == 0){
+        input_tail = "*";
+    }
+
+    console.log(input_tail);
 
     if (input.length > 1) {
 
@@ -547,7 +562,7 @@ function do_ajax_search() {
 
                             {
                                 "param": "FT Keyword Search",
-                                "current_value": input + "*"
+                                "current_value": input + input_tail
                             },
                             {
                                 "param": "FT Facet",
@@ -566,6 +581,7 @@ function do_ajax_search() {
                 }
             ]
         };
+        console.log(submit_json);
 
         clearTimeout(timer);
 
@@ -981,24 +997,24 @@ function display_result(json) {
         markersGroup = new L.MarkerClusterGroup({});
         map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
-        //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-        //        maxZoom: 18
-        //    }).addTo(map);
-        L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
-            attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
-            subdomains: '1234',
-            base: 'base',
-            type: 'maptile',
-            scheme: 'pedestrian.day',
-            app_id: '1yM5jhYmACdjFG39Q7yP',
-            app_code: 'ZAuXzelqWvL92h_jjEY_pA',
-            mapID: 'newest',
-            maxZoom: 20,
-            language: 'eng',
-            format: 'png8',
-            size: '256'
-        }).addTo(map);
+           L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+               attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+               maxZoom: 18
+           }).addTo(map);
+        // L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
+        //     attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
+        //     subdomains: '1234',
+        //     base: 'base',
+        //     type: 'maptile',
+        //     scheme: 'pedestrian.day',
+        //     app_id: '1yM5jhYmACdjFG39Q7yP',
+        //     app_code: 'ZAuXzelqWvL92h_jjEY_pA',
+        //     mapID: 'newest',
+        //     maxZoom: 20,
+        //     language: 'eng',
+        //     format: 'png8',
+        //     size: '256'
+        // }).addTo(map);
 
         L.control.zoom({position: 'topright'}).addTo(map);
 
