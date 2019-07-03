@@ -645,7 +645,7 @@ function copyToClipboard(text) {
 function format_treatment_ajax_result(array) {
     var html = [];
 
-    html.push('<table class="display" id="treatment_result">');
+    html.push('<table class="display" id="treatment_result" width="100%">');
     html.push('<thead>');
     html.push('<tr>');
     html.push('<th>Trait name</th>');
