@@ -601,7 +601,7 @@ function do_ajax_search() {
                         var datatable = $('#treatment_result').DataTable({
                             "searching": false,
                             "aaSorting": [],
-                            dom: 'Bfrtip',
+                            dom: 'lBfrtip',
                             buttons: [
                                 'copy',
                                 'csv',
