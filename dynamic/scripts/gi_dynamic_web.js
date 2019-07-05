@@ -600,17 +600,24 @@ function do_ajax_search() {
                         $('#ajax_result').html(format_treatment_ajax_result(result_array));
                         var datatable = $('#treatment_result').DataTable({
                             "searching": false,
-                            "aaSorting": []
+                            "aaSorting": [],
+                            dom: 'Bfrtip',
+                            buttons: [
+                                'copy',
+                                'csv',
+                                'excel'
+                            ],
+                            select: true
                         });
                         simpleOrAdvanced('show_simple');
-
-                        $('#treatment_result tbody').on('click', 'tr', function () {
-                            var data = datatable.row(this).data();
-                            copyToClipboard(data[8]);
-                            $('#message').show();
-                            $('#message').animate({opacity: 1.0}, 500).fadeOut();
-                            console.log(data);
-                        });
+                        //
+                        // $('#treatment_result tbody').on('click', 'tr', function () {
+                        //     var data = datatable.row(this).data();
+                        //     copyToClipboard(data[8]);
+                        //     $('#message').show();
+                        //     $('#message').animate({opacity: 1.0}, 500).fadeOut();
+                        //     console.log(data);
+                        // });
 
                     }
                 }
