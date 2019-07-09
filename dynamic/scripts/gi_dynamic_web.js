@@ -538,10 +538,10 @@ function do_ajax_search() {
 
     var input_tail = "";
 
-    if (isOdd((input.match(/\"/g) || []).length)){
+    if (isOdd((input.match(/\"/g) || []).length)) {
         input_tail = "\"";
     }
-    if (((input.match(/\"/g) || []).length) == 0){
+    if (((input.match(/\"/g) || []).length) == 0) {
         input_tail = "*";
     }
 
@@ -592,7 +592,6 @@ function do_ajax_search() {
                 type: "POST",
                 dataType: "json",
                 success: function (json) {
-                    console.log(JSON.stringify(json));
                     var result_array = json['results'][0]['results'];
                     if (result_array == undefined) {
                         $('#ajax_result').html("No result found");
@@ -603,9 +602,24 @@ function do_ajax_search() {
                             "aaSorting": [],
                             dom: 'lBfrtip',
                             buttons: [
-                                'copy',
-                                'csv',
-                                'excel'
+                                {
+                                    extend: 'copyHtml5',
+                                    title: null,
+                                    messageTop: null,
+                                    messageBottom: null,
+                                    exportOptions: {
+                                        columns: [8]
+                                    }
+                                },
+                                {
+                                    extend: 'excelHtml5',
+                                    title: null,
+                                    messageTop: null,
+                                    messageBottom: null,
+                                    exportOptions: {
+                                        columns: [8]
+                                    }
+                                }
                             ],
                             select: true
                         });
@@ -811,15 +825,15 @@ function simpleOrAdvanced(string) {
     if (selected_service_name === 'Search Treatment') {
         var treatment_table = $('#treatment_result').DataTable();
         if (string === 'show_simple') {
-            treatment_table.column(1).visible( false );
-            treatment_table.column(5).visible( false );
-            treatment_table.column(7).visible( false );
-            treatment_table.column(9).visible( false );
+            treatment_table.column(1).visible(false);
+            treatment_table.column(5).visible(false);
+            treatment_table.column(7).visible(false);
+            treatment_table.column(9).visible(false);
         } else if (string === 'show_advanced') {
-            treatment_table.column(1).visible( true );
-            treatment_table.column(5).visible( true );
-            treatment_table.column(7).visible( true );
-            treatment_table.column(9).visible( true );
+            treatment_table.column(1).visible(true);
+            treatment_table.column(5).visible(true);
+            treatment_table.column(7).visible(true);
+            treatment_table.column(9).visible(true);
         }
 
     } else {
@@ -1004,10 +1018,10 @@ function display_result(json) {
         markersGroup = new L.MarkerClusterGroup({});
         map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
-           L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-               attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-               maxZoom: 18
-           }).addTo(map);
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 18
+        }).addTo(map);
         // L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
         //     attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
         //     subdomains: '1234',
