@@ -607,6 +607,7 @@ function do_ajax_search() {
                                     title: null,
                                     messageTop: null,
                                     messageBottom: null,
+                                    header: false,
                                     exportOptions: {
                                         columns: [8]
                                     }
@@ -616,6 +617,7 @@ function do_ajax_search() {
                                     title: null,
                                     messageTop: null,
                                     messageBottom: null,
+                                    header: false,
                                     exportOptions: {
                                         columns: [8]
                                     }
