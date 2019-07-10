@@ -613,6 +613,16 @@ function do_ajax_search() {
                                     }
                                 },
                                 {
+                                    extend: 'csvHtml5',
+                                    title: null,
+                                    messageTop: null,
+                                    messageBottom: null,
+                                    header: false,
+                                    exportOptions: {
+                                        columns: [8]
+                                    }
+                                },
+                                {
                                     extend: 'excelHtml5',
                                     title: null,
                                     messageTop: null,
