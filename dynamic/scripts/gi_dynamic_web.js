@@ -1030,7 +1030,7 @@ function display_result(json) {
         markersGroup = new L.MarkerClusterGroup({});
         map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
             maxZoom: 18
         }).addTo(map);
@@ -1062,7 +1062,7 @@ function display_result(json) {
         markersGroup2 = new L.MarkerClusterGroup({});
         map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
-           L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
                maxZoom: 18
            }).addTo(map);
