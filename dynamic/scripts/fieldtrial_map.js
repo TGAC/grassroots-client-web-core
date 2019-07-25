@@ -83,7 +83,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
                         /* remove the quotes */
                         id = id.replace (/"/g, "");
                          //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
-                        return '<a class=\"newstyle_link\" href=\"fieldtrialplots_dynamic.html?id='+id+'\"  target=\"_blank\">View plots</a>';
+                        return '<a class=\"newstyle_link\" href=\"/dynamic/fieldtrialplots_dynamic.html?id='+id+'\"  target=\"_blank\">View plots</a>';
                     }
                     else {
                         return '';
@@ -477,12 +477,12 @@ function CreatePlotsRequestForExperimentalArea (exp_area_id) {
     var request = 
     {
 	    "services": [{
-		    "so:name": "DFWFieldTrial search service",
+		    "so:name": "Search Field Trials",
 		    "start_service": true,
 		    "parameter_set": {
 			    "parameters": [{
 				    "param": "Study to search for",
-				    "current_value": "5bcdc979618dc26d682e4a52"
+				    "current_value": exp_area_id
 			    }, {
 				    "param": "Get all Plots for Study",
 				    "current_value": true
@@ -494,7 +494,9 @@ function CreatePlotsRequestForExperimentalArea (exp_area_id) {
 	    }]
     };
 
-    request['services'][0]['parameter_set']['parameters'][0]['current_value'] = exp_area_id;
+    // request['services'][0]['parameter_set']['parameters'][0]['current_value'] = exp_area_id;
+
+    console.log(JSON.stringify(request));
 
     return request;
 }

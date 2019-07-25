@@ -155,15 +155,15 @@ function populateService(service_name) {
     // $('#description').html('Search field trial treatment');
     $('#simpleAdvanceWrapper').show();
     selected_service_name = service_name;
-    if (selected_service_name == 'Search Treatment') {
+    if (selected_service_name === 'Search Treatment' ||  selected_service_name === 'SearchTreatment' ) {
         $('#title').html('Search Treatment');
         $('#description').html('Search field trial treatment');
         var form_html = [];
 
         // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
         form_html.push('<label title="Search the field trial data">Search treatment in the box below <i class="fas fa-arrow-right"></i>' +
-            ' Click result row to copy it to clipboard <i class="fas fa-arrow-right"></i>' +
-            ' Paste into your field trial spread sheet.</label>');
+            ' Click (Ctrl click to select multi-rows) result rows to copy it to clipboard <i class="fas fa-arrow-right"></i>' +
+            ' Paste into your field trial spread sheet or export as excel.</label>');
 
         // ajax stuff here
         form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="search_treatment_ajax" value="" onkeyup="do_ajax_search();"/>');
@@ -834,7 +834,7 @@ function table_add_new_row(table_id) {
 }
 
 function simpleOrAdvanced(string) {
-    if (selected_service_name === 'Search Treatment') {
+    if (selected_service_name === 'Search Treatment' || selected_service_name === 'SearchTreatment' ) {
         var treatment_table = $('#treatment_result').DataTable();
         if (string === 'show_simple') {
             treatment_table.column(1).visible(false);
@@ -1062,24 +1062,24 @@ function display_result(json) {
         markersGroup2 = new L.MarkerClusterGroup({});
         map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
-        //    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-        //        maxZoom: 18
-        //    }).addTo(map);
-        L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
-            attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
-            subdomains: '1234',
-            base: 'base',
-            type: 'maptile',
-            scheme: 'pedestrian.day',
-            app_id: '1yM5jhYmACdjFG39Q7yP',
-            app_code: 'ZAuXzelqWvL92h_jjEY_pA',
-            mapID: 'newest',
-            maxZoom: 20,
-            language: 'eng',
-            format: 'png8',
-            size: '256'
-        }).addTo(map);
+           L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+               attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+               maxZoom: 18
+           }).addTo(map);
+        // L.tileLayer('https://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/{scheme}/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
+        //     attribution: 'Map &copy; 2016 <a href="http://developer.here.com">HERE</a>',
+        //     subdomains: '1234',
+        //     base: 'base',
+        //     type: 'maptile',
+        //     scheme: 'pedestrian.day',
+        //     app_id: '1yM5jhYmACdjFG39Q7yP',
+        //     app_code: 'ZAuXzelqWvL92h_jjEY_pA',
+        //     mapID: 'newest',
+        //     maxZoom: 20,
+        //     language: 'eng',
+        //     format: 'png8',
+        //     size: '256'
+        // }).addTo(map);
 
         L.control.zoom({position: 'topright'}).addTo(map);
 
