@@ -1466,7 +1466,7 @@ function run_linked_service_with_redirect(id) {
         success: function (json) {
             console.info(JSON.stringify(json));
             var uuid = json['results'][0]['job_uuid'];
-            window.open("services_get.html?service=" + encodeURI(service_name) + '&Previous%20results=' + uuid, '_blank');
+            window.open("/dynamic/services_get.html?service=" + encodeURI(service_name) + '&Previous%20results=' + uuid, '_blank');
             $('#' + id + 'status').html('');
             $('#' + id).attr('onclick', 'run_linked_service_with_redirect(\'' + id + '\')');
 
