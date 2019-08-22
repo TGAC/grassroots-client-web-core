@@ -11,6 +11,10 @@ This web UI has to be installed on the same server or using a proxy to overcome 
 2. In the dynamic/config/ directory, copy config.js.example to config.js and change the server_url to point to your grassroots server URL.
 3. In apache.conf add the content from config/htaccess file between the \<directory\>\</directory\> tag.
 
+## Use
+Go to: http(s)://server/service/ to list all services.
+
+
 ## One service only
 
 You can change the web UI to serve one service only by calling populateService('serviceName') in the $(document).ready(). in service.html
