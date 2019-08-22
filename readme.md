@@ -15,6 +15,3 @@ This web UI has to be installed on the same server or using a proxy to overcome 
 Go to: http(s)://server/service/ to list all services.
 
 
-## One service only
-
-You can change the web UI to serve one service only by calling populateService('serviceName') in the $(document).ready(). in service.html
