@@ -14,20 +14,24 @@ var colorJSON = {
 var plotsModalInfo = {};
 
 function startFieldTrialGIS(jsonArray) {
-
+console.log(JSON.stringify(jsonArray));
     var filtered_data = [];
     jQuery('#status').html('');
     var fieldTrialName = '';
     var team = '';
     for (i = 0; i < jsonArray.length; i++) {
-        for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
-            if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
-                fieldTrialName = jsonArray[i]['data']['so:name'];
-                team = jsonArray[i]['data']['team'];
-                if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
-                    filtered_data.push(jsonArray[i]['data']['studies'][j]);
+        if (jsonArray[i]['data']['studies'] != null) {
+            for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
+                if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
+                    fieldTrialName = jsonArray[i]['data']['so:name'];
+                    team = jsonArray[i]['data']['team'];
+                    if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
+                        filtered_data.push(jsonArray[i]['data']['studies'][j]);
+                    }
                 }
-            }
+        } else {
+
+        }
     }
     // removeTable();
     produceFieldtrialTable(filtered_data, fieldTrialName, team);
