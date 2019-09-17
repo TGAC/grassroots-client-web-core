@@ -1043,23 +1043,38 @@ function display_result(json) {
 
         startGIS(json['results'][0]['results']);
         map.fitWorld({reset: true}).zoomIn();
-    } else if (selected_service_name == 'Search Field Trials') {
-        $('#simpleAdvanceWrapper').hide();
+    }
+    // else if (selected_service_name == 'Search Field Trials') {
+    //     $('#simpleAdvanceWrapper').hide();
+    //     $('#status').html('');
+    //     $('#form').html('');
+    //     $('#tableWrapper').html('<table id="resultTable"></table>');
+    //     // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+    //     markersGroup2 = new L.MarkerClusterGroup({});
+    //     map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+    //
+    //        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+    //            maxZoom: 18
+    //        }).addTo(map);
+    //
+    //     L.control.zoom({position: 'topright'}).addTo(map);
+    //
+    //     startFieldTrialGIS(json['results'][0]['results']);
+    // }
+    else if (selected_service_name == 'Search Field Trials') {
+        // $('#simpleAdvanceWrapper').hide();
         $('#status').html('');
-        $('#form').html('');
-        $('#tableWrapper').html('<table id="resultTable"></table>');
-        // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-        markersGroup2 = new L.MarkerClusterGroup({});
-        map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+        $('#map').remove();
+        // $('#form').html('');
+        $('#tableWrapper').html('<table class="display" id="resultTable" width="100%"></table>');
+        var resultsList = json['results'][0]['results'];
+        $('#resultTable').html(format_fieldtrial_result(resultsList));
+        var datatable = $('#resultTable').DataTable({
+            // "searching": false,
+            "aaSorting": []
+        });
 
-           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-               attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-               maxZoom: 18
-           }).addTo(map);
-
-        L.control.zoom({position: 'topright'}).addTo(map);
-
-        startFieldTrialGIS(json['results'][0]['results']);
 
     } else {
         $('#status').html('');
@@ -1074,6 +1089,52 @@ function display_result(json) {
         }
 
     }
+}
+
+function format_fieldtrial_result(array) {
+    var html = [];
+
+    html.push('<thead>');
+    html.push('<tr>');
+    html.push('<th>Rank</th>');
+    html.push('<th>Type</th>');
+    html.push('<th>Title</th>');
+    html.push('<th>Info</th>');
+    html.push('<th>DOI</th>');
+    html.push('</tr>');
+    html.push('</thead>');
+
+    html.push('<tbody>');
+    for (var i = 0; i < array.length; i++) {
+        var type = '';
+        if (array[i]['data'] != undefined){
+            type = array[i]['data']['@type'];
+        }
+        var title = array[i]['title'];
+        var info = JSON.stringify(array[i]['data']);
+        var doi = '';
+        html.push('<tr>');
+        html.push('<td>');
+        html.push(i+1);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(type);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(title);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(info);
+        html.push('</td>');
+        html.push('<td>');
+        html.push('link here');
+        html.push('</td>');
+        html.push('</tr>');
+    }
+    html.push('</tbody>');
+
+
+    return html.join(' ');
 }
 
 function checkResult(each_result) {
