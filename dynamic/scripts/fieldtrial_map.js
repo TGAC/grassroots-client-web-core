@@ -14,7 +14,7 @@ var colorJSON = {
 var plotsModalInfo = {};
 
 function startFieldTrialGIS(jsonArray) {
-console.log(JSON.stringify(jsonArray));
+    console.log(JSON.stringify(jsonArray));
     var filtered_data = [];
     jQuery('#status').html('');
     var fieldTrialName = '';
@@ -34,8 +34,11 @@ console.log(JSON.stringify(jsonArray));
         }
     }
     // removeTable();
-    produceFieldtrialTable(filtered_data, fieldTrialName, team);
-    displayFTLocations(filtered_data, fieldTrialName, team);
+    if (fieldTrailSearchType === '<ANY>' || fieldTrailSearchType === 'Field Trail') {
+
+        produceFieldtrialTable(filtered_data, fieldTrialName, team);
+        displayFTLocations(filtered_data, fieldTrialName, team);
+    }
     // createPlotsHTML(filtered_data);
     // renderLegend();
 }
@@ -61,8 +64,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
                 "render": function (data, type, full, meta) {
                     if (full['sowing_date'] != undefined) {
                         return full['sowing_date'];
-                    }
-                    else {
+                    } else {
                         return '';
                     }
                 }
@@ -72,8 +74,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
                 "render": function (data, type, full, meta) {
                     if (full['harvest_date'] != undefined) {
                         return full['harvest_date'];
-                    }
-                    else {
+                    } else {
                         return '';
                     }
                 }
@@ -83,13 +84,12 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
                 "render": function (data, type, full, meta) {
                     if (full['_id'] != undefined) {
                         var id = full['_id']['$oid'];
-                        
+
                         /* remove the quotes */
-                        id = id.replace (/"/g, "");
-                         //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
-                        return '<a class=\"newstyle_link\" href=\"/dynamic/fieldtrialplots_dynamic.html?id='+id+'\"  target=\"_blank\">View plots</a>';
-                    }
-                    else {
+                        id = id.replace(/"/g, "");
+                        //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
+                        return '<a class=\"newstyle_link\" href=\"/dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
+                    } else {
                         return '';
                     }
                 }
@@ -185,7 +185,6 @@ function removePointers() {
 //         }
 //
 //     });
-
 
 
 function displayFTLocations(array, fieldTrialName, team) {
@@ -407,25 +406,25 @@ function formatPlotModal(plot) {
                 var observation = plot['rows'][r]['observations'][o];
 
                 phenotypearray.push('<tr>');
-                phenotypearray.push('<td>' + SafePrint (observation['date']) + '</td>');
-                phenotypearray.push('<td>' + SafePrint (observation['raw_value']) + '</td>');
-                phenotypearray.push('<td>' + SafePrint (observation['corrected_value']) + '</td>');
-                if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['trait']['so:sameAs']+'/">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+                phenotypearray.push('<td>' + SafePrint(observation['date']) + '</td>');
+                phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
+                phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>');
+                if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')) {
+                    phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/' + observation['phenotype']['trait']['so:sameAs'] + '/">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
 
-                }else{
-                    phenotypearray.push('<td class="tooltip-test"  title="'+observation['phenotype']['trait']['so:description']+'">' + observation['phenotype']['trait']['so:name'] + '</td>');
+                } else {
+                    phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '">' + observation['phenotype']['trait']['so:name'] + '</td>');
                 }
-                if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['measurement']['so:sameAs']+'/">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')) {
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/' + observation['phenotype']['measurement']['so:sameAs'] + '/">' + observation['phenotype']['measurement']['so:name'] + '</td>');
 
-                }else {
+                } else {
                     phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
                 }
-                if (observation['phenotype']['unit']['so:sameAs'].startsWith('CO')){
-                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/'+observation['phenotype']['unit']['so:sameAs']+'/">' + observation['phenotype']['unit']['so:name'] + '</td>');
+                if (observation['phenotype']['unit']['so:sameAs'].startsWith('CO')) {
+                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/' + observation['phenotype']['unit']['so:sameAs'] + '/">' + observation['phenotype']['unit']['so:name'] + '</td>');
 
-                }else {
+                } else {
                     phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
                 }
                 phenotypearray.push('</tr>');
@@ -439,9 +438,9 @@ function formatPlotModal(plot) {
     htmlarray.push('<span style="background-color:' + color + '" >Replicate: ' + replicate_index + '</span><br/>');
     htmlarray.push('Length: ' + plot['length'] + 'm<br/>');
     htmlarray.push('Width: ' + plot['width'] + 'm<br/>');
-    htmlarray.push('Trial Design: ' + SafePrint (plot['trial_desgin']) + '<br/>');
-    htmlarray.push('Sowing Date: ' + SafePrint (plot['sowing_date']) + '<br/>');
-    htmlarray.push('Harvest Date: ' + SafePrint (plot['harvest_date']) + '<br/>');
+    htmlarray.push('Trial Design: ' + SafePrint(plot['trial_desgin']) + '<br/>');
+    htmlarray.push('Sowing Date: ' + SafePrint(plot['sowing_date']) + '<br/>');
+    htmlarray.push('Harvest Date: ' + SafePrint(plot['harvest_date']) + '<br/>');
     htmlarray.push('Pedigree: ' + pedigree + '<br/>');
     htmlarray.push('<hr/>');
     htmlarray.push('<h5>Phenotype</h5>');
@@ -464,39 +463,39 @@ function formatPlotModal(plot) {
 
 /**
  * Get empty strings instead of undefeined variables
- * 
+ *
  * @param obj The object to check.
  */
-function SafePrint (obj) {
+function SafePrint(obj) {
     if (obj === undefined) {
         return "";
-     } else {
+    } else {
         return obj;
-     }
+    }
 }
 
 
-function CreatePlotsRequestForExperimentalArea (exp_area_id) {
+function CreatePlotsRequestForExperimentalArea(exp_area_id) {
 
-    var request = 
-    {
-	    "services": [{
-		    "so:name": "Search Field Trials",
-		    "start_service": true,
-		    "parameter_set": {
-			    "parameters": [{
-				    "param": "Study to search for",
-				    "current_value": exp_area_id
-			    }, {
-				    "param": "Get all Plots for Study",
-				    "current_value": true
-			    }, {
-				    "param": "Search Studies",
-				    "current_value": true
-			    }]
-		    }
-	    }]
-    };
+    var request =
+        {
+            "services": [{
+                "so:name": "Search Field Trials",
+                "start_service": true,
+                "parameter_set": {
+                    "parameters": [{
+                        "param": "Study to search for",
+                        "current_value": exp_area_id
+                    }, {
+                        "param": "Get all Plots for Study",
+                        "current_value": true
+                    }, {
+                        "param": "Search Studies",
+                        "current_value": true
+                    }]
+                }
+            }]
+        };
 
     // request['services'][0]['parameter_set']['parameters'][0]['current_value'] = exp_area_id;
 
