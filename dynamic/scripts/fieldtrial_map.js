@@ -88,7 +88,7 @@ function produceFieldtrialTable(data, fieldTrialName, team) {
                         /* remove the quotes */
                         id = id.replace(/"/g, "");
                         //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
-                        return '<a class=\"newstyle_link\" href=\"dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
+                        return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
                     } else {
                         return '';
                     }
