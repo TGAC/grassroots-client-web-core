@@ -13,32 +13,39 @@ var colorJSON = {
 };
 var plotsModalInfo = {};
 
-function startFieldTrialGIS(jsonArray) {
+function startFieldTrialGIS(jsonArray, type_param) {
     console.log(JSON.stringify(jsonArray));
-    var filtered_data = [];
+    var filtered_data_with_location = [];
+    var filtered_data_without_location = [];
     jQuery('#status').html('');
     var fieldTrialName = '';
     var team = '';
     for (i = 0; i < jsonArray.length; i++) {
-        if (jsonArray[i]['data']['studies'] != null) {
-            for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
-                if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
-                    fieldTrialName = jsonArray[i]['data']['so:name'];
-                    team = jsonArray[i]['data']['team'];
-                    if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
-                        filtered_data.push(jsonArray[i]['data']['studies'][j]);
+        if (type_param === 'Grassroots:FieldTrial') {
+            fieldTrialName = jsonArray[i]['data']['so:name'];
+            team = jsonArray[i]['data']['team'];
+            if (jsonArray[i]['data']['studies'] != null) {
+                for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
+                    if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
+                        if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
+                            filtered_data_with_location.push(jsonArray[i]['data']['studies'][j]);
+                        }
+                    } else {
+                        filtered_data_without_location.push(jsonArray[i]['data']['studies'][j]);
                     }
-                }
-        } else {
-
+            } else {
+                filtered_data_without_location.push(jsonArray[i]['data']);
+            }
+        } else if (type_param === 'Grassroots:Study'){
+            filtered_data_with_location.push(jsonArray[i]['data'])
         }
     }
     // removeTable();
-    if (fieldTrailSearchType === '<ANY>' || fieldTrailSearchType === 'Field Trail') {
+    // if (fieldTrailSearchType === '<ANY>' || fieldTrailSearchType === 'Field Trail') {
 
-        produceFieldtrialTable(filtered_data, fieldTrialName, team);
-        displayFTLocations(filtered_data, fieldTrialName, team);
-    }
+        produceFieldtrialTable(filtered_data_without_location, fieldTrialName, team);
+        displayFTLocations(filtered_data_with_location, fieldTrialName, team);
+    // }
     // createPlotsHTML(filtered_data);
     // renderLegend();
 }

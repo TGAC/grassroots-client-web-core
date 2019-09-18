@@ -183,11 +183,17 @@
                     // Browser supports URLSearchParams
                     let params = new URLSearchParams(document.location.search.substring(1));
                     id_param = params.get("id");
-                    type_param = params.get("id");
+                    type_param = params.get("type");
                 }
 
-                if (id_param != null) {
-                    var req_json = CreatePlotsRequestForFieldTrial(id_param);
+                if (id_param != null && type_param != null) {
+                    var req_json;
+
+                    if (type_param === 'Grassroots:Study') {
+                        req_json = CreatePlotsRequestForExperimentalArea(id_param);
+                    } else if (type_param === 'Grassroots:FieldTrial') {
+                        req_json = CreatePlotsRequestForFieldTrial(id_param);
+                    }
 
 
                     if (req_json) {
@@ -199,7 +205,7 @@
                             contentType: "application/json; charset=utf-8"
                         }).done(function (ft_json) {
                             console.log(ft_json);
-                            start_map(ft_json);
+                            start_map(ft_json, type_param);
                         }).fail(function (req, status, error) {
                             console.info("req " + "status " + status + " error " + error);
                         });
@@ -207,7 +213,7 @@
                 }
             });
 
-            function start_map(ft_json) {
+            function start_map(ft_json, type_param) {
                 $('#simpleAdvanceWrapper').hide();
                 $('#status').html('');
                 $('#form').html('');
@@ -222,8 +228,8 @@
                 }).addTo(map);
 
                 L.control.zoom({position: 'topright'}).addTo(map);
-                fieldTrailSearchType = 'Field Trail'
-                startFieldTrialGIS(ft_json['results'][0]['results']);
+
+                startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
             }
 
         </script>
