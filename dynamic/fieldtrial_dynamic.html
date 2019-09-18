@@ -43,12 +43,12 @@
     <script type="text/javascript" src="scripts/fieldtrial_map.js"></script>
 
     <!-- Leaflet -->
-    <link rel="stylesheet" href="scripts/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="scripts/leaflet/leaflet.css"/>
     <script src="scripts/leaflet/leaflet.js"></script>
 
     <!-- Leaflet markercluster -->
-    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.css" />
-    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.css"/>
+    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.Default.css"/>
     <script src="scripts/leaflet.markercluster/leaflet.markercluster.js"></script>
 
     <!-- polymarker -->
@@ -77,7 +77,7 @@
 
     <link rel="stylesheet" href="styles/style.css" type="text/css"/>
 
-    
+
     <script type="text/javascript" src="scripts/d3/d3.min.js"></script>
     <!-- data file -->
     <!--<script type="text/javascript" src="scripts/json_now_including_plot_replicates.js"></script>-->
@@ -125,14 +125,15 @@
 <!--content-->
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
-    <div class="container" style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">
-        <div id="back_link" ><a href="/service/"><< Back to all services list</a><br/></div>
+    <div class="container">
         <h2 id="title">DFWFieldTrial search service</h2>
 
         <p id="description">A service to search field trial data</p>
 
         <form id="form" role="form">
-            <div class="list_service_table"><table id="listTable"></table></div>
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
         </form>
         <div id="status"></div>
         <div id="output_format_div" style="display:none; float:right;">
@@ -174,38 +175,39 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#plots').html ('<img src="images/ajax-loader.gif"/>');
+                $('#plots').html('<img src="images/ajax-loader.gif"/>');
                 var id_param = null;
                 var type_param = null;
 
                 if ('URLSearchParams' in window) {
                     // Browser supports URLSearchParams
-                    let params = new URLSearchParams (document.location.search.substring(1));
-                    id_param = params.get ("id");
-                    type_param = params.get ("id");
+                    let params = new URLSearchParams(document.location.search.substring(1));
+                    id_param = params.get("id");
+                    type_param = params.get("id");
                 }
-                
-                if (id_param != null) {
-                    var req_json = CreatePlotsRequestForFieldTrial (id_param);
 
-                
+                if (id_param != null) {
+                    var req_json = CreatePlotsRequestForFieldTrial(id_param);
+
+
                     if (req_json) {
-                         $.ajax ({
+                        $.ajax({
                             type: "POST",
                             url: server_url,
-                            data: JSON.stringify (req_json),
+                            data: JSON.stringify(req_json),
                             dataType: "json",
                             contentType: "application/json; charset=utf-8"
-                        }).done (function (ft_json) {
+                        }).done(function (ft_json) {
                             console.log(ft_json);
-                             start_map (ft_json);
-                        }).fail (function (req, status, error) {
-                            console.info ("req " + "status " + status + " error " + error);
+                            start_map(ft_json);
+                        }).fail(function (req, status, error) {
+                            console.info("req " + "status " + status + " error " + error);
                         });
                     }
                 }
-          });
-        function start_map(ft_json) {
+            });
+
+            function start_map(ft_json) {
                 $('#simpleAdvanceWrapper').hide();
                 $('#status').html('');
                 $('#form').html('');
@@ -214,15 +216,15 @@
                 markersGroup2 = new L.MarkerClusterGroup({});
                 map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
-                   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                       maxZoom: 18
-                   }).addTo(map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                    maxZoom: 18
+                }).addTo(map);
 
                 L.control.zoom({position: 'topright'}).addTo(map);
-
+                fieldTrailSearchType = 'Field Trail'
                 startFieldTrialGIS(ft_json['results'][0]['results']);
-        }
+            }
 
         </script>
     </div>
