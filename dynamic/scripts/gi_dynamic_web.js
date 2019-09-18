@@ -1100,19 +1100,29 @@ function format_fieldtrial_result(array) {
     html.push('<th>Type</th>');
     html.push('<th>Title</th>');
     html.push('<th>Info</th>');
-    html.push('<th>DOI</th>');
+    html.push('<th>Link</th>');
     html.push('</tr>');
     html.push('</thead>');
 
     html.push('<tbody>');
     for (var i = 0; i < array.length; i++) {
+        var id = array[i]['data']['_id']['$oid'];
+
         var type = '';
+
         if (array[i]['data'] != undefined){
             type = array[i]['data']['@type'];
         }
         var title = array[i]['title'];
         var info = JSON.stringify(array[i]['data']);
         var doi = '';
+
+        var typeText = '';
+        if (type === 'Grassroots:FieldTrial'){typeText='Field Trial';}
+        if (type === 'Grassroots:Study'){typeText='Study';}
+        if (type === 'Grassroots:FieldTrial' || type === 'Grassroots:Study'){
+            doi = '<a target="_blank" href="../dynamic/fieldtrial_dynamic.html?id=' + id + '&type='+type+'">View '+typeText+'</a>'
+        }
         html.push('<tr>');
         html.push('<td>');
         html.push(i+1);
@@ -1127,7 +1137,7 @@ function format_fieldtrial_result(array) {
         html.push(info);
         html.push('</td>');
         html.push('<td>');
-        html.push('link here');
+        html.push(doi);
         html.push('</td>');
         html.push('</tr>');
     }

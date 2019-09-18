@@ -496,12 +496,37 @@ function CreatePlotsRequestForExperimentalArea(exp_area_id) {
                 }
             }]
         };
+    console.log(JSON.stringify(request));
 
-    // request['services'][0]['parameter_set']['parameters'][0]['current_value'] = exp_area_id;
+    return request;
+}
+
+function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
+
+    var request =
+        {
+            "services": [{
+                "so:name": "Search Field Trials",
+                "start_service": true,
+                "parameter_set": {
+                    "parameters": [{
+                        "param": "FT id",
+                        "current_value": fieldtrial_id
+                    }, {
+                        "param": "Get all Plots for Study",
+                        "current_value": true
+                    }, {
+                        "param": "Search Studies",
+                        "current_value": true
+                    }]
+                }
+            }]
+        };
 
     console.log(JSON.stringify(request));
 
     return request;
+
 }
 
 
