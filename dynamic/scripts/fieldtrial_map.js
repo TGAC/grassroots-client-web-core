@@ -36,29 +36,27 @@ function startFieldTrialGIS(jsonArray, type_param) {
             } else {
                 filtered_data_without_location.push(jsonArray[i]['data']);
             }
-        } else if (type_param === 'Grassroots:Study'){
-            fieldTrialName = jsonArray[i]['data']['so:name'];
+        } else if (type_param === 'Grassroots:Study') {
             filtered_data_with_location.push(jsonArray[i]['data'])
         }
     }
-    // removeTable();
-    // if (fieldTrailSearchType === '<ANY>' || fieldTrailSearchType === 'Field Trail') {
-
-        produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), fieldTrialName, team);
-        displayFTLocations(filtered_data_with_location, fieldTrialName, team);
-    // }
-    // createPlotsHTML(filtered_data);
-    // renderLegend();
+    if (type_param === 'Grassroots:FieldTrial'){
+        $('#description').append(' '+fieldTrialName);
+    } else if(type_param === 'Grassroots:Study'){
+        $('#title').append(' Study');
+    }
+    produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), team);
+    displayFTLocations(filtered_data_with_location, team);
 }
 
-function produceFieldtrialTable(data, fieldTrialName, team) {
+function produceFieldtrialTable(data, team) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
             {
                 title: "Name",
                 "render": function (data, type, full, meta) {
-                    return fieldTrialName;
+                    return full['so:name'];
                 }
             },
             {
