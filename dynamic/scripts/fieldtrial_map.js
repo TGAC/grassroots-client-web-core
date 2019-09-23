@@ -37,12 +37,32 @@ function startFieldTrialGIS(jsonArray, type_param) {
                 filtered_data_without_location.push(jsonArray[i]['data']);
             }
         } else if (type_param === 'Grassroots:Study') {
-            filtered_data_with_location.push(jsonArray[i]['data'])
+            filtered_data_with_location.push(jsonArray[i]['data']);
+            var ft_id = jsonArray[i]['parent_field_trial_id']['$oid'];
+            var req_json = CreatePlotsRequestForFieldTrial(ft_id);
+
+
+            if (req_json) {
+                $.ajax({
+                    type: "POST",
+                    url: server_url,
+                    data: JSON.stringify(req_json),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8"
+                }).done(function (ft_json) {
+                    console.log(ft_json);
+                    fieldTrialName = ft_json['results'][0]['results'][0]['data']['so:name'];
+                    team = ft_json['results'][0]['results'][0]['data']['team'];
+                }).fail(function (req, status, error) {
+                    console.info("req " + "status " + status + " error " + error);
+                });
+            }
         }
     }
-    if (type_param === 'Grassroots:FieldTrial'){
-        $('#description').append(' '+fieldTrialName);
-    } else if(type_param === 'Grassroots:Study'){
+    if (type_param === 'Grassroots:FieldTrial') {
+        $('#description').append(' ' + fieldTrialName);
+    } else if (type_param === 'Grassroots:Study') {
+        $('#description').append(' ' + fieldTrialName);
         $('#title').append(' Study');
     }
     produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), team);
