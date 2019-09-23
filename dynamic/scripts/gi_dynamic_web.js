@@ -6,6 +6,7 @@ var datatable_param_list = [];
 var fieldTrailSearchType = '';
 
 function get_all_services_as_table() {
+
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
 
     $.ajax({
@@ -117,6 +118,8 @@ function get_all_services_as_table() {
             // ]).draw(false);
         }
     });
+
+    $('#back_link').css('visibility', 'hidden');
 }
 
 function ontology_links(context_json, ontology_ref) {
