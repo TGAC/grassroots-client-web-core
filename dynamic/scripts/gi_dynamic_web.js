@@ -125,7 +125,7 @@ function get_all_services_as_table() {
 function ontology_links(context_json, ontology_ref) {
     var ontology_array = ontology_ref.split(':');
     var prefix = ontology_array[0] + ':';
-    console.log(prefix);
+    // console.log(prefix);
     return context_json[prefix] + ontology_array[1];
 }
 
@@ -159,7 +159,7 @@ function populateService(service_name) {
     // $('#description').html('Search field trial treatment');
     $('#simpleAdvanceWrapper').show();
     selected_service_name = service_name;
-    if (selected_service_name === 'Search Treatment' ||  selected_service_name === 'SearchTreatment' ) {
+    if (selected_service_name === 'Search Treatment' || selected_service_name === 'SearchTreatment') {
         $('#title').html('Search Treatment');
         $('#description').html('Search field trial treatment');
         var form_html = [];
@@ -838,7 +838,7 @@ function table_add_new_row(table_id) {
 }
 
 function simpleOrAdvanced(string) {
-    if (selected_service_name === 'Search Treatment' || selected_service_name === 'SearchTreatment' ) {
+    if (selected_service_name === 'Search Treatment' || selected_service_name === 'SearchTreatment') {
         var treatment_table = $('#treatment_result').DataTable();
         if (string === 'show_simple') {
             treatment_table.column(1).visible(false);
@@ -921,7 +921,7 @@ function submit_form() {
             var value = form[i]['value'];
             var parameter = {};
             parameter['param'] = param;
-            if (param === 'FT Facet'){
+            if (param === 'FT Facet') {
                 fieldTrailSearchType = value;
             }
             // parameter['grassroots_type'] = grassroots_type;
@@ -1047,6 +1047,7 @@ function display_result(json) {
         startGIS(json['results'][0]['results']);
         map.fitWorld({reset: true}).zoomIn();
     }
+    //old field trial showing map directly
     // else if (selected_service_name == 'Search Field Trials') {
     //     $('#simpleAdvanceWrapper').hide();
     //     $('#status').html('');
@@ -1113,25 +1114,38 @@ function format_fieldtrial_result(array) {
 
         var type = '';
 
-        if (array[i]['data'] != undefined){
+        if (array[i]['data'] != undefined) {
             type = array[i]['data']['@type'];
         }
         var title = array[i]['title'];
-        var info = JSON.stringify(array[i]['data']);
+        var info = ''; //JSON.stringify(array[i]['data']);
         var doi = '';
 
         var typeText = '';
-        if (type === 'Grassroots:FieldTrial'){typeText='Field Trial';}
-        if (type === 'Grassroots:Study'){typeText='Study';}
-        if (type === 'Grassroots:FieldTrial' || type === 'Grassroots:Study'){
-            doi = '<a target="_blank" href="../dynamic/fieldtrial_dynamic.html?id=' + id + '&type='+type+'">View '+typeText+'</a>'
+        if (type === 'Grassroots:FieldTrial') {
+            typeText = 'Field Trial';
+            info = array[i]['data']['team'];
+        }
+        if (type === 'Grassroots:Study') {
+            typeText = 'Study';
+            info = array[i]['data']['address']['address']['Address']['name'] + '<br/>'
+                + array[i]['data']['address']['address']['Address']['addressLocality'] + '<br/>'
+                + array[i]['data']['address']['address']['Address']['addressCountry'] + '<br/>'
+                + array[i]['data']['address']['address']['Address']['postalCode'];
+        }
+        if (type === 'Grassroots:Phenotype') {
+            typeText = 'Phenotype';
+            info = array[i]['data']['trait']['so:name'];
+        }
+        if (type === 'Grassroots:FieldTrial' || type === 'Grassroots:Study') {
+            doi = '<a target="_blank" href="../dynamic/fieldtrial_dynamic.html?id=' + id + '&type=' + type + '">View ' + typeText + '</a>'
         }
         html.push('<tr>');
         html.push('<td>');
-        html.push(i+1);
+        html.push(i + 1);
         html.push('</td>');
         html.push('<td>');
-        html.push(type);
+        html.push(typeText);
         html.push('</td>');
         html.push('<td>');
         html.push(title);
