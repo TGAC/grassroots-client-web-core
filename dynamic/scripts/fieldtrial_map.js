@@ -569,6 +569,48 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
 
 }
 
+function CreatePlotsRequestForAllFieldTrials() {
+
+    var request = {
+        "services": [{
+            "start_service": true,
+            "so:name": "Search Field Trials",
+            "parameter_set": {
+                "parameters": [{
+                    "param": "FT Id",
+                    "current_value": ""
+                }, {"param": "FT Name", "current_value": ""}, {
+                    "param": "FT Team",
+                    "current_value": ""
+                }, {"param": "Study to search for", "current_value": ""}, {
+                    "param": "Locations",
+                    "current_value": "Any Location"
+                }, {"param": "Active on date", "current_value": "2017-03-01T00:00:00"}, {
+                    "param": "FT Keyword Search",
+                    "current_value": ""
+                }, {"param": "FT Facet", "current_value": "Field Trial"}, {
+                    "param": "FT Results Page Number",
+                    "current_value": 0
+                }, {"param": "FT Results Page Size", "current_value": 10}, {
+                    "param": "Search Field Trials",
+                    "current_value": false
+                }, {"param": "Fuzzy Search", "current_value": false}, {
+                    "param": "Get full data from search",
+                    "current_value": false
+                }, {"param": "Search Studies", "current_value": false}, {
+                    "param": "Get all Plots for Study",
+                    "current_value": false
+                }, {"param": "Get all Locations", "current_value": false}]
+            }
+        }]
+    };
+
+    console.log(JSON.stringify(request));
+
+    return request;
+
+}
+
 
 
 
