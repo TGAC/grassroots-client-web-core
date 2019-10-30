@@ -544,6 +544,122 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
 function refresh_service(input) {
     console.log(input);
+
+    $('#status').html('<img src="/dynamic/images/ajax-loader.gif"/>');
+    Utils.ui.disableButton('submit_button');
+    var form = jQuery('#form').serializeArray();
+    form = form.concat(
+        jQuery('#form input[type=checkbox]:not(:checked)').map(
+            function () {
+                return {"name": this.name, "value": "false"}
+            }).get()
+    );
+    var submission = {};
+    var submit_job = {};
+    var parameters = [];
+    var services_array = [];
+    var parameter_set = {};
+
+    for (var idt = 0; idt < datatable_param_list.length; idt++) {
+
+        var parameter = {};
+        var datatableId = datatable_param_list[idt]['table_id'];
+        var this_table_array = [];
+        var current_value_array = [];
+        var real_param = datatableId.replace(/_/g, " ");
+        parameter['param'] = real_param;
+        var this_table = $('#' + datatableId).DataTable();
+        this_table_array = this_table.$('input, select').serializeArray();
+        var row_length = this_table.rows().count();
+        for (var rowsi = 0; rowsi < row_length; rowsi++) {
+            var row_object = {};
+            for (var ttai = 0; ttai < this_table_array.length; ttai++) {
+                var name = this_table_array[ttai]['name'].split('^');
+                var column_name = name[3];
+                if (name[2] == rowsi) {
+                    row_object[column_name] = this_table_array[ttai]['value'];
+                }
+
+            }
+            current_value_array.push(row_object);
+            console.log(JSON.stringify(current_value_array));
+        }
+        parameter['current_value'] = current_value_array;
+        parameters.push(parameter);
+
+    }
+
+    for (var i = 0; i < form.length; i++) {
+        var name = form[i]['name'].split('^');
+        if (name[0] === 'tabular') {
+            //do nothing? DataTable().serializeArray() takes over
+        } else {
+            var param = name[0];
+            var grassroots_type = name[1];
+            var type = name[2];
+            var group = name[3];
+            var value = form[i]['value'];
+            var parameter = {};
+            parameter['param'] = param;
+            if (param === 'FT Facet') {
+                fieldTrailSearchType = value;
+            }
+            // parameter['grassroots_type'] = grassroots_type;
+            if (group != 'none') {
+                if (name[4] == 0) {
+                    parameter['group'] = repeatable_groups[group]['group'];
+                } else {
+                    parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+                }
+            }
+
+            if (type == 'boolean') {
+                parameter['current_value'] = JSON.parse(value);
+            } else if (type == 'integer') {
+                parameter['current_value'] = parseInt(value);
+            } else if (type == 'number') {
+                parameter['current_value'] = parseFloat(value);
+            } else {
+                parameter['current_value'] = value;
+            }
+            parameters.push(parameter);
+        }
+    }
+
+    submit_job['refresh_service'] = true;
+    submit_job['so:name'] = selected_service_name;
+
+    parameter_set['level'] = level_simpleoradvanced;
+    parameter_set['parameters'] = parameters;
+    submit_job['parameter_set'] = parameter_set;
+
+    services_array.push(submit_job);
+    submission['services'] = services_array;
+
+
+    console.info(JSON.stringify(submission));
+    console.info(server_url);
+    $.ajax({
+        url: server_url,
+        data: JSON.stringify(submission),
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            // do update values instead
+            refresh_form_with_result(json);
+
+            $('#status').html('');
+        }
+    });
+
+
+}
+
+function  refresh_form_with_result(json){
+    parameters = json['services'][0]['operation']['parameter_set']['parameters'];
+    groups = json['services'][0]['operation']['parameter_set']['groups'];
+    produce_form('form', parameters, groups);
+
 }
 
 function isOdd(n) {
