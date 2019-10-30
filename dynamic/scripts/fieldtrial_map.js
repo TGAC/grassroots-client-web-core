@@ -66,7 +66,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
         $('#title').append(' Study');
     }
     produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), team);
-    displayFTLocations(filtered_data_with_location, team);
+    displayFTLocations(filtered_data_with_location, fieldTrialName, team);
 }
 
 function produceFieldtrialTable(data, team) {
@@ -126,10 +126,15 @@ function produceFieldtrialTable(data, team) {
                     var addressInfo = '';
                     if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
                         if (full['address']['address']['Address'] !== undefined && full['address']['address']['Address'] !== "undefined") {
-                            addressInfo = '<span class=\"newstyle_link\"> ' + full['address']['address']['Address']['name'] + '<br/>'
-                                + full['address']['address']['Address']['addressLocality'] + '<br/>'
-                                + full['address']['address']['Address']['addressCountry'] + '<br/>'
-                                + full['address']['address']['Address']['postalCode'] + '</span>';
+                            var address_name = (full['address']['address']['Address']['name']!=undefined) ? full['address']['address']['Address']['name'] :"";
+                            var address_locality = (full['address']['address']['Address']['addressLocality']!=undefined) ? full['address']['address']['Address']['addressLocality'] : "";
+                            var address_country = (full['address']['address']['Address']['addressCountry']!=undefined)? full['address']['address']['Address']['addressCountry'] :"";
+                            var address_postcode = (full['address']['address']['Address']['postalCode']!=undefined)? full['address']['address']['Address']['postalCode']:"";
+
+                            addressInfo = '<span class=\"newstyle_link\"> ' + address_name + '<br/>'
+                                + address_locality + '<br/>'
+                                + address_country + '<br/>'
+                                + address_postcode + '</span>';
                         }
                     }
                     return addressInfo;
@@ -165,7 +170,7 @@ function produceFieldtrialTable(data, team) {
                 }
             }
         }
-        displayFTLocations(search_data, fieldTrialName, team);
+        displayFTLocations(search_data, team);
     });
 
 
@@ -221,6 +226,9 @@ function displayFTLocations(array, fieldTrialName, team) {
         var town = '';
         var name = '';
 
+        var sowing_date = (array[i]['sowing_date'] != undefined) ?  array[i]['sowing_date'] : " ";
+        var harvest_date = (array[i]['harvest_date'] != undefined) ?  array[i]['harvest_date'] : " ";
+
 
         la = array[i]['address']['address']['location']['centre']['latitude'];
         lo = array[i]['address']['address']['location']['centre']['longitude'];
@@ -237,12 +245,14 @@ function displayFTLocations(array, fieldTrialName, team) {
             }
         }
         var id = array[i]['_id']['$oid'];
+        /* remove the quotes */
+        id = id.replace(/"/g, "");
         var popup_note = '<b>Field Trial Name: </b>' + fieldTrialName + '<br/>'
             + '<b>Team: </b>' + team + '<br/>'
-            + '<b>Sowing Date: </b>' + array[i]['sowing_date'] + '<br/>'
-            + '<b>Harvest Date: </b>' + array[i]['harvest_date'] + '<br/>'
+            + '<b>Sowing Date: </b>' + sowing_date + '<br/>'
+            + '<b>Harvest Date: </b>' + harvest_date + '<br/>'
             // + '<u class=\"newstyle_link\" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View plots</u>'
-            + '<a class=\"newstyle_link\" href="fieldtrialplots.html" target="_blank">View plots</a>'
+            + '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\" target="_blank">View plots</a>'
         ;
         addFTPointer(la, lo, popup_note);
     }
