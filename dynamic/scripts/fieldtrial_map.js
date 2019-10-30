@@ -414,7 +414,7 @@ function formatPlot(plot) {
     }
 
     // return '<td>' + accession + '</td>';
-    var replicate_index = plot['replicate_index'];
+    var replicate_index = plot['replicate'];
     var color;
     // if (colorJSON[replicate_index]==undefined){
     //    color = getRandomColor();
@@ -436,7 +436,7 @@ function plotModal(plotId) {
 function formatPlotModal(plot) {
     var htmlarray = [];
 
-    var replicate_index = plot['replicate_index'];
+    var replicate_index = plot['replicate'];
     var color = colorJSON[replicate_index];
 
     var accession = '';
@@ -530,7 +530,7 @@ function CreatePlotsRequestForExperimentalArea(exp_area_id) {
                 "parameter_set": {
                     "level": "advanced",
                     "parameters": [{
-                        "param": "Study to search for",
+                        "param": "ST Id",
                         "current_value": exp_area_id
                     }, {
                         "param": "Get all Plots for Study",
