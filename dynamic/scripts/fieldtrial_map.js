@@ -28,10 +28,16 @@ function startFieldTrialGIS(jsonArray, type_param) {
                 for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
                     if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
                         if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
-                            filtered_data_with_location.push(jsonArray[i]['data']['studies'][j]);
+                            var study_json = jsonArray[i]['data']['studies'][j];
+                            study_json["team"] = team;
+                            study_json["so:name"] = fieldTrialName;
+                            filtered_data_with_location.push(study_json);
                         }
                     } else {
-                        filtered_data_without_location.push(jsonArray[i]['data']['studies'][j]);
+                        var study_json = jsonArray[i]['data']['studies'][j];
+                        study_json["team"] = team;
+                        study_json["so:name"] = fieldTrialName;
+                        filtered_data_without_location.push(study_json);
                     }
             } else {
                 filtered_data_without_location.push(jsonArray[i]['data']);
@@ -65,11 +71,11 @@ function startFieldTrialGIS(jsonArray, type_param) {
         $('#description').append(' ' + fieldTrialName);
         $('#title').append(' Study');
     }
-    produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), team);
-    displayFTLocations(filtered_data_with_location, fieldTrialName, team);
+    produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location));
+    displayFTLocations(filtered_data_with_location);
 }
 
-function produceFieldtrialTable(data, team) {
+function produceFieldtrialTable(data) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
@@ -82,7 +88,7 @@ function produceFieldtrialTable(data, team) {
             {
                 title: "Team",
                 "render": function (data, type, full, meta) {
-                    return team;
+                    return full['team'];
                 }
             },
             {
@@ -126,10 +132,10 @@ function produceFieldtrialTable(data, team) {
                     var addressInfo = '';
                     if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
                         if (full['address']['address']['Address'] !== undefined && full['address']['address']['Address'] !== "undefined") {
-                            var address_name = (full['address']['address']['Address']['name']!=undefined) ? full['address']['address']['Address']['name'] :"";
-                            var address_locality = (full['address']['address']['Address']['addressLocality']!=undefined) ? full['address']['address']['Address']['addressLocality'] : "";
-                            var address_country = (full['address']['address']['Address']['addressCountry']!=undefined)? full['address']['address']['Address']['addressCountry'] :"";
-                            var address_postcode = (full['address']['address']['Address']['postalCode']!=undefined)? full['address']['address']['Address']['postalCode']:"";
+                            var address_name = (full['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] : "";
+                            var address_locality = (full['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] : "";
+                            var address_country = (full['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] : "";
+                            var address_postcode = (full['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
 
                             addressInfo = '<span class=\"newstyle_link\"> ' + address_name + '<br/>'
                                 + address_locality + '<br/>'
@@ -170,7 +176,7 @@ function produceFieldtrialTable(data, team) {
                 }
             }
         }
-        displayFTLocations(search_data, team);
+        displayFTLocations(search_data);
     });
 
 
@@ -218,7 +224,7 @@ function removePointers() {
 //     });
 
 
-function displayFTLocations(array, fieldTrialName, team) {
+function displayFTLocations(array) {
     for (i = 0; i < array.length; i++) {
         var la = '';
         var lo = '';
@@ -226,8 +232,11 @@ function displayFTLocations(array, fieldTrialName, team) {
         var town = '';
         var name = '';
 
-        var sowing_date = (array[i]['sowing_date'] != undefined) ?  array[i]['sowing_date'] : " ";
-        var harvest_date = (array[i]['harvest_date'] != undefined) ?  array[i]['harvest_date'] : " ";
+        var fieldTrialName = array[i]['so:name'];
+        var team = array[i]['team'];
+
+        var sowing_date = (array[i]['sowing_date'] != undefined) ? array[i]['sowing_date'] : " ";
+        var harvest_date = (array[i]['harvest_date'] != undefined) ? array[i]['harvest_date'] : " ";
 
 
         la = array[i]['address']['address']['location']['centre']['latitude'];
@@ -519,6 +528,7 @@ function CreatePlotsRequestForExperimentalArea(exp_area_id) {
                 "so:name": "Search Field Trials",
                 "start_service": true,
                 "parameter_set": {
+                    "level": "advanced",
                     "parameters": [{
                         "param": "Study to search for",
                         "current_value": exp_area_id
@@ -544,6 +554,7 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
             "start_service": true,
             "so:name": "Search Field Trials",
             "parameter_set": {
+                "level": "advanced",
                 "parameters": [{
                     "param": "FT Id",
                     "current_value": fieldtrial_id
