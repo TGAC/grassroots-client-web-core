@@ -178,7 +178,7 @@ function populateService(service_name) {
     } else {
         $.ajax({
             url: server_url,
-            data: '{"services": ["' + service_name + '"], "operations": {"operation": "get_named_service"}}',
+            data: '{"services": [{"so:name":"' + service_name + '"}], "operations": {"operation": "get_named_service"}}',
             type: "POST",
             dataType: "json",
             success: function (json) {
@@ -359,6 +359,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     var current_value = '';
     var default_value = '';
     var group = "none";
+    var refresh = false;
 
     if (parameter['group'] !== undefined) {
         if (repeatable) {
@@ -366,6 +367,9 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             counter = repeatable_groups[group_id]['counter'];
             group = group_id + '^' + counter;
         }
+    }
+    if (parameter['refresh'] !== undefined) {
+        refresh = parameter['refresh'];
     }
 
     if (grassroots_type == "params:directory") {
@@ -512,7 +516,11 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         var enums = parameter['enum'];
         form_html.push('<div class="form-group ' + level + '">');
         form_html.push('<label title="' + description + '">' + display_name + '</label>');
-        form_html.push('<select class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '">');
+        if (refresh) {
+            form_html.push('<select class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" onchange="refresh_service(this);">');
+        } else {
+            form_html.push('<select class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '">');
+        }
         for (var j = 0; j < enums.length; j++) {
             var this_enum = enums[j];
             var option_text = this_enum['so:description'];
@@ -531,6 +539,10 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
     }
     return form_html.join(' ');
+}
+
+function refresh_service(input) {
+    console.log(input);
 }
 
 function isOdd(n) {
