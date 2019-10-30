@@ -4,6 +4,7 @@ var synchronous = false;
 var repeatable_groups = {};
 var datatable_param_list = [];
 var fieldTrailSearchType = '';
+var level_simpleoradvanced = "simple";
 
 function get_all_services_as_table() {
 
@@ -857,21 +858,25 @@ function simpleOrAdvanced(string) {
             treatment_table.column(5).visible(false);
             treatment_table.column(7).visible(false);
             treatment_table.column(9).visible(false);
+            level_simpleoradvanced = "simple";
         } else if (string === 'show_advanced') {
             treatment_table.column(1).visible(true);
             treatment_table.column(5).visible(true);
             treatment_table.column(7).visible(true);
             treatment_table.column(9).visible(true);
+            level_simpleoradvanced = "advanced";
         }
 
     } else {
         if (string === 'show_simple') {
             $('.advanced').hide();
             $('.simple').show();
+            level_simpleoradvanced = "simple";
 
         } else if (string === 'show_advanced') {
             $('.simple').hide();
             $('.advanced').show();
+            level_simpleoradvanced = "advanced";
         }
     }
 }
@@ -961,6 +966,7 @@ function submit_form() {
     submit_job['start_service'] = true;
     submit_job['so:name'] = selected_service_name;
 
+    parameter_set['level'] = level_simpleoradvanced;
     parameter_set['parameters'] = parameters;
     submit_job['parameter_set'] = parameter_set;
 
