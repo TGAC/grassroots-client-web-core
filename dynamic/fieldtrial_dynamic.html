@@ -208,7 +208,7 @@
                             dataType: "json",
                             contentType: "application/json; charset=utf-8"
                         }).done(function (ft_json) {
-                            console.log(ft_json);
+                            console.log(JSON.stringify(ft_json));
                             start_map(ft_json, type_param);
                         }).fail(function (req, status, error) {
                             console.info("req " + "status " + status + " error " + error);
