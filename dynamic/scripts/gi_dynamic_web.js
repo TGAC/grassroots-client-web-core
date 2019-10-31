@@ -1262,14 +1262,14 @@ function format_fieldtrial_result(array) {
         }
         if (type === 'Grassroots:Study') {
             typeText = 'Study';
-            var address_name = (array[i]['data']['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] : "";
-            var address_locality = (array[i]['data']['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] : "";
-            var address_country = (array[i]['data']['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] : "";
-            var address_postcode = (array[i]['data']['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
+            var address_name = (array[i]['data']['address']['address']['Address']['name'] != undefined) ? array[i]['data']['address']['address']['Address']['name']  + '<br/>' : "";
+            var address_locality = (array[i]['data']['address']['address']['Address']['addressLocality'] != undefined) ? array[i]['data']['address']['address']['Address']['addressLocality'] + '<br/>' : "";
+            var address_country = (array[i]['data']['address']['address']['Address']['addressCountry'] != undefined) ? array[i]['data']['address']['address']['Address']['addressCountry'] + '<br/>' : "";
+            var address_postcode = (array[i]['data']['address']['address']['Address']['postalCode'] != undefined) ? array[i]['data']['address']['address']['Address']['postalCode'] : "";
 
-            info = address_name + '<br/>'
-                + address_locality + '<br/>'
-                + address_country + '<br/>'
+            info = address_name
+                + address_locality
+                + address_country
                 + address_postcode;
         }
         if (type === 'Grassroots:Phenotype') {

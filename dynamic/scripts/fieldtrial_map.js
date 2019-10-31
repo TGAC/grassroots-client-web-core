@@ -136,14 +136,14 @@ function produceFieldtrialTable(data) {
                     var addressInfo = '';
                     if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
                         if (full['address']['address']['Address'] !== undefined && full['address']['address']['Address'] !== "undefined") {
-                            var address_name = (full['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] : "";
-                            var address_locality = (full['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] : "";
-                            var address_country = (full['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] : "";
+                            var address_name = (full['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] + '<br/>' : "";
+                            var address_locality = (full['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] + '<br/>' : "";
+                            var address_country = (full['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] + '<br/>' : "";
                             var address_postcode = (full['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
 
-                            addressInfo = '<span class=\"newstyle_link\"> ' + address_name + '<br/>'
-                                + address_locality + '<br/>'
-                                + address_country + '<br/>'
+                            addressInfo = '<span class=\"newstyle_link\"> ' + address_name
+                                + address_locality
+                                + address_country
                                 + address_postcode + '</span>';
                         }
                     }
