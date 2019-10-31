@@ -655,7 +655,7 @@ function refresh_service(input) {
 
 }
 
-function  refresh_form_with_result(json){
+function refresh_form_with_result(json) {
     parameters = json['services'][0]['operation']['parameter_set']['parameters'];
     groups = json['services'][0]['operation']['parameter_set']['groups'];
     produce_form('form', parameters, groups);
@@ -1262,10 +1262,15 @@ function format_fieldtrial_result(array) {
         }
         if (type === 'Grassroots:Study') {
             typeText = 'Study';
-            info = array[i]['data']['address']['address']['Address']['name'] + '<br/>'
-                + array[i]['data']['address']['address']['Address']['addressLocality'] + '<br/>'
-                + array[i]['data']['address']['address']['Address']['addressCountry'] + '<br/>'
-                + array[i]['data']['address']['address']['Address']['postalCode'];
+            var address_name = (array[i]['data']['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] : "";
+            var address_locality = (array[i]['data']['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] : "";
+            var address_country = (array[i]['data']['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] : "";
+            var address_postcode = (array[i]['data']['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
+
+            info = address_name + '<br/>'
+                + address_locality + '<br/>'
+                + address_country + '<br/>'
+                + address_postcode;
         }
         if (type === 'Grassroots:Phenotype') {
             typeText = 'Phenotype';
