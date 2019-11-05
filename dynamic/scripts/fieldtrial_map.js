@@ -75,11 +75,12 @@ function startFieldTrialGIS(jsonArray, type_param) {
         $('#description').append(' ' + fieldTrialName);
         $('#title').append(' Study');
     }
-    produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location));
+    produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
     displayFTLocations(filtered_data_with_location);
 }
 
-function produceFieldtrialTable(data) {
+function produceFieldtrialTable(data, type_param) {
+    // yrtable.destroy();
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "columns": [
@@ -169,19 +170,66 @@ function produceFieldtrialTable(data) {
 
     });
 
-    jQuery('#resultTable').on('search.dt', function () {
-        removePointers();
-        var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
-        var search_data = [];
-        for (i = 0; i < searchData.length; i++) {
-            if (searchData[i]['address']['address'] != undefined) {
-                if (searchData[i]['address']['address']['location']['centre'] != undefined) {
-                    search_data.push(searchData[i]);
+    if (type_param === 'AllFieldTrials') {
+        console.log("server search here");
+        jQuery('#resultTable').on('search.dt', function () {
+            removePointers();
+            var search_value = $('.dataTables_filter input').val();
+            var req_json = CreatePlotsRequestForAllFieldTrials(search_value);
+
+            console.log("server search query " + JSON.stringify(req_json));
+
+            if (req_json) {
+                $.ajax({
+                    type: "POST",
+                    url: server_url,
+                    data: JSON.stringify(req_json),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8"
+                }).done(function (ft_json) {
+                    console.log("server search response " + JSON.stringify(ft_json));
+                    if (ft_json['results'][0]['results'] != undefined) {
+
+                        // yrtable.destroy();
+                        $('#tableWrapper').html('  <div id="tableWrapper">\n' +
+                            '            <table id="resultTable"></table>\n' +
+                            '        </div>');
+                        startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
+                        $('.dataTables_filter input').val(search_value);
+                    }
+                }).fail(function (req, status, error) {
+                    console.info("req " + "status " + status + " error " + error);
+                });
+            }
+
+
+            // var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
+            // var search_data = [];
+            // for (i = 0; i < searchData.length; i++) {
+            //     if (searchData[i]['address']['address'] != undefined) {
+            //         if (searchData[i]['address']['address']['location']['centre'] != undefined) {
+            //             search_data.push(searchData[i]);
+            //         }
+            //     }
+            // }
+            // displayFTLocations(search_data);
+        });
+    } else {
+        jQuery('#resultTable').on('search.dt', function () {
+            removePointers();
+            var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
+            var search_data = [];
+            for (i = 0; i < searchData.length; i++) {
+                if (searchData[i]['address']['address'] != undefined) {
+                    if (searchData[i]['address']['address']['location']['centre'] != undefined) {
+                        search_data.push(searchData[i]);
+                    }
                 }
             }
-        }
-        displayFTLocations(search_data);
-    });
+            displayFTLocations(search_data);
+        });
+
+    }
 
 
     // jQuery("#slider").bind("valuesChanging", function (e, data) {
@@ -594,7 +642,7 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
 
 }
 
-function CreatePlotsRequestForAllFieldTrials() {
+function CreatePlotsRequestForAllFieldTrials(keyword) {
 
     var request = {
         "services": [
@@ -606,7 +654,7 @@ function CreatePlotsRequestForAllFieldTrials() {
                     "parameters": [
                         {
                             "param": "FT Keyword Search",
-                            "current_value": ""
+                            "current_value": keyword
                         },
                         {
                             "param": "FT Facet",

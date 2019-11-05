@@ -191,7 +191,7 @@
                     var req_json;
 
                     if (type_param === 'AllFieldTrials') {
-                        req_json = CreatePlotsRequestForAllFieldTrials();
+                        req_json = CreatePlotsRequestForAllFieldTrials('');
                     } else if (id_param != null) {
                         if (type_param === 'Grassroots:Study') {
                             req_json = CreatePlotsRequestForExperimentalArea(id_param);
