@@ -234,32 +234,37 @@
             console.log(JSON.stringify(experimental_area_json));
             var expAreaId = experimental_area_json['_id']['$oid'];
             var plots = experimental_area_json['plots'];
-            var htmlarray = [];
 
-            var row = 1;
-            var column = 1;
+            if (plots.length>0) {
+                var htmlarray = [];
 
-            for (j = 0; j < plots.length; j++) {
+                var row = 1;
+                var column = 1;
 
-                if (plots[j]['row_index'] === row) {
-                    if (plots[j]['column_index'] === column) {
+                for (j = 0; j < plots.length; j++) {
+
+                    if (plots[j]['row_index'] === row) {
+                        if (plots[j]['column_index'] === column) {
+                            htmlarray.push(formatPlot(plots[j]));
+                            column++;
+                        }
+                    } else if (plots[j]['row_index'] > row) {
+
+                        row++;
+                        column = 2;
+                        htmlarray.push('</tr><tr>');
+                        htmlarray.push('<td>' + row + '</td>');
                         htmlarray.push(formatPlot(plots[j]));
-                        column++;
                     }
-                } else if (plots[j]['row_index'] > row) {
-
-                    row++;
-                    column = 2;
-                    htmlarray.push('</tr><tr>');
-                    htmlarray.push('<td>' + row + '</td>');
-                    htmlarray.push(formatPlot(plots[j]));
                 }
-            }
-            var tableString = '<td>1</td>' + htmlarray.join("");
-            var tableArray = tableString.split("</tr><tr>");
-            var reversedString = tableArray.reverse().join("</tr><tr>");
+                var tableString = '<td>1</td>' + htmlarray.join("");
+                var tableArray = tableString.split("</tr><tr>");
+                var reversedString = tableArray.reverse().join("</tr><tr>");
 
-            return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
+                return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
+            } else {
+                return '<div id="plot"><p>No plot data available.</p></div>'
+            }
         }
 
         </script>
