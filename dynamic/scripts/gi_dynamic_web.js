@@ -691,6 +691,7 @@ function do_ajax_search() {
                     "start_service": true,
                     "so:name": "Search Field Trials",
                     "parameter_set": {
+                    		"level": "simple",
                         "parameters": [
 
                             {

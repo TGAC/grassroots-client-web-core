@@ -1,5 +1,0 @@
-
-RewriteEngine On
-RewriteCond %{REQUEST_URI} !=service/index.html
-RewriteCond %{REQUEST_URI} !\.(jpg|png|css|js|php)$
-RewriteRule    ^service/(.*)$    service/index.html?service=$1   [NC,L]
