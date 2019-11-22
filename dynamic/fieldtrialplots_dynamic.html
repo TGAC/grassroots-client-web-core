@@ -124,6 +124,21 @@
 </nav>
 <!--content-->
 
+<style type="text/css">
+    .modal-body{
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @media (min-height: 500px) {
+        .modal-body { height: 400px; }
+    }
+
+    @media (min-height: 800px) {
+        .modal-body { height: 600px; }
+    }
+</style>
+
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
     <div class="container" style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">
         <div id="back_link" ><a href="/service/"><< Back to all services list</a><br/></div>
@@ -261,7 +276,7 @@
                 var tableArray = tableString.split("</tr><tr>");
                 var reversedString = tableArray.reverse().join("</tr><tr>");
 
-                return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
+                return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
             } else {
                 return '<div id="plot"><p>No plot data available.</p></div>'
             }
