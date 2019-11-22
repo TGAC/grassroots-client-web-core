@@ -700,7 +700,7 @@ function do_ajax_search() {
                             },
                             {
                                 "param": "FT Facet",
-                                "current_value": "Treatment"
+                                "current_value": "Measured Variable"
                             },
                             {
                                 "param": "FT Results Page Number",

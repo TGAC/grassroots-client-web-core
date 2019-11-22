@@ -1,4 +1,5 @@
 var plotsHTMLArray = {};
+var plotsGRUArray = [];
 var global_width = 0;
 var global_height = 0;
 var colorJSON = {
@@ -489,18 +490,28 @@ function formatPlot(plot) {
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
+    for (r = 0; r < plotsGRUArray.length ; r++){
+
+        var linksJson = plotsGRUArray[r];
+        if (linksJson['plotId'] === plotId) {
+            $('#' + linksJson['id']).html(linksJson['links']);
+        }
+    }
 
 }
 
 function formatPlotModal(plot) {
+
+    var plotId = plot['_id']['$oid'];
     var htmlarray = [];
     var phenotypearray = [];
     var rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th></tr></thead><tbody>');
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>GRU Link</th></tr></thead><tbody>');
     phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
 
     for (r = 0; r < plot['rows'].length; r++) {
+        var random_id = generate_random_id();
         var replicate_index = plot['rows'][r]['replicate'];
         var color = colorJSON[replicate_index];
         var accession = SafePrint(plot['rows'][r]['material']['accession']);
@@ -511,7 +522,10 @@ function formatPlotModal(plot) {
         rowsInfoarray.push('<td>' + accession + '</td>');
         rowsInfoarray.push('<td>' + pedigree + '</td>');
         rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
+        rowsInfoarray.push('<td id="' + random_id + '"></td>');
         rowsInfoarray.push('<tr>');
+        get_GRU_by_accession(accession, plotId, random_id);
+
         if (plot['rows'][r]['observations'] != undefined) {
             for (o = 0; o < plot['rows'][r]['observations'].length; o++) {
                 var observation = plot['rows'][r]['observations'][o];
@@ -543,6 +557,8 @@ function formatPlotModal(plot) {
                 phenotypearray.push('</tr>');
             }
         }
+
+        // plotsGRUArray[plotId] = plotGRULinkArray;
     }
     rowsInfoarray.push('</tbody></table>');
     phenotypearray.push('</tbody></table>');
@@ -562,6 +578,42 @@ function formatPlotModal(plot) {
     return htmlarray.join("");
 
 
+}
+
+// function get_GRU_by_accession(accession) {
+function get_GRU_by_accession(accession, plotId, id) {
+    $.ajax({
+        type: "GET",
+        url: '/seedstor/apisearch-unified.php?query=' + accession,
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (gru_json) {
+            var links = format_gru_json(gru_json);
+            var linksjson = {};
+            linksjson['plotId'] = plotId;
+            linksjson['id'] = id;
+            linksjson['links'] = links;
+            plotsGRUArray.push(linksjson);
+        }
+    });
+}
+
+
+// }
+
+function format_gru_json(gru_json) {
+    var htmlarray = [];
+    if (gru_json != undefined && gru_json.length > 0) {
+        for (i = 0; i < gru_json.length; i++) {
+            if (gru_json[i]['idPlant'] != undefined) {
+
+                var idPlant = gru_json[i]['idPlant'];
+                // htmlarray.push(idPlant);
+                htmlarray.push('<a class="newstyle_link" href="https://seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a>');
+            }
+        }
+    }
+    return htmlarray.join('');
 }
 
 /**
