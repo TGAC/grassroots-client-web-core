@@ -562,13 +562,13 @@ function formatPlot(plot) {
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
-    // for (r = 0; r < plotsGRUArray.length ; r++){
-    //
-    //     var linksJson = plotsGRUArray[r];
-    //     if (linksJson['plotId'] === plotId) {
-    //         $('#' + linksJson['id']).html(linksJson['links']);
-    //     }
-    // }
+    for (r = 0; r < plotsGRUArray.length ; r++){
+
+        var linksJson = plotsGRUArray[r];
+        if (linksJson['plotId'] === plotId) {
+            $('#' + linksJson['id']).html(linksJson['links']+' ');
+        }
+    }
 
 }
 
@@ -579,7 +579,7 @@ function formatPlotModal(plot) {
     var phenotypearray = [];
     var rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th></tr></thead><tbody>');
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
     phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
 
     for (r = 0; r < plot['rows'].length; r++) {
@@ -681,7 +681,7 @@ function format_gru_json(gru_json) {
 
                 var idPlant = gru_json[i]['idPlant'];
                 // htmlarray.push(idPlant);
-                htmlarray.push('<a class="newstyle_link" href="https://seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a>');
+                htmlarray.push('<a target="_blank" class="newstyle_link" href="https://seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a> ');
             }
         }
     }
