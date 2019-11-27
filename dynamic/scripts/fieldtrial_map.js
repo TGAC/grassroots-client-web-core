@@ -31,7 +31,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
                         if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
                             var study_json = jsonArray[i]['data']['studies'][j];
                             study_json["team"] = team;
-                            // study_json["so:name"] = fieldTrialName;
+                            study_json["parent_field_trial_name"] = fieldTrialName;
                             filtered_data_with_location.push(study_json);
                         }
                     } else {
@@ -155,7 +155,7 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Additional Info",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
-                    return '<span style="cursor:pointer; font-size: 0.8rem;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
+                    return '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
                 }
             }
 
@@ -301,6 +301,10 @@ function create_study_modal_html(array) {
 
 function create_study_info_html(studyJson) {
     var htmlarray = [];
+
+    if (studyJson["parent_field_trial_name"]!=undefined){
+        htmlarray.push('Field Trail Name: ' + studyJson["parent_field_trial_name"]);
+    }
 
     htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
     htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
