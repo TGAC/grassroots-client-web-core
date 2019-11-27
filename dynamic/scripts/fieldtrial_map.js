@@ -31,7 +31,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
                         if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
                             var study_json = jsonArray[i]['data']['studies'][j];
                             study_json["team"] = team;
-                            study_json["so:name"] = fieldTrialName;
+                            // study_json["so:name"] = fieldTrialName;
                             filtered_data_with_location.push(study_json);
                         }
                     } else {
@@ -80,7 +80,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
 
     displayFTLocations(filtered_data_with_location);
 
-    createStudyHTML(filtered_data_without_location.concat(filtered_data_with_location));
+    create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
 }
 
 function produceFieldtrialTable(data, type_param) {
@@ -100,18 +100,18 @@ function produceFieldtrialTable(data, type_param) {
                     return full['team'];
                 }
             },
-            {
-                title: "Study Design",
-                "render": function (data, type, full, meta) {
-                    return SafePrint(full['study_design']);
-                }
-            },
-            {
-                title: "Phenotype Gathering Notes",
-                "render": function (data, type, full, meta) {
-                    return SafePrint(full['phenotype_gathering_notes']);
-                }
-            },
+            // {
+            //     title: "Study Design",
+            //     "render": function (data, type, full, meta) {
+            //         return SafePrint(full['study_design']);
+            //     }
+            // },
+            // {
+            //     title: "Phenotype Gathering Notes",
+            //     "render": function (data, type, full, meta) {
+            //         return SafePrint(full['phenotype_gathering_notes']);
+            //     }
+            // },
             {
                 title: "Description",
                 "render": function (data, type, full, meta) {
@@ -141,21 +141,7 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Plots",
                 "render": function (data, type, full, meta) {
-                    if (full['_id'] != undefined && full['number_of_plots'] != undefined) {
-                        if (full['number_of_plots'] > 0) {
-                            var id = full['_id']['$oid'];
-
-                            /* remove the quotes */
-                            id = id.replace(/"/g, "");
-                            //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
-
-                            return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
-                        } else {
-                            return '';
-                        }
-                    } else {
-                        return '';
-                    }
+                    return get_study_plots_link(full);
                 }
             },
             {
@@ -169,7 +155,7 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Additional Info",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
-                    return '<span style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
+                    return '<span style="cursor:pointer; font-size: 0.8rem;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
                 }
             }
 
@@ -286,26 +272,47 @@ function get_study_address(full, link_bool) {
     return addressInfo;
 }
 
-function createStudyHTML(array) {
+function get_study_plots_link(full) {
+    if (full['_id'] != undefined && full['number_of_plots'] != undefined) {
+        if (full['number_of_plots'] > 0) {
+            var id = full['_id']['$oid'];
+
+            /* remove the quotes */
+            id = id.replace(/"/g, "");
+
+            return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
+        } else {
+            return '';
+        }
+    } else {
+        return '';
+    }
+}
+
+function create_study_modal_html(array) {
     for (i = 0; i < array.length; i++) {
-        var studyJson = arrayp[i];
+        var studyJson = array[i];
         var studyId = studyJson['_id']['$oid'];
 
-
-        var htmlarray = [];
-
-        htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
-        htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
-        htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
-        htmlarray.push('Sowing Date: ' + studyJson['so:name'] + '<br/>');
-        htmlarray.push('Harvest Date: ' + studyJson['so:name'] + '<br/>');
-        htmlarray.push('Plots: ' + studyJson['so:name'] + '<br/>');
-        htmlarray.push('Address: ' + get_study_address(studyJson,false) + '<br/>');
-        htmlarray.push('<hr/>');
-
-
-        plotsModalInfo[studyId] = htmlarray.join("");
+        plotsModalInfo[studyId] = create_study_info_html(studyJson);
     }
+
+}
+
+function create_study_info_html(studyJson) {
+    var htmlarray = [];
+
+    htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
+    htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
+    htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
+    htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
+    htmlarray.push('Sowing Date: ' + SafePrint(studyJson['sowing_date']) + '<br/>');
+    htmlarray.push('Harvest Date: ' + SafePrint(studyJson['harvest_date']) + '<br/>');
+    htmlarray.push('Plots: ' + get_study_plots_link(studyJson) + '<br/>');
+    htmlarray.push('Address: ' + get_study_address(studyJson, false) + '<br/>');
+    htmlarray.push('<hr/>');
+
+    return htmlarray.join("");
 
 }
 
@@ -374,13 +381,14 @@ function displayFTLocations(array) {
         var id = array[i]['_id']['$oid'];
         /* remove the quotes */
         id = id.replace(/"/g, "");
-        var popup_note = '<b>Field Trial Name: </b>' + fieldTrialName + '<br/>'
-            + '<b>Team: </b>' + team + '<br/>'
-            + '<b>Sowing Date: </b>' + sowing_date + '<br/>'
-            + '<b>Harvest Date: </b>' + harvest_date + '<br/>'
-            // + '<u class=\"newstyle_link\" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View plots</u>'
-            + '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\" target="_blank">View plots</a>'
-        ;
+        // var popup_note = '<b>Field Trial Name: </b>' + fieldTrialName + '<br/>'
+        //     + '<b>Team: </b>' + team + '<br/>'
+        //     + '<b>Sowing Date: </b>' + sowing_date + '<br/>'
+        //     + '<b>Harvest Date: </b>' + harvest_date + '<br/>'
+        //     // + '<u class=\"newstyle_link\" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View plots</u>'
+        //     + '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\" target="_blank">View plots</a>'
+        // ;
+        var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
     }
     map.addLayer(markersGroup2);
