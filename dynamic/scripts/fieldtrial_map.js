@@ -77,7 +77,10 @@ function startFieldTrialGIS(jsonArray, type_param) {
         $('#title').append(' Study');
     }
     produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
+
     displayFTLocations(filtered_data_with_location);
+
+    createStudyHTML(filtered_data_without_location.concat(filtered_data_with_location));
 }
 
 function produceFieldtrialTable(data, type_param) {
@@ -110,6 +113,12 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
+                title: "Description",
+                "render": function (data, type, full, meta) {
+                    return SafePrint(full['so:description']);
+                }
+            },
+            {
                 title: "Sowing Date",
                 "render": function (data, type, full, meta) {
                     if (full['sowing_date'] != undefined) {
@@ -130,7 +139,7 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
-                title: "Experiments",
+                title: "Plots",
                 "render": function (data, type, full, meta) {
                     if (full['_id'] != undefined && full['number_of_plots'] != undefined) {
                         if (full['number_of_plots'] > 0) {
@@ -152,23 +161,18 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Address",
                 "render": function (data, type, full, meta) {
-                    var addressInfo = '';
-                    if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
-                        if (full['address']['address']['Address'] !== undefined && full['address']['address']['Address'] !== "undefined") {
-                            var address_name = (full['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] + '<br/>' : "";
-                            var address_locality = (full['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] + '<br/>' : "";
-                            var address_country = (full['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] + '<br/>' : "";
-                            var address_postcode = (full['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
-
-                            addressInfo = '<span class=\"newstyle_link\"> ' + address_name
-                                + address_locality
-                                + address_country
-                                + address_postcode + '</span>';
-                        }
-                    }
-                    return addressInfo;
+                    return get_study_address(full, true);
                 }
             }
+            ,
+            {
+                title: "Additional Info",
+                "render": function (data, type, full, meta) {
+                    var studyId = full['_id']['$oid'];
+                    return '<span style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
+                }
+            }
+
         ]
 
     });
@@ -261,6 +265,50 @@ function produceFieldtrialTable(data, type_param) {
     //     yrtable.column(13).visible(false);
     // }
 }
+
+function get_study_address(full, link_bool) {
+    var addressInfo = '';
+    if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
+        if (full['address']['address']['Address'] !== undefined && full['address']['address']['Address'] !== "undefined") {
+            var address_name = (full['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] + '<br/>' : "";
+            var address_locality = (full['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] + '<br/>' : "";
+            var address_country = (full['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] + '<br/>' : "";
+            var address_postcode = (full['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
+
+            var link = (link_bool) ? 'class="newstyle_link"' : "";
+
+            addressInfo = '<span ' + link + '> ' + address_name
+                + address_locality
+                + address_country
+                + address_postcode + '</span>';
+        }
+    }
+    return addressInfo;
+}
+
+function createStudyHTML(array) {
+    for (i = 0; i < array.length; i++) {
+        var studyJson = arrayp[i];
+        var studyId = studyJson['_id']['$oid'];
+
+
+        var htmlarray = [];
+
+        htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
+        htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
+        htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
+        htmlarray.push('Sowing Date: ' + studyJson['so:name'] + '<br/>');
+        htmlarray.push('Harvest Date: ' + studyJson['so:name'] + '<br/>');
+        htmlarray.push('Plots: ' + studyJson['so:name'] + '<br/>');
+        htmlarray.push('Address: ' + get_study_address(studyJson,false) + '<br/>');
+        htmlarray.push('<hr/>');
+
+
+        plotsModalInfo[studyId] = htmlarray.join("");
+    }
+
+}
+
 
 function removePointers() {
     map.removeLayer(markersGroup2);
@@ -502,13 +550,13 @@ function formatPlot(plot) {
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
-    for (r = 0; r < plotsGRUArray.length ; r++){
-
-        var linksJson = plotsGRUArray[r];
-        if (linksJson['plotId'] === plotId) {
-            $('#' + linksJson['id']).html(linksJson['links']);
-        }
-    }
+    // for (r = 0; r < plotsGRUArray.length ; r++){
+    //
+    //     var linksJson = plotsGRUArray[r];
+    //     if (linksJson['plotId'] === plotId) {
+    //         $('#' + linksJson['id']).html(linksJson['links']);
+    //     }
+    // }
 
 }
 
@@ -519,7 +567,7 @@ function formatPlotModal(plot) {
     var phenotypearray = [];
     var rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>GRU Link</th></tr></thead><tbody>');
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th></tr></thead><tbody>');
     phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
 
     for (r = 0; r < plot['rows'].length; r++) {
