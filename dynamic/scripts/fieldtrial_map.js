@@ -302,7 +302,7 @@ function create_study_modal_html(array) {
 function create_study_info_html(studyJson) {
     var htmlarray = [];
 
-    if (studyJson["parent_field_trial_name"]!=undefined){
+    if (studyJson["parent_field_trial_name"] != undefined) {
         htmlarray.push('Field Trail Name: ' + studyJson["parent_field_trial_name"]);
     }
 
@@ -562,11 +562,11 @@ function formatPlot(plot) {
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
-    for (r = 0; r < plotsGRUArray.length ; r++){
+    for (r = 0; r < plotsGRUArray.length; r++) {
 
         var linksJson = plotsGRUArray[r];
         if (linksJson['plotId'] === plotId) {
-            $('#' + linksJson['id']).html(linksJson['links']+' ');
+            $('#' + linksJson['id']).html(linksJson['links'] + ' ');
         }
     }
 
@@ -676,8 +676,9 @@ function get_GRU_by_accession(accession, plotId, id) {
 function format_gru_json(gru_json) {
     var htmlarray = [];
     if (gru_json != undefined && gru_json.length > 0) {
-        for (i = 0; i < gru_json.length; i++) {
-            if (gru_json[i]['idPlant'] != undefined) {
+        // for (i = 0; i < gru_json.length; i++) {
+        if (gru_json.length > 0) {
+            if (gru_json[0]['idPlant'] != undefined) {
 
                 var idPlant = gru_json[i]['idPlant'];
                 // htmlarray.push(idPlant);
@@ -685,6 +686,7 @@ function format_gru_json(gru_json) {
             }
         }
     }
+    // }
     return htmlarray.join('');
 }
 
