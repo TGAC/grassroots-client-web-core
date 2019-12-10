@@ -178,11 +178,14 @@
                     <div id="control" style="display: none; margin-left: 20px; padding:5px;">
                         <br>
                         Search:</br>
-                        <input type="text" id="searchPlotsInput"/></br><br/>
+                        <input type="text" id="searchPlotsInput" value="PW468-84-4-8-Q5A-NDRE-P"/></br><br/>
                         Phenotype:</br>
-                        Height: <input type="text" id="height" value=""/></br>
-                        Yield: <input type="text" id="yield" value=""/></br><br/>
-                        GRU Accession: <input type="text" id="gruAccession" value=""/></br>
+                        Height: <input type="text" id="height" value="117.25"/></br>
+                        Yield: <input type="text" id="yield" value="8.91292789637138"/></br><br/>
+                        GRU Accession: <input type="text" id="gruAccession" value="PW141-41-2-20-Q5B-NDVI-W"/></br>
+                        <button onclick="filter_plot();">Filter</button>
+
+                        </br></br></br></br>
                         <button>Get Data</button>
                         </p>
                     </div>
@@ -308,6 +311,13 @@
                 } else {
                     return '<div id="plot"><p>No plot data available.</p></div>'
                 }
+            }
+
+            function filter_plot(){
+                $('#5ddea768de68e726cc4de708').css('background-color', '#FF4136');
+                $('#5ddea768de68e726cc4de78c').css('background-color', '#FF4136');
+                $('#5ddea768de68e726cc4de6c1').css('background-color', '#FF4136');
+                $('#5ddea768de68e726cc4de5d0').css('background-color', '#FF4136');
             }
 
         </script>
