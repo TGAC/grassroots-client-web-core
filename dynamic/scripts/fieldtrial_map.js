@@ -556,7 +556,7 @@ function formatPlot(plot) {
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
     // return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
-    return '<td id="'+plotId+'" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
+    return '<td class="plot" id="'+plotId+'" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
 }
 
 function plotModal(plotId) {
