@@ -720,7 +720,7 @@ function CreatePlotsRequestForExperimentalArea(exp_area_id) {
                         "param": "Get all Plots for Study",
                         "current_value": true
                     }, {
-                        "param": "Search Studies",
+                        "param": "ST Search Studies",
                         "current_value": true
                     }]
                 }
