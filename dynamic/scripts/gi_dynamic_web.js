@@ -491,7 +491,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('</div>');
         }
         // tabular
-        else if (grassroots_type == "params:tabular") {
+        else if (grassroots_type == "params:tabular" || grassroots_type == "params:json_array") {
             var cHeading = parameter['store']['Column Headings'];
             var each_table_obj = {};
             var table_id = param.replace(/ /g, "_");
