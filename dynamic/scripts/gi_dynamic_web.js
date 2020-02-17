@@ -5,6 +5,8 @@ var repeatable_groups = {};
 var datatable_param_list = [];
 var fieldTrailSearchType = '';
 var level_simpleoradvanced = "simple";
+var wizard_bool = false;
+var wizard_count = 0;
 
 function get_all_services_as_table() {
 
@@ -998,6 +1000,7 @@ function simpleOrAdvanced(string) {
     }
 }
 
+
 function submit_form() {
     $('#status').html('<img src="/dynamic/images/ajax-loader.gif"/>');
     Utils.ui.disableButton('submit_button');
@@ -1099,7 +1102,13 @@ function submit_form() {
         type: "POST",
         dataType: "json",
         success: function (json) {
-            display_result(json);
+            if (wizard_bool){
+                //
+                Utils.ui.reenableButton('submit_button', 'Next Step');
+                wizard_count++;
+            }else{
+                display_result(json);
+            }
         }
     });
 }
