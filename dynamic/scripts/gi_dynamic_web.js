@@ -508,7 +508,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('<div class="sheet-drop" id="' + table_id + '^drop">Drop a spreadsheet file here to populate the table below</div>');
             form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
             if (param === 'PL Upload') {
-                form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns(\'' + table_id + '\')">Add treatment</button>');
+                form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns_modal(\'' + table_id + '\')">Add treatment</button>');
             }
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push('<thead id="' + table_id + 'thead" >');
@@ -977,13 +977,13 @@ function table_add_new_row(table_id) {
 }
 
 function table_add_teatment_columns_modal(table_id) {
-    $('#modal-body').html('<div class="modal-body"><input id="add_treatment" type="text" class="form-control"></div>'+
-        +'<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'PL_Upload\');">Add Treatment</button></div>');
-    $('#plotModal').modal('show');
-
+    $('#modal-body').html('<input id="add_treatment" type="text" class="form-control">');
+    $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\''+table_id+'\');">Add Treatment</button></div>');
+    $('#treatmentModal').modal('show');
 }
 
 function table_add_teatment_columns(table_id) {
+    $('#treatmentModal').modal('hide');
     var column_name = $('#add_treatment').val();
     var t = $('#' + table_id).DataTable();
     var column_index = t.columns().count();
