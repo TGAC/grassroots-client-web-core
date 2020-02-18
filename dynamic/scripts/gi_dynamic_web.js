@@ -976,8 +976,15 @@ function table_add_new_row(table_id) {
     t.row.add(row_array).draw(false);
 }
 
+function table_add_teatment_columns_modal(table_id) {
+    $('#modal-body').html('<div class="modal-body"><input id="add_treatment" type="text" class="form-control"></div>'+
+        +'<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'PL_Upload\');">Add Treatment</button></div>');
+    $('#plotModal').modal('show');
+
+}
+
 function table_add_teatment_columns(table_id) {
-    var column_name = 'test';
+    var column_name = $('#add_treatment').val();
     var t = $('#' + table_id).DataTable();
     var column_index = t.columns().count();
     var row_index = t.rows().count();
