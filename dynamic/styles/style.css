@@ -269,7 +269,7 @@ table.plots td {
 }
 
 .new_row_button {
-    position: absolute;
+    /*position: absolute;*/
     /*margin-top: -5px;*/
     /*margin-left:200px;*/
     z-index: 999;

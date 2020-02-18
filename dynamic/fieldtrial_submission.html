@@ -202,7 +202,14 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                var wizard_list = ['Submit Field Trials', 'Submit Field Trial Study', 'Submit Field Trial Location'];
+                var wizard_list = [
+                    'Submit Field Trials',
+                    'Submit Field Trial Location',
+                    'Submit Field Trial Crop',
+                    'Submit Field Trial Study',
+                    'Submit Field Trial Plots',
+                    'Submit Field Trial Materials'
+                ];
                 populateService(wizard_list[wizard_count]);
                 console.log(wizard_count);
                 var wizard_progress = wizard_count + 1;

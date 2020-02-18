@@ -505,8 +505,13 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
             form_html.push('<div class="sheet-drop" id="' + table_id + '^drop">Drop a spreadsheet file here to populate the table below</div>');
             form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
+            if (param === 'PL Upload'){
+                form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns(\'' + table_id + '\')">Add treatment</button>');
+            }
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
+            form_html.push('<thead id="' + table_id + 'thead" >');
             form_html.push(table_thead_formatter(cHeading));
+            form_html.push('</thead>');
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
             form_html.push('</table>');
@@ -879,14 +884,14 @@ function format_treatment_ajax_result(array) {
 
 function table_thead_formatter(cHeadings) {
     var thead_html = [];
-    thead_html.push('<thead>');
+    // thead_html.push('<thead>');
     thead_html.push('<tr>');
     // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
     for (var i = 0; i < cHeadings.length; i++) {
         thead_html.push('<th>' + cHeadings[i]['param'] + '</th>');
     }
     thead_html.push('</tr>');
-    thead_html.push('</thead>');
+    // thead_html.push('</thead>');
     return thead_html.join(' ');
 }
 
@@ -967,6 +972,40 @@ function table_add_new_row(table_id) {
         row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value=""/>');
     }
     t.row.add(row_array).draw(false);
+}
+
+function table_add_teatment_columns(table_id){
+    var column_name = 'test';
+    var t = $('#' + table_id).DataTable();
+    var column_index = t.columns().count();
+    var row_index = t.rows().count();
+    var cHeadings = [];
+    for (var i = 0; i < datatable_param_list.length; i++) {
+        if (datatable_param_list[i]['table_id'] === table_id) {
+            cHeadings = datatable_param_list[i]['cHeadings'];
+        }
+    }
+    var row_array = [];
+    var real_param = table_id.replace(/_/g, " ");
+
+    cHeadings.push({ "param": column_name, "type": "xsd:string" },{ "param": column_name + " date", "type": "xsd:string" },{ "param": column_name + " corrected", "type": "xsd:string" });
+    // t.columns[column_index+1] = column_name;
+    // t.columns[column_index+2] = column_name + ' date';
+    // t.columns[column_index+3] = column_name + ' corrected';
+// Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" },
+    t.destroy();
+    var table_heading_html = table_thead_formatter(cHeadings);
+    $('#'+table_id+'thead').html(table_heading_html);
+    $('#' + table_id).DataTable();
+    // for (var r = 1; r < row_index; r++) {
+    //     var column_grassroots_type = 'xsd:string';
+    //
+    //     t.row[r][column_name] = '<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_name + '^' + column_grassroots_type + '" value=""/>';
+    //     t.row[r][column_name + ' date'] = '<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_name + ' date^' + column_grassroots_type + '" value=""/>';
+    //     t.row[r][column_name + ' corrected'] = '<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_name + ' corrected^' + column_grassroots_type + '" value=""/>';
+    // }
+    // t.draw(false);
+
 }
 
 function simpleOrAdvanced(string) {
