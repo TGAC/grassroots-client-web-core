@@ -978,47 +978,51 @@ function table_add_new_row(table_id) {
 
 function table_add_teatment_columns_modal(table_id) {
     $('#modal-body').html('<input id="add_treatment" type="text" class="form-control">');
-    $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\''+table_id+'\');">Add Treatment</button></div>');
+    $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Treatment</button></div>');
     $('#treatmentModal').modal('show');
 }
 
 function table_add_teatment_columns(table_id) {
-    $('#treatmentModal').modal('hide');
     var column_name = $('#add_treatment').val();
-    var t = $('#' + table_id).DataTable();
-    var column_index = t.columns().count();
-    var row_index = t.rows().count();
-    var cHeadings = [];
-    for (var i = 0; i < datatable_param_list.length; i++) {
-        if (datatable_param_list[i]['table_id'] === table_id) {
-            cHeadings = datatable_param_list[i]['cHeadings'];
+    if (column_name === '') {
+        $('#add_treatment').css({'background-color':'#ff4d4d'});
+    } else{
+        $('#treatmentModal').modal('hide');
+        var t = $('#' + table_id).DataTable();
+        var column_index = t.columns().count();
+        var row_index = t.rows().count();
+        var cHeadings = [];
+        for (var i = 0; i < datatable_param_list.length; i++) {
+            if (datatable_param_list[i]['table_id'] === table_id) {
+                cHeadings = datatable_param_list[i]['cHeadings'];
+            }
         }
+        var row_array = [];
+        var real_param = table_id.replace(/_/g, " ");
+
+        cHeadings.push({"param": column_name, "type": "xsd:string"},
+            {"param": column_name + " date", "type": "xsd:string"},
+            {"param": column_name + " corrected", "type": "xsd:string"});
+
+        var each_table_obj = {};
+
+        each_table_obj['table_id'] = table_id;
+        each_table_obj['cHeadings'] = cHeadings;
+        datatable_param_list.push(each_table_obj);
+
+        t.destroy();
+        var table_heading_html = table_thead_formatter(cHeadings);
+        $('#' + table_id + 'thead').html(table_heading_html);
+        $('#' + table_id + '> tbody').remove();
+
+        // var existing_rows = $('#' + table_id + '> tbody').find("tr");
+        // $.each(existing_rows, function (i, v) {
+        //    v.append("<td></td><td></td><td></td>");
+        // });
+        $('#' + table_id).DataTable({scrollX: true});
+
+        table_add_new_row(table_id);
     }
-    var row_array = [];
-    var real_param = table_id.replace(/_/g, " ");
-
-    cHeadings.push({"param": column_name, "type": "xsd:string"},
-        {"param": column_name + " date", "type": "xsd:string"},
-        {"param": column_name + " corrected", "type": "xsd:string"});
-
-    var each_table_obj = {};
-
-    each_table_obj['table_id'] = table_id;
-    each_table_obj['cHeadings'] = cHeadings;
-    datatable_param_list.push(each_table_obj);
-
-    t.destroy();
-    var table_heading_html = table_thead_formatter(cHeadings);
-    $('#' + table_id + 'thead').html(table_heading_html);
-    $('#' + table_id + '> tbody').remove();
-
-    // var existing_rows = $('#' + table_id + '> tbody').find("tr");
-    // $.each(existing_rows, function (i, v) {
-    //    v.append("<td></td><td></td><td></td>");
-    // });
-    $('#' + table_id).DataTable({scrollX: true});
-
-    table_add_new_row(table_id);
 
 }
 
