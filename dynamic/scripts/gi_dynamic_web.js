@@ -209,7 +209,32 @@ function populateService(service_name) {
                     $('#' + datatableId).DataTable({
                         scrollX: true,
                         "paging": false,
-                        "aaSorting": []
+                        "aaSorting": [],
+                        dom: 'lBfrtip',
+                        buttons: [
+                            {
+                                extend: 'csvHtml5',
+                                title: null,
+                                messageTop: null,
+                                messageBottom: null
+                                // ,
+                                // header: false,
+                                // exportOptions: {
+                                //     columns: [8]
+                                // }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                title: null,
+                                messageTop: null,
+                                messageBottom: null
+                                // ,
+                                // header: false,
+                                // exportOptions: {
+                                //     columns: [8]
+                                // }
+                            }
+                        ]
                         // dom: '<lBr<t>ip>',
                         // buttons: [
                         //     {
@@ -1019,7 +1044,34 @@ function table_add_teatment_columns(table_id) {
         // $.each(existing_rows, function (i, v) {
         //    v.append("<td></td><td></td><td></td>");
         // });
-        $('#' + table_id).DataTable({scrollX: true});
+        $('#' + table_id).DataTable({
+            scrollX: true,
+            dom: 'lBfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    title: null,
+                    messageTop: null,
+                    messageBottom: null
+                    // ,
+                    // header: false,
+                    // exportOptions: {
+                    //     columns: [8]
+                    // }
+                },
+                {
+                    extend: 'excelHtml5',
+                    title: null,
+                    messageTop: null,
+                    messageBottom: null
+                    // ,
+                    // header: false,
+                    // exportOptions: {
+                    //     columns: [8]
+                    // }
+                }
+            ]
+        });
 
         table_add_new_row(table_id);
     }
