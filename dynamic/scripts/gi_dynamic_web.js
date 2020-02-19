@@ -233,7 +233,16 @@ function populateService(service_name) {
                                 // exportOptions: {
                                 //     columns: [8]
                                 // }
-                            }
+                            },
+                            $.extend(true, {}, buttonCommon, {
+                                extend: 'excelHtml5',
+                                className: 'bg-white btn-outline-melody',
+                                titleAttr: 'Export to Excel',
+                                text:'New Export',
+                                title: null,
+                                messageTop: null,
+                                messageBottom: null
+                            }),
                         ]
                         // dom: '<lBr<t>ip>',
                         // buttons: [
@@ -256,6 +265,16 @@ function populateService(service_name) {
         });
     }
 }
+var buttonCommon = {
+    exportOptions: {
+        format: {
+            body: function (data, row, column, node) {
+                console.log($(data));
+                return $(data).val();
+            }
+        }
+    }
+};
 
 function produce_form(div, parameters, groups) {
     var form_html = [];
