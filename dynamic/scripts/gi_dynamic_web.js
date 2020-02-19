@@ -1002,7 +1002,7 @@ function table_add_new_row(table_id) {
 }
 
 function table_add_teatment_columns_modal(table_id) {
-    $('#modal-body').html('<input id="add_treatment" type="text" class="form-control">');
+    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/SearchTreatment" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control">');
     $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Treatment</button></div>');
     $('#treatmentModal').modal('show');
 }
