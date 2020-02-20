@@ -206,54 +206,89 @@ function populateService(service_name) {
                 $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
                 for (var idt = 0; idt < datatable_param_list.length; idt++) {
                     var datatableId = datatable_param_list[idt]['table_id'];
-                    $('#' + datatableId).DataTable({
-                        scrollX: true,
-                        "paging": false,
-                        "aaSorting": [],
-                        dom: 'lBfrtip',
-                        buttons: [
-                            // {
-                            //     extend: 'csvHtml5',
-                            //     title: null,
-                            //     messageTop: null,
-                            //     messageBottom: null
-                            //     // ,
-                            //     // header: false,
-                            //     // exportOptions: {
-                            //     //     columns: [8]
-                            //     // }
-                            // },
-                            // {
-                            //     extend: 'excelHtml5',
-                            //     title: null,
-                            //     messageTop: null,
-                            //     messageBottom: null
-                            //     // ,
-                            //     // header: false,
-                            //     // exportOptions: {
-                            //     //     columns: [8]
-                            //     // }
-                            // },
-                            $.extend(true, {}, buttonCommon, {
-                                extend: 'excelHtml5',
-                                className: 'bg-white btn-outline-melody',
-                                titleAttr: 'Export to Excel',
-                                // text:'New Export',
-                                title: null,
-                                messageTop: null,
-                                messageBottom: null
-                            })
-                        ]
-                        // dom: '<lBr<t>ip>',
-                        // buttons: [
-                        //     {
-                        //         text: 'Add Row',
-                        //         action: function ( e, dt, node, config ) {
-                        //             table_add_new_row(datatableId);
-                        //         }
-                        //     }
-                        // ]
-                    });
+                    if (datatableId === 'PL_Upload'){
+
+                        $('#' + datatableId).DataTable({
+                            scrollX: true,
+                            "paging": false,
+                            "aaSorting": [],
+                            dom: 'lBfrtip',
+                            buttons: [
+                                // {
+                                //     extend: 'csvHtml5',
+                                //     title: null,
+                                //     messageTop: null,
+                                //     messageBottom: null
+                                //     // ,
+                                //     // header: false,
+                                //     // exportOptions: {
+                                //     //     columns: [8]
+                                //     // }
+                                // },
+                                // {
+                                //     extend: 'excelHtml5',
+                                //     title: null,
+                                //     messageTop: null,
+                                //     messageBottom: null
+                                //     // ,
+                                //     // header: false,
+                                //     // exportOptions: {
+                                //     //     columns: [8]
+                                //     // }
+                                // },
+                                {
+                                    text: 'Add Row',
+                                    className: 'btn btn-success new_row_button',
+                                    action: function ( e, dt, node, config ) {
+                                        table_add_new_row(dt.table().node().id);
+                                    }
+                                },
+                                {
+                                    text: 'Add Treatment',
+                                    className: 'btn btn-success new_row_button',
+                                    action: function ( e, dt, node, config ) {
+                                        table_add_teatment_columns_modal(dt.table().node().id);
+                                    }
+                                },
+                                $.extend(true, {}, buttonCommon, {
+                                    extend: 'excelHtml5',
+                                    className: 'btn btn-success new_row_button',
+                                    titleAttr: 'Export to Excel',
+                                    // text:'New Export',
+                                    title: null,
+                                    messageTop: null,
+                                    messageBottom: null
+                                })
+                            ]
+                        });
+                    } else {
+
+                        $('#' + datatableId).DataTable({
+                            scrollX: true,
+                            "paging": false,
+                            "aaSorting": [],
+                            dom: 'lBfrtip',
+                            buttons: [
+                                {
+                                    text: 'Add Row',
+                                    className: 'btn btn-success new_row_button',
+                                    action: function ( e, dt, node, config ) {
+
+                                        table_add_new_row(dt.table().node().id);
+                                    }
+                                },
+                                $.extend(true, {}, buttonCommon, {
+                                    extend: 'excelHtml5',
+                                    className: 'btn btn-success new_row_button',
+                                    titleAttr: 'Export to Excel',
+                                    // text:'New Export',
+                                    title: null,
+                                    messageTop: null,
+                                    messageBottom: null
+                                })
+                            ]
+                        });
+                    }
                     if (datatableId != 'PL_Upload') {
                         table_add_new_row(datatableId);
                     }
@@ -549,10 +584,10 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
             form_html.push('<div class="sheet-drop" id="' + table_id + '^drop">Drop a spreadsheet file here to populate the table below</div>');
-            form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
-            if (param === 'PL Upload') {
-                form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns_modal(\'' + table_id + '\')">Add treatment</button>');
-            }
+            // form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
+            // if (param === 'PL Upload') {
+            //     form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns_modal(\'' + table_id + '\')">Add treatment</button>');
+            // }
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push('<thead id="' + table_id + 'thead" >');
             form_html.push(table_thead_formatter(cHeading));
@@ -1014,7 +1049,7 @@ function table_add_new_row(table_id) {
     for (var r = 0; r < cHeadings.length; r++) {
         var column_param = cHeadings[r]['param'];
         var column_grassroots_type = cHeadings[r]['type'];
-        row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value=""/>');
+        row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value=" "/>');
     }
     t.row.add(row_array).draw(false);
 }
@@ -1064,33 +1099,27 @@ function table_add_teatment_columns(table_id) {
         // });
         $('#' + table_id).DataTable({
             scrollX: true,
+            "paging": false,
+            "aaSorting": [],
             dom: 'lBfrtip',
             buttons: [
-                // {
-                //     extend: 'csvHtml5',
-                //     title: null,
-                //     messageTop: null,
-                //     messageBottom: null
-                //     // ,
-                //     // header: false,
-                //     // exportOptions: {
-                //     //     columns: [8]
-                //     // }
-                // },
-                // {
-                //     extend: 'excelHtml5',
-                //     title: null,
-                //     messageTop: null,
-                //     messageBottom: null
-                //     // ,
-                //     // header: false,
-                //     // exportOptions: {
-                //     //     columns: [8]
-                //     // }
-                // }
+                {
+                    text: 'Add Row',
+                    className: 'btn btn-success new_row_button',
+                    action: function ( e, dt, node, config ) {
+                        table_add_new_row(dt.table().node().id);
+                    }
+                },
+                {
+                    text: 'Add Treatment',
+                    className: 'btn btn-success new_row_button',
+                    action: function ( e, dt, node, config ) {
+                        table_add_teatment_columns_modal(dt.table().node().id);
+                    }
+                },
                 $.extend(true, {}, buttonCommon, {
                     extend: 'excelHtml5',
-                    className: 'bg-white btn-outline-melody',
+                    className: 'btn btn-success new_row_button',
                     titleAttr: 'Export to Excel',
                     // text:'New Export',
                     title: null,
