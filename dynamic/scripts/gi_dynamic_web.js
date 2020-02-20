@@ -212,37 +212,37 @@ function populateService(service_name) {
                         "aaSorting": [],
                         dom: 'lBfrtip',
                         buttons: [
-                            {
-                                extend: 'csvHtml5',
-                                title: null,
-                                messageTop: null,
-                                messageBottom: null
-                                // ,
-                                // header: false,
-                                // exportOptions: {
-                                //     columns: [8]
-                                // }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: null,
-                                messageTop: null,
-                                messageBottom: null
-                                // ,
-                                // header: false,
-                                // exportOptions: {
-                                //     columns: [8]
-                                // }
-                            },
+                            // {
+                            //     extend: 'csvHtml5',
+                            //     title: null,
+                            //     messageTop: null,
+                            //     messageBottom: null
+                            //     // ,
+                            //     // header: false,
+                            //     // exportOptions: {
+                            //     //     columns: [8]
+                            //     // }
+                            // },
+                            // {
+                            //     extend: 'excelHtml5',
+                            //     title: null,
+                            //     messageTop: null,
+                            //     messageBottom: null
+                            //     // ,
+                            //     // header: false,
+                            //     // exportOptions: {
+                            //     //     columns: [8]
+                            //     // }
+                            // },
                             $.extend(true, {}, buttonCommon, {
                                 extend: 'excelHtml5',
                                 className: 'bg-white btn-outline-melody',
                                 titleAttr: 'Export to Excel',
-                                text:'New Export',
+                                // text:'New Export',
                                 title: null,
                                 messageTop: null,
                                 messageBottom: null
-                            }),
+                            })
                         ]
                         // dom: '<lBr<t>ip>',
                         // buttons: [
@@ -269,7 +269,6 @@ var buttonCommon = {
     exportOptions: {
         format: {
             body: function (data, row, column, node) {
-                console.log($(data));
                 return $(data).val();
             }
         }
@@ -1067,28 +1066,37 @@ function table_add_teatment_columns(table_id) {
             scrollX: true,
             dom: 'lBfrtip',
             buttons: [
-                {
-                    extend: 'csvHtml5',
-                    title: null,
-                    messageTop: null,
-                    messageBottom: null
-                    // ,
-                    // header: false,
-                    // exportOptions: {
-                    //     columns: [8]
-                    // }
-                },
-                {
+                // {
+                //     extend: 'csvHtml5',
+                //     title: null,
+                //     messageTop: null,
+                //     messageBottom: null
+                //     // ,
+                //     // header: false,
+                //     // exportOptions: {
+                //     //     columns: [8]
+                //     // }
+                // },
+                // {
+                //     extend: 'excelHtml5',
+                //     title: null,
+                //     messageTop: null,
+                //     messageBottom: null
+                //     // ,
+                //     // header: false,
+                //     // exportOptions: {
+                //     //     columns: [8]
+                //     // }
+                // }
+                $.extend(true, {}, buttonCommon, {
                     extend: 'excelHtml5',
+                    className: 'bg-white btn-outline-melody',
+                    titleAttr: 'Export to Excel',
+                    // text:'New Export',
                     title: null,
                     messageTop: null,
                     messageBottom: null
-                    // ,
-                    // header: false,
-                    // exportOptions: {
-                    //     columns: [8]
-                    // }
-                }
+                })
             ]
         });
 
