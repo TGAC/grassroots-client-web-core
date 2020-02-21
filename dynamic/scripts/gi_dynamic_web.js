@@ -206,47 +206,27 @@ function populateService(service_name) {
                 $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
                 for (var idt = 0; idt < datatable_param_list.length; idt++) {
                     var datatableId = datatable_param_list[idt]['table_id'];
-                    if (datatableId === 'PL_Upload'){
+                    var buttons = [];
+                    if (datatableId === 'PL_Upload') {
 
-                        $('#' + datatableId).DataTable({
+                        var tdt = $('#' + datatableId).DataTable({
                             scrollX: true,
                             "paging": false,
                             "aaSorting": [],
                             dom: 'lBfrtip',
                             buttons: [
-                                // {
-                                //     extend: 'csvHtml5',
-                                //     title: null,
-                                //     messageTop: null,
-                                //     messageBottom: null
-                                //     // ,
-                                //     // header: false,
-                                //     // exportOptions: {
-                                //     //     columns: [8]
-                                //     // }
-                                // },
-                                // {
-                                //     extend: 'excelHtml5',
-                                //     title: null,
-                                //     messageTop: null,
-                                //     messageBottom: null
-                                //     // ,
-                                //     // header: false,
-                                //     // exportOptions: {
-                                //     //     columns: [8]
-                                //     // }
-                                // },
+
                                 {
                                     text: 'Add Row',
                                     className: 'btn btn-success new_row_button',
-                                    action: function ( e, dt, node, config ) {
+                                    action: function (e, dt, node, config) {
                                         table_add_new_row(dt.table().node().id);
                                     }
                                 },
                                 {
                                     text: 'Add Treatment',
                                     className: 'btn btn-success new_row_button',
-                                    action: function ( e, dt, node, config ) {
+                                    action: function (e, dt, node, config) {
                                         table_add_teatment_columns_modal(dt.table().node().id);
                                     }
                                 },
@@ -261,9 +241,21 @@ function populateService(service_name) {
                                 })
                             ]
                         });
-                    } else {
 
-                        $('#' + datatableId).DataTable({
+                        $('#' + datatableId).on('change', 'input', function () {
+                            //Get the cell of the input
+                            var cell = $(this).closest('td');
+                            //update the input value
+
+                            $(this).attr('value', $(this).val());
+                            console.log($(this));
+
+                            //invalidate the DT cache
+                            tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
+                        });
+                    } else {
+                        var ndt = $('#' + datatableId).DataTable({
                             scrollX: true,
                             "paging": false,
                             "aaSorting": [],
@@ -272,7 +264,7 @@ function populateService(service_name) {
                                 {
                                     text: 'Add Row',
                                     className: 'btn btn-success new_row_button',
-                                    action: function ( e, dt, node, config ) {
+                                    action: function (e, dt, node, config) {
 
                                         table_add_new_row(dt.table().node().id);
                                     }
@@ -288,6 +280,18 @@ function populateService(service_name) {
                                 })
                             ]
                         });
+
+                        $('#' + datatableId).on('change', 'input', function () {
+                            //Get the cell of the input
+                            var cell = $(this).closest('td');
+
+                            //update the input value
+                            $(this).attr('value', $(this).val());
+
+                            //invalidate the DT cache
+                            ndt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
+                        });
                     }
                     if (datatableId != 'PL_Upload') {
                         table_add_new_row(datatableId);
@@ -300,6 +304,7 @@ function populateService(service_name) {
         });
     }
 }
+
 var buttonCommon = {
     exportOptions: {
         format: {
@@ -1049,7 +1054,7 @@ function table_add_new_row(table_id) {
     for (var r = 0; r < cHeadings.length; r++) {
         var column_param = cHeadings[r]['param'];
         var column_grassroots_type = cHeadings[r]['type'];
-        row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value=" "/>');
+        row_array.push('<input type="text"  name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value=""/>');
     }
     t.row.add(row_array).draw(false);
 }
@@ -1063,8 +1068,8 @@ function table_add_teatment_columns_modal(table_id) {
 function table_add_teatment_columns(table_id) {
     var column_name = $('#add_treatment').val();
     if (column_name === '') {
-        $('#add_treatment').css({'background-color':'#ff4d4d'});
-    } else{
+        $('#add_treatment').css({'background-color': '#ff4d4d'});
+    } else {
         $('#treatmentModal').modal('hide');
         var t = $('#' + table_id).DataTable();
         var column_index = t.columns().count();
@@ -1097,7 +1102,7 @@ function table_add_teatment_columns(table_id) {
         // $.each(existing_rows, function (i, v) {
         //    v.append("<td></td><td></td><td></td>");
         // });
-        $('#' + table_id).DataTable({
+        var tdt = $('#' + table_id).DataTable({
             scrollX: true,
             "paging": false,
             "aaSorting": [],
@@ -1106,14 +1111,14 @@ function table_add_teatment_columns(table_id) {
                 {
                     text: 'Add Row',
                     className: 'btn btn-success new_row_button',
-                    action: function ( e, dt, node, config ) {
+                    action: function (e, dt, node, config) {
                         table_add_new_row(dt.table().node().id);
                     }
                 },
                 {
                     text: 'Add Treatment',
                     className: 'btn btn-success new_row_button',
-                    action: function ( e, dt, node, config ) {
+                    action: function (e, dt, node, config) {
                         table_add_teatment_columns_modal(dt.table().node().id);
                     }
                 },
@@ -1127,6 +1132,18 @@ function table_add_teatment_columns(table_id) {
                     messageBottom: null
                 })
             ]
+        });
+
+        $('#' + datatableId).on('change', 'input', function () {
+            //Get the cell of the input
+            var cell = $(this).closest('td');
+
+            //update the input value
+            $(this).attr('value', $(this).val());
+
+            //invalidate the DT cache
+            tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
         });
 
         table_add_new_row(table_id);
