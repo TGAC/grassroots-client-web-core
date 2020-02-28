@@ -393,6 +393,12 @@ function produce_form(div, parameters, groups) {
     }
 
     form_html.push('<input id="submit_button" class="btn btn-secondary" type="button" onclick="submit_form();" value="Submit">');
+    if (wizard_bool) {
+        if (wizard_count === 0) {
+            form_html.push('<input id="skip_button1" class="btn btn-secondary" type="button" onclick="window.location.href = \'fieldtrial_submission.html?step=2\';" value="Skip & Add Location"> '
+                + '<input id="skip_button2" class="btn btn-secondary" type="button" onclick="window.location.href = \'fieldtrial_submission.html?step=4\';" value="Skip & Add Study">');
+        }
+    }
 
     $('#' + div).html(form_html.join(' '));
     $('#' + div).validator({
