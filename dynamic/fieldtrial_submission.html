@@ -222,7 +222,7 @@
                     'Submit Field Trial Materials'
                 ];
 
-                if (getUrlParameter('service') != null) {
+                if (getUrlParameter('step') != null) {
                     var step = getUrlParameter('step');
                     wizard_count = parseInt(step) -1;
                     populateService(wizard_list[wizard_count]);
