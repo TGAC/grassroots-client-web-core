@@ -157,11 +157,21 @@
 
         <p id="description"></p>
 
-        <form id="form" role="form">
-            <div class="list_service_table">
-                <table id="listTable"></table>
-            </div>
-        </form>
+
+        <table border="0">
+            <tr>
+                <td width="70%">
+                    <form id="form" role="form">
+                        <div class="list_service_table">
+                            <table id="listTable"></table>
+                        </div>
+                    </form>
+                </td>
+                <td width="30%">
+                    <div id="wizard_doc"></div>
+                </td>
+            </tr>
+        </table>
         <div id="status"></div>
         <div id="output_format_div" style="display:none; float:right;">
             <p>Download job format
@@ -217,7 +227,20 @@
                 $('#wizard_progress').html(wizard_progress + '/7');
                 wizard_bool = true;
             });
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
 
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
 
         </script>
     </div>
