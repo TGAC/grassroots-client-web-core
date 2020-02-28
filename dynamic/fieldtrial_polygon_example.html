@@ -561,7 +561,7 @@
                 $('#tableWrapper').html('<table id="resultTable"></table>');
                 // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
                 markersGroup2 = new L.MarkerClusterGroup({});
-                map = L.map('map', {zoomControl: false}).setView([ 51.805273, -0.398919], 13);
+                map = L.map('map', {zoomControl: false}).setView([ 51.805189, -0.399342], 17);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
@@ -570,7 +570,7 @@
 
                 L.control.zoom({position: 'topright'}).addTo(map);
 
-                L.geoJSON(polygon_geojson).addTo(map);
+                L.geoJson(polygon_geojson).addTo(map);
 
                 // startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
             }
