@@ -158,7 +158,7 @@
         <p id="description"></p>
 
 
-        <table border="0">
+        <table border="0" width="100%">
             <tr>
                 <td width="70%">
                     <form id="form" role="form">
@@ -212,6 +212,7 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
+
                 var wizard_list = [
                     'Submit Field Trials',
                     'Submit Field Trial Location',
@@ -220,8 +221,16 @@
                     'Submit Field Trial Plots',
                     'Submit Field Trial Materials'
                 ];
+
+                if (getUrlParameter('service') != null) {
+                    var step = getUrlParameter('step');
+                    wizard_count = parseInt(step) -1;
+                    populateService(wizard_list[wizard_count]);
+                }
+
                 populateService(wizard_list[wizard_count]);
                 console.log(wizard_count);
+
                 var wizard_progress = wizard_count + 1;
                 $('#wizard_progress').css({'width': 'calc(' + wizard_progress + '/7*100%)'});
                 $('#wizard_progress').html(wizard_progress + '/7');
