@@ -178,11 +178,12 @@
                     <div id="control" style="display: none; margin-left: 20px; padding:5px;">
                         <br>
                         Search:</br>
-                        <input type="text" id="searchPlotsInput" value="PW468-84-4-8-Q5A-NDRE-P"/></br><br/>
+                        <input type="text" id="searchPlotsInput" value=""/></br><br/>
                         Phenotype:</br>
-                        Height: <input type="text" id="height" value="117.25"/></br>
-                        Yield: <input type="text" id="yield" value="8.91292789637138"/></br><br/>
-                        GRU Accession: <input type="text" id="gruAccession" value="PW141-41-2-20-Q5B-NDVI-W"/></br>
+                        Height: <input type="text" id="height" value="117.25" disabled="disabled"/></br>
+                        Yield: <input type="text" id="yield" value="8.91292789637138" disabled="disabled"/></br><br/>
+                        GRU Accession: <input type="text" id="gruAccession" value="PW141-41-2-20-Q5B-NDVI-W"
+                                              disabled="disabled"/></br>
                         <button onclick="filter_plot();">Filter</button>
 
                         </br></br></br></br>
@@ -214,6 +215,7 @@
         </div>
 
         <script type="text/javascript">
+            var plot_json = [];
             $(document).ready(function () {
                 $('#plots').html('<img src="images/ajax-loader.gif"/>')
                 var id_param = null;
@@ -248,6 +250,7 @@
             function LoadTable(experimental_area_json) {
                 $('#control').show();
                 var jsonArray = experimental_area_json['results'][0]['results'];
+                plot_json = jsonArray['plots'];
                 var filtered_data = [];
                 jQuery('#status').html('');
                 var fieldTrialName = '';
@@ -313,11 +316,26 @@
                 }
             }
 
-            function filter_plot(){
-                $('#5e0f3088de68e726d027cb9f').css('background-color', '#FF4136');
-                $('#5e0f3088de68e726d027caf3').css('background-color', '#FF4136');
-                $('#5e0f3088de68e726d027ca3b').css('background-color', '#FF4136');
-                $('#5e0f3088de68e726d027ca49').css('background-color', '#FF4136');
+            function filter_plot() {
+                // $('#5e0f3088de68e726d027cb9f').css('background-color', '#FF4136');
+                // $('#5e0f3088de68e726d027caf3').css('background-color', '#FF4136');
+                // $('#5e0f3088de68e726d027ca3b').css('background-color', '#FF4136');
+                // $('#5e0f3088de68e726d027ca49').css('background-color', '#FF4136');
+                var searchStr = $('#searchPlotsInput').val();
+                for (i = 0; i < plot_json.length; i++) {
+                    var bool = false;
+                    var rows = plot_json[i]['rows'];
+                    for (r = 0; r < rows.length; r++){
+                        var accession = rows[r]['material']['_id']['accession'];
+                        if (searchStr === accession || accession.includes(searchStr)){
+                            bool = true;
+                        }
+                    }
+                    if (bool){
+                        var plotId = plot_json[i]['_id']['$oid'];
+                        $('#' + plotId).css('background-color', '#FF4136');
+                    }
+                }
             }
 
         </script>
