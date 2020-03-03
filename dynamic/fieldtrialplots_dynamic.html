@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -43,12 +43,12 @@
     <script type="text/javascript" src="scripts/fieldtrial_map.js"></script>
 
     <!-- Leaflet -->
-    <link rel="stylesheet" href="scripts/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="scripts/leaflet/leaflet.css"/>
     <script src="scripts/leaflet/leaflet.js"></script>
 
     <!-- Leaflet markercluster -->
-    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.css" />
-    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.css"/>
+    <link rel="stylesheet" href="scripts/leaflet.markercluster/MarkerCluster.Default.css"/>
     <script src="scripts/leaflet.markercluster/leaflet.markercluster.js"></script>
 
     <!-- polymarker -->
@@ -77,7 +77,7 @@
 
     <link rel="stylesheet" href="styles/style.css" type="text/css"/>
 
-    
+
     <script type="text/javascript" src="scripts/d3/d3.min.js"></script>
     <!-- data file -->
     <!--<script type="text/javascript" src="scripts/json_now_including_plot_replicates.js"></script>-->
@@ -125,22 +125,26 @@
 <!--content-->
 
 <style type="text/css">
-    .modal-body{
+    .modal-body {
         height: 250px;
         overflow-y: auto;
     }
 
     @media (min-height: 500px) {
-        .modal-body { height: 400px; }
+        .modal-body {
+            height: 400px;
+        }
     }
 
     @media (min-height: 800px) {
-        .modal-body { height: 600px; }
+        .modal-body {
+            height: 600px;
+        }
     }
 </style>
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
-    <div class="container" >
+    <div class="container">
         <!--style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">-->
         <!--<div id="back_link" ><a href="/service/"><< Back to all services list</a><br/></div>-->
         <h2 id="title">DFWFieldTrial search service</h2>
@@ -148,7 +152,9 @@
         <p id="description">A service to search field trial data</p>
 
         <form id="form" role="form">
-            <div class="list_service_table"><table id="listTable"></table></div>
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
         </form>
         <div id="status"></div>
         <div id="output_format_div" style="display:none; float:right;">
@@ -161,9 +167,33 @@
         <div style="clear:both;"></div>
 
         <div id="result"></div>
+        <table style="border-style: solid; border-width:1px;">
+            <tr style="vertical-align:top;">
+                <td style="width:80%;">
+                    <div id="plots" style="width:99%; overflow: scroll;"></div>
+                </td>
 
-        <div id="plots" style="width:100%; overflow: scroll;"></div>
 
+                <td style="width:20%; border-style: solid; border-width:0 0 0 1px; ">
+                    <div id="control" style="display: none; margin-left: 20px; padding:5px;">
+                        <br>
+                        Search:</br>
+                        <input type="text" id="searchPlotsInput" value=""/></br><br/>
+                        Phenotype:</br>
+                        Height: <input type="text" id="height" value="117.25" disabled="disabled"/></br>
+                        Yield: <input type="text" id="yield" value="8.91292789637138" disabled="disabled"/></br><br/>
+                        GRU Accession: <input type="text" id="gruAccession" value="PW141-41-2-20-Q5B-NDVI-W"
+                                              disabled="disabled"/></br>
+                        <button onclick="filter_plot();">Filter</button>
+
+                        </br></br></br></br>
+                        <button>Get Data</button>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
         <!-- Modal -->
         <div class="modal" tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
             <div class="modal-dialog  modal-lg" role="document">
@@ -185,103 +215,128 @@
         </div>
 
         <script type="text/javascript">
+            var plot_json = [];
             $(document).ready(function () {
-                $('#plots').html ('<img src="images/ajax-loader.gif"/>')
+                $('#plots').html('<img src="images/ajax-loader.gif"/>')
                 var id_param = null;
 
                 if ('URLSearchParams' in window) {
                     // Browser supports URLSearchParams
-                    let params = new URLSearchParams (document.location.search.substring(1));
-                    id_param = params.get ("id"); 
+                    let params = new URLSearchParams(document.location.search.substring(1));
+                    id_param = params.get("id");
                 }
-                
-                if (id_param != null) {
-                    var req_json = CreatePlotsRequestForExperimentalArea (id_param);
 
-                
+                if (id_param != null) {
+                    var req_json = CreatePlotsRequestForExperimentalArea(id_param);
+
+
                     if (req_json) {
-                         $.ajax ({
+                        $.ajax({
                             type: "POST",
                             url: server_url,
-                            data: JSON.stringify (req_json),
+                            data: JSON.stringify(req_json),
                             dataType: "json",
                             contentType: "application/json; charset=utf-8"
-                        }).done (function (experimental_areas_json) {
+                        }).done(function (experimental_areas_json) {
                             console.log(experimental_areas_json);
-                            LoadTable (experimental_areas_json);
-                        }).fail (function (req, status, error) {
-                            console.info ("req " + "status " + status + " error " + error);
+                            LoadTable(experimental_areas_json);
+                        }).fail(function (req, status, error) {
+                            console.info("req " + "status " + status + " error " + error);
                         });
                     }
                 }
-          });
+            });
 
-        function LoadTable (experimental_area_json) {
-            var jsonArray = experimental_area_json['results'][0]['results'];
-            var filtered_data = [];
-            jQuery('#status').html('');
-            var fieldTrialName = '';
-            var team = '';
-            for (i = 0; i < jsonArray.length; i++) {
-                let exp_area = jsonArray[i]['data'];            
+            function LoadTable(experimental_area_json) {
+                $('#control').show();
+                var jsonArray = experimental_area_json['results'][0]['results'];
+                plot_json = jsonArray['plots'];
+                var filtered_data = [];
+                jQuery('#status').html('');
+                var fieldTrialName = '';
+                var team = '';
+                for (i = 0; i < jsonArray.length; i++) {
+                    let exp_area = jsonArray[i]['data'];
 
-                let plots_table = GeneratePlotsForExperimentalArea (exp_area);
-                $('#plots').html (plots_table);
-/*
-                for (j = 0; j < exp_areas_array.length; j++) {
-                    let address = exp_areas_array [j]['address'];
+                    let plots_table = GeneratePlotsForExperimentalArea(exp_area);
+                    $('#plots').html(plots_table);
+                    /*
+                                    for (j = 0; j < exp_areas_array.length; j++) {
+                                        let address = exp_areas_array [j]['address'];
 
-                    if (address != undefined) {
-                        
-                        fieldTrialName = jsonArray [i]['data']['so:name'];
-                        team = jsonArray [i]['data']['team'];
-                        if (address ['address']['location']['centre'] != undefined) {
-                            filtered_data.push (exp_areas_array [j]);
-                        }
-                    }
+                                        if (address != undefined) {
+
+                                            fieldTrialName = jsonArray [i]['data']['so:name'];
+                                            team = jsonArray [i]['data']['team'];
+                                            if (address ['address']['location']['centre'] != undefined) {
+                                                filtered_data.push (exp_areas_array [j]);
+                                            }
+                                        }
+                                    }
+                    */
                 }
-*/
+                console.log(JSON.stringify(plotsHTMLArray));
+
             }
-            console.log(JSON.stringify(plotsHTMLArray));
 
-        }
+            function GeneratePlotsForExperimentalArea(experimental_area_json) {
+                console.log(JSON.stringify(experimental_area_json));
+                var expAreaId = experimental_area_json['_id']['$oid'];
+                var plots = experimental_area_json['plots'];
 
-        function GeneratePlotsForExperimentalArea (experimental_area_json) {
-            console.log(JSON.stringify(experimental_area_json));
-            var expAreaId = experimental_area_json['_id']['$oid'];
-            var plots = experimental_area_json['plots'];
+                if (plots.length > 0) {
+                    var htmlarray = [];
 
-            if (plots.length>0) {
-                var htmlarray = [];
+                    var row = 1;
+                    var column = 1;
 
-                var row = 1;
-                var column = 1;
+                    for (j = 0; j < plots.length; j++) {
 
-                for (j = 0; j < plots.length; j++) {
+                        if (plots[j]['row_index'] === row) {
+                            if (plots[j]['column_index'] === column) {
+                                htmlarray.push(formatPlot(plots[j]));
+                                column++;
+                            }
+                        } else if (plots[j]['row_index'] > row) {
 
-                    if (plots[j]['row_index'] === row) {
-                        if (plots[j]['column_index'] === column) {
+                            row++;
+                            column = 2;
+                            htmlarray.push('</tr><tr>');
+                            htmlarray.push('<td>' + row + '</td>');
                             htmlarray.push(formatPlot(plots[j]));
-                            column++;
                         }
-                    } else if (plots[j]['row_index'] > row) {
+                    }
+                    var tableString = '<td>1</td>' + htmlarray.join("");
+                    var tableArray = tableString.split("</tr><tr>");
+                    var reversedString = tableArray.reverse().join("</tr><tr>");
 
-                        row++;
-                        column = 2;
-                        htmlarray.push('</tr><tr>');
-                        htmlarray.push('<td>' + row + '</td>');
-                        htmlarray.push(formatPlot(plots[j]));
+                    return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
+                } else {
+                    return '<div id="plot"><p>No plot data available.</p></div>'
+                }
+            }
+
+            function filter_plot() {
+                // $('#5e0f3088de68e726d027cb9f').css('background-color', '#FF4136');
+                // $('#5e0f3088de68e726d027caf3').css('background-color', '#FF4136');
+                // $('#5e0f3088de68e726d027ca3b').css('background-color', '#FF4136');
+                // $('#5e0f3088de68e726d027ca49').css('background-color', '#FF4136');
+                var searchStr = $('#searchPlotsInput').val();
+                for (i = 0; i < plot_json.length; i++) {
+                    var bool = false;
+                    var rows = plot_json[i]['rows'];
+                    for (r = 0; r < rows.length; r++){
+                        var accession = rows[r]['material']['_id']['accession'];
+                        if (searchStr === accession || accession.includes(searchStr)){
+                            bool = true;
+                        }
+                    }
+                    if (bool){
+                        var plotId = plot_json[i]['_id']['$oid'];
+                        $('#' + plotId).css('background-color', '#FF4136');
                     }
                 }
-                var tableString = '<td>1</td>' + htmlarray.join("");
-                var tableArray = tableString.split("</tr><tr>");
-                var reversedString = tableArray.reverse().join("</tr><tr>");
-
-                return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
-            } else {
-                return '<div id="plot"><p>No plot data available.</p></div>'
             }
-        }
 
         </script>
     </div>

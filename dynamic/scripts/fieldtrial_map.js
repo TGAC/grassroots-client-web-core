@@ -556,7 +556,7 @@ function formatPlot(plot) {
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
     // return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
-    return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
+    return '<td class="plot" id="'+plotId+'" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
 }
 
 function plotModal(plotId) {
@@ -676,17 +676,14 @@ function get_GRU_by_accession(accession, plotId, id) {
 function format_gru_json(gru_json) {
     var htmlarray = [];
     if (gru_json != undefined && gru_json.length > 0) {
-        // for (i = 0; i < gru_json.length; i++) {
-        if (gru_json.length > 0) {
+        for (i = 0; i < gru_json.length; i++) {
+        // if (gru_json.length > 0) {
             if (gru_json[0]['idPlant'] != undefined) {
-
                 var idPlant = gru_json[i]['idPlant'];
-                // htmlarray.push(idPlant);
                 htmlarray.push('<a target="_blank" class="newstyle_link" href="https://seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a> ');
             }
         }
     }
-    // }
     return htmlarray.join('');
 }
 
