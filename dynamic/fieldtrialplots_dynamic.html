@@ -185,6 +185,7 @@
                         GRU Accession: <input type="text" id="gruAccession" value="PW141-41-2-20-Q5B-NDVI-W"
                                               disabled="disabled"/></br>
                         <button onclick="filter_plot();">Filter</button>
+                        <div id="filter_result"></div>
 
                         </br></br></br></br>
                         <button>Get Data</button>
@@ -238,7 +239,7 @@
                             dataType: "json",
                             contentType: "application/json; charset=utf-8"
                         }).done(function (experimental_areas_json) {
-                            console.log(experimental_areas_json);
+                            // console.log("experimental_areas_json : "+experimental_areas_json);
                             LoadTable(experimental_areas_json);
                         }).fail(function (req, status, error) {
                             console.info("req " + "status " + status + " error " + error);
@@ -250,7 +251,6 @@
             function LoadTable(experimental_area_json) {
                 $('#control').show();
                 var jsonArray = experimental_area_json['results'][0]['results'];
-                plot_json = jsonArray['plots'];
                 var filtered_data = [];
                 jQuery('#status').html('');
                 var fieldTrialName = '';
@@ -281,6 +281,9 @@
 
             function GeneratePlotsForExperimentalArea(experimental_area_json) {
                 console.log(JSON.stringify(experimental_area_json));
+
+                plot_json = experimental_area_json['plots'];
+                console.log(JSON.stringify(plot_json));
                 var expAreaId = experimental_area_json['_id']['$oid'];
                 var plots = experimental_area_json['plots'];
 
@@ -321,21 +324,31 @@
                 // $('#5e0f3088de68e726d027caf3').css('background-color', '#FF4136');
                 // $('#5e0f3088de68e726d027ca3b').css('background-color', '#FF4136');
                 // $('#5e0f3088de68e726d027ca49').css('background-color', '#FF4136');
-                var searchStr = $('#searchPlotsInput').val();
+                var result = 0;
+                var searchStr = $('#searchPlotsInput').val().toLowerCase();
                 for (i = 0; i < plot_json.length; i++) {
-                    var bool = false;
+                    // var bool = false;
                     var rows = plot_json[i]['rows'];
-                    for (r = 0; r < rows.length; r++){
-                        var accession = rows[r]['material']['_id']['accession'];
-                        if (searchStr === accession || accession.includes(searchStr)){
-                            bool = true;
+                    for (r = 0; r < rows.length; r++) {
+                        var accession = rows[r]['material']['accession'].toLowerCase();
+                        if (accession != undefined) {
+                            if (searchStr === accession || accession.includes(searchStr)) {
+                                // bool = true;
+                                var plotId = plot_json[i]['_id']['$oid'];
+                                console.log(plotId);
+                                $('#' + plotId).css('background-color', '#FF4136');
+                                result ++;
+                                break;
+                            }
                         }
                     }
-                    if (bool){
-                        var plotId = plot_json[i]['_id']['$oid'];
-                        $('#' + plotId).css('background-color', '#FF4136');
-                    }
+                    // if (bool) {
+                    //     var plotId = plot_json[i]['_id']['$oid'];
+                    //     console.log(plotId);
+                    //     $('#' + plotId).css('background-color', '#FF4136');
+                    // }
                 }
+                $('#filter_result').html('<p>Filtered result: '+result+'</p>');
             }
 
         </script>
