@@ -588,6 +588,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             var cHeading = parameter['store']['Column Headings'];
             var each_table_obj = {};
             var table_id = param.replace(/ /g, "_");
+            var current_table_value = [];
 
             each_table_obj['table_id'] = table_id;
             each_table_obj['cHeadings'] = cHeading;
@@ -599,12 +600,21 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             // if (param === 'PL Upload') {
             //     form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns_modal(\'' + table_id + '\')">Add treatment</button>');
             // }
+
+
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push('<thead id="' + table_id + 'thead" >');
             form_html.push(table_thead_formatter(cHeading));
             form_html.push('</thead>');
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+
+            if (parameter['current_value'] != undefined) {
+                current_table_value = parameter['current_value'];
+                if (parameter['current_value'].length > 0) {
+                    form_html.push(table_body_formatter(cHeading, current_table_value, param));
+                }
+            }
             form_html.push('</table>');
             form_html.push('</div><hr/>');
         }
@@ -744,6 +754,7 @@ function refresh_service(input) {
         dataType: "json",
         success: function (json) {
             // do update values instead
+            console.info(JSON.stringify(json));
             refresh_form_with_result(json);
 
             $('#status').html('');
@@ -753,12 +764,14 @@ function refresh_service(input) {
 
 }
 
+
 function refresh_form_with_result(json) {
     parameters = json['services'][0]['operation']['parameter_set']['parameters'];
     groups = json['services'][0]['operation']['parameter_set']['groups'];
     produce_form('form', parameters, groups);
 
 }
+
 
 function isOdd(n) {
     return Math.abs(n % 2) == 1;
@@ -984,6 +997,28 @@ function table_thead_formatter(cHeadings) {
     thead_html.push('</tr>');
     // thead_html.push('</thead>');
     return thead_html.join(' ');
+}
+
+function table_body_formatter(cHeadings, tbody_values, real_param) {
+    var tbody_html = [];
+    tbody_html.push('<tbody>');
+    // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
+    for (var i = 0; i < tbody_values.length; i++) {
+
+        tbody_html.push('<tr>');
+        var row_json = tbody_values[i];
+        var row_index = i;
+        for (var j = 0; j < cHeadings.length; j++) {
+            var column_param = cHeadings[j]['param'];
+            var column_grassroots_type = cHeadings[j]['type'];
+            var sheet_value = row_json[column_param];
+            tbody_html.push('<td><input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/></td>');
+        }
+        tbody_html.push('</tr>');
+    }
+    tbody_html.push('</tbody>');
+    return tbody_html.join(' ');
+
 }
 
 function table_add_rows(table_id_drop, json) {
