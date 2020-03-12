@@ -185,124 +185,129 @@ function populateService(service_name) {
             type: "POST",
             dataType: "json",
             success: function (json) {
-                response = json;
-                console.info(JSON.stringify(json));
-                $('#title').html(response['services'][0]['so:name']);
-                $('#description').html(response['services'][0]['so:description']);
-                if (response['services'][0]['operation']['so:url'] != undefined) {
-                    var infoLink = response['services'][0]['operation']['so:url'];
-                    $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
-                }
-                parameters = response['services'][0]['operation']['parameter_set']['parameters'];
-                groups = response['services'][0]['operation']['parameter_set']['groups'];
-                synchronous = response['services'][0]['operation']['synchronous'];
-                console.info('synchronous' + synchronous);
-                produce_form('form', parameters, groups);
-                simpleOrAdvanced('show_simple');
-                for (var i = 0; i < textareas.length; i++) {
-                    document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
-                    document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
-                }
-                $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
-                for (var idt = 0; idt < datatable_param_list.length; idt++) {
-                    var datatableId = datatable_param_list[idt]['table_id'];
-                    var buttons = [];
-                    if (datatableId === 'PL_Upload') {
-
-                        var tdt = $('#' + datatableId).DataTable({
-                            scrollX: true,
-                            "paging": false,
-                            "aaSorting": [],
-                            dom: 'lBfrtip',
-                            buttons: [
-
-                                {
-                                    text: 'Add Row',
-                                    className: 'btn btn-success new_row_button',
-                                    action: function (e, dt, node, config) {
-                                        table_add_new_row(dt.table().node().id);
-                                    }
-                                },
-                                {
-                                    text: 'Add Treatment',
-                                    className: 'btn btn-success new_row_button',
-                                    action: function (e, dt, node, config) {
-                                        table_add_teatment_columns_modal(dt.table().node().id);
-                                    }
-                                },
-                                $.extend(true, {}, buttonCommon, {
-                                    extend: 'excelHtml5',
-                                    className: 'btn btn-success new_row_button',
-                                    titleAttr: 'Export to Excel',
-                                    // text:'New Export',
-                                    title: null,
-                                    messageTop: null,
-                                    messageBottom: null
-                                })
-                            ]
-                        });
-
-                        $('#' + datatableId).on('change', 'input', function () {
-                            //Get the cell of the input
-                            var cell = $(this).closest('td');
-                            //update the input value
-
-                            $(this).attr('value', $(this).val());
-                            console.log($(this));
-
-                            //invalidate the DT cache
-                            tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
-
-                        });
-                    } else {
-                        var ndt = $('#' + datatableId).DataTable({
-                            scrollX: true,
-                            "paging": false,
-                            "aaSorting": [],
-                            dom: 'lBfrtip',
-                            buttons: [
-                                {
-                                    text: 'Add Row',
-                                    className: 'btn btn-success new_row_button',
-                                    action: function (e, dt, node, config) {
-
-                                        table_add_new_row(dt.table().node().id);
-                                    }
-                                },
-                                $.extend(true, {}, buttonCommon, {
-                                    extend: 'excelHtml5',
-                                    className: 'btn btn-success new_row_button',
-                                    titleAttr: 'Export to Excel',
-                                    // text:'New Export',
-                                    title: null,
-                                    messageTop: null,
-                                    messageBottom: null
-                                })
-                            ]
-                        });
-
-                        $('#' + datatableId).on('change', 'input', function () {
-                            //Get the cell of the input
-                            var cell = $(this).closest('td');
-
-                            //update the input value
-                            $(this).attr('value', $(this).val());
-
-                            //invalidate the DT cache
-                            ndt.cell($(cell)).data($(cell).html()).invalidate().draw();
-
-                        });
-                    }
-                    if (datatableId != 'PL_Upload') {
-                        table_add_new_row(datatableId);
-                    }
-
-                    document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
-                    document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
-                }
+                populate_page_with_json(json);
             }
         });
     }
+}
+
+function populate_page_with_json(json){
+        response = json;
+        console.info(JSON.stringify(json));
+        $('#title').html(response['services'][0]['so:name']);
+        $('#description').html(response['services'][0]['so:description']);
+        if (response['services'][0]['operation']['so:url'] != undefined) {
+            var infoLink = response['services'][0]['operation']['so:url'];
+            $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
+        }
+        parameters = response['services'][0]['operation']['parameter_set']['parameters'];
+        groups = response['services'][0]['operation']['parameter_set']['groups'];
+        synchronous = response['services'][0]['operation']['synchronous'];
+        console.info('synchronous' + synchronous);
+        produce_form('form', parameters, groups);
+        simpleOrAdvanced('show_simple');
+        for (var i = 0; i < textareas.length; i++) {
+            document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
+            document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
+        }
+        $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
+        for (var idt = 0; idt < datatable_param_list.length; idt++) {
+            var datatableId = datatable_param_list[idt]['table_id'];
+            var buttons = [];
+            if (datatableId === 'PL_Upload') {
+
+                var tdt = $('#' + datatableId).DataTable({
+                    scrollX: true,
+                    "paging": false,
+                    "aaSorting": [],
+                    dom: 'lBfrtip',
+                    buttons: [
+
+                        {
+                            text: 'Add Row',
+                            className: 'btn btn-success new_row_button',
+                            action: function (e, dt, node, config) {
+                                table_add_new_row(dt.table().node().id);
+                            }
+                        },
+                        {
+                            text: 'Add Treatment',
+                            className: 'btn btn-success new_row_button',
+                            action: function (e, dt, node, config) {
+                                table_add_teatment_columns_modal(dt.table().node().id);
+                            }
+                        },
+                        $.extend(true, {}, buttonCommon, {
+                            extend: 'excelHtml5',
+                            className: 'btn btn-success new_row_button',
+                            titleAttr: 'Export to Excel',
+                            // text:'New Export',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null
+                        })
+                    ]
+                });
+
+                $('#' + datatableId).on('change', 'input', function () {
+                    //Get the cell of the input
+                    var cell = $(this).closest('td');
+                    //update the input value
+
+                    $(this).attr('value', $(this).val());
+                    console.log($(this));
+
+                    //invalidate the DT cache
+                    tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
+                });
+            } else {
+                var ndt = $('#' + datatableId).DataTable({
+                    scrollX: true,
+                    "paging": false,
+                    "aaSorting": [],
+                    dom: 'lBfrtip',
+                    buttons: [
+                        {
+                            text: 'Add Row',
+                            className: 'btn btn-success new_row_button',
+                            action: function (e, dt, node, config) {
+
+                                table_add_new_row(dt.table().node().id);
+                            }
+                        },
+                        $.extend(true, {}, buttonCommon, {
+                            extend: 'excelHtml5',
+                            className: 'btn btn-success new_row_button',
+                            titleAttr: 'Export to Excel',
+                            // text:'New Export',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null
+                        })
+                    ]
+                });
+
+                $('#' + datatableId).on('change', 'input', function () {
+                    //Get the cell of the input
+                    var cell = $(this).closest('td');
+
+                    //update the input value
+                    $(this).attr('value', $(this).val());
+
+                    //invalidate the DT cache
+                    ndt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
+                });
+            }
+            if (datatableId != 'PL_Upload') {
+                table_add_new_row(datatableId);
+            }
+
+            document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
+            document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
+        }
+
 }
 
 var buttonCommon = {
