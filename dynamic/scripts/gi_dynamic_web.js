@@ -677,6 +677,7 @@ function refresh_service(input) {
 
         var parameter = {};
         var datatableId = datatable_param_list[idt]['table_id'];
+        $('#'+datatableId).DataTable().destroy();
         var this_table_array = [];
         var current_value_array = [];
         var real_param = datatableId.replace(/_/g, " ");
@@ -760,7 +761,11 @@ function refresh_service(input) {
         success: function (json) {
             // do update values instead
             console.info(JSON.stringify(json));
-            refresh_form_with_result(json);
+            // for (var idt = 0; idt < datatable_param_list.length; idt++) {
+            //     var datatableId = datatable_param_list[idt]['table_id'];
+            //     $('#'+datatableId).DataTable().destroy();
+            // }
+            populate_page_with_json(json);
 
             $('#status').html('');
         }
