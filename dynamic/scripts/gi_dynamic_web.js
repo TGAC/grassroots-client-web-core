@@ -1021,7 +1021,11 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
         for (var j = 0; j < cHeadings.length; j++) {
             var column_param = cHeadings[j]['param'];
             var column_grassroots_type = cHeadings[j]['type'];
-            var sheet_value = row_json[column_param];
+            var sheet_value = '';
+            //row_json[column_param];
+            if (row_json[column_param]!== undefined){
+                sheet_value = row_json[column_param];
+            }
             tbody_html.push('<td><input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/></td>');
         }
         tbody_html.push('</tr>');
