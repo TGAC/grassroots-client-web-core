@@ -214,6 +214,7 @@ function populate_page_with_json(json){
         for (var idt = 0; idt < datatable_param_list.length; idt++) {
             var datatableId = datatable_param_list[idt]['table_id'];
             var buttons = [];
+            $('#' + datatableId).DataTable().destroy();
             if (datatableId === 'PL_Upload') {
 
                 var tdt = $('#' + datatableId).DataTable({
@@ -300,9 +301,9 @@ function populate_page_with_json(json){
 
                 });
             }
-            if (datatableId != 'PL_Upload') {
-                table_add_new_row(datatableId);
-            }
+            // if (datatableId != 'PL_Upload') {
+            //     table_add_new_row(datatableId);
+            // }
 
             document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
             document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
@@ -1012,7 +1013,6 @@ function table_thead_formatter(cHeadings) {
 function table_body_formatter(cHeadings, tbody_values, real_param) {
     var tbody_html = [];
     tbody_html.push('<tbody>');
-    // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
     for (var i = 0; i < tbody_values.length; i++) {
 
         tbody_html.push('<tr>');
@@ -1032,7 +1032,6 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
     }
     tbody_html.push('</tbody>');
     return tbody_html.join(' ');
-
 }
 
 function table_add_rows(table_id_drop, json) {
