@@ -1185,7 +1185,7 @@ function table_add_teatment_columns(table_id) {
             ]
         });
 
-        $('#' + datatableId).on('change', 'input', function () {
+        $('#' + table_id).on('change', 'input', function () {
             //Get the cell of the input
             var cell = $(this).closest('td');
 
