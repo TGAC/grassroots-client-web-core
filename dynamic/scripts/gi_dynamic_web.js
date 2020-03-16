@@ -51,12 +51,12 @@ function get_all_services_as_table() {
                             provider_html.push('<ul class="list_service_table_ul">');
                             if (full['provider'] != undefined) {
                                 var this_provider = full['provider'];
-                                provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+                                provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/> <a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
 
                             } else if (full['providers'] != undefined) {
                                 for (var proi = 0; proi < full['providers'].length; proi++) {
                                     var this_provider = full['providers'][proi];
-                                    provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+                                    provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/> <a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
                                 }
                             }
                             provider_html.push('</ul>');
@@ -179,6 +179,7 @@ function populateService(service_name) {
         $('#form').html(form_html.join(' '));
 
     } else {
+        console.log('{"services": [{"so:name":"' + service_name + '"}], "operations": {"operation": "get_named_service"}}');
         $.ajax({
             url: server_url,
             data: '{"services": [{"so:name":"' + service_name + '"}], "operations": {"operation": "get_named_service"}}',
@@ -194,16 +195,21 @@ function populateService(service_name) {
 function populate_page_with_json(json) {
     response = json;
     console.info(JSON.stringify(json));
-    if (response['services'][0]['so:name'] != undefined) {
-        $('#title').html(response['services'][0]['so:name']);
+    if(response['services']!== undefined){
+        if(response['services'].length>0){
+            if (response['services'][0]['so:name'] !== undefined) {
+                $('#title').html(response['services'][0]['so:name']);
+            }
+            if (response['services'][0]['so:description'] !== undefined) {
+                $('#description').html(response['services'][0]['so:description']);
+            }
+            if (response['services'][0]['operation']['so:url'] !== undefined) {
+                var infoLink = response['services'][0]['operation']['so:url'];
+                $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
+            }
+        }
     }
-    if (response['services'][0]['so:description'] != undefined) {
-        $('#description').html(response['services'][0]['so:description']);
-    }
-    if (response['services'][0]['operation']['so:url'] != undefined) {
-        var infoLink = response['services'][0]['operation']['so:url'];
-        $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
-    }
+
     parameters = response['services'][0]['operation']['parameter_set']['parameters'];
     groups = response['services'][0]['operation']['parameter_set']['groups'];
     synchronous = response['services'][0]['operation']['synchronous'];
@@ -1170,7 +1176,7 @@ function add_plot_datatable(table_id){
         $(this).attr('value', $(this).val());
 
         //invalidate the DT cache
-        tdt.row($(cell)).data($(cell).html()).invalidate().draw();
+        tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
 
     });
 }

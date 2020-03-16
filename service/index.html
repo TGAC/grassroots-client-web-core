@@ -275,10 +275,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(this).scrollTop(0);
-        // if (getUrlParameter('service') != null) {
-        //     var modalid = getUrlParameter('service');
-        //     populateService(modalid);
-        // }
+        if (getUrlParameter('service') != null) {
+            var modalid = getUrlParameter('service');
+            populateService(modalid);
+        }
         var pathname = (window.location.pathname).split('/');
         var lastSegment = pathname.pop() || pathname.pop();
         if (lastSegment != 'services.html' && lastSegment != 'service' && lastSegment != '' && lastSegment != null) {
