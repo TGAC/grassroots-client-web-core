@@ -220,52 +220,7 @@ function populate_page_with_json(json) {
         var buttons = [];
         $('#' + datatableId).DataTable().destroy();
         if (datatableId === 'PL_Upload') {
-
-            var tdt = $('#' + datatableId).DataTable({
-                scrollX: true,
-                "paging": false,
-                "aaSorting": [],
-                dom: 'lBfrtip',
-                buttons: [
-
-                    {
-                        text: 'Add Row',
-                        className: 'btn btn-success new_row_button',
-                        action: function (e, dt, node, config) {
-                            table_add_new_row(dt.table().node().id);
-                        }
-                    },
-                    {
-                        text: 'Add Treatment',
-                        className: 'btn btn-success new_row_button',
-                        action: function (e, dt, node, config) {
-                            table_add_teatment_columns_modal(dt.table().node().id);
-                        }
-                    },
-                    $.extend(true, {}, buttonCommon, {
-                        extend: 'excelHtml5',
-                        className: 'btn btn-success new_row_button',
-                        titleAttr: 'Export to Excel',
-                        // text:'New Export',
-                        title: null,
-                        messageTop: null,
-                        messageBottom: null
-                    })
-                ]
-            });
-
-            $('#' + datatableId).on('change', 'input', function () {
-                //Get the cell of the input
-                var cell = $(this).closest('td');
-                //update the input value
-
-                $(this).attr('value', $(this).val());
-                console.log($(this));
-
-                //invalidate the DT cache
-                tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
-
-            });
+            add_plot_datatable(datatableId);
         } else {
             var ndt = $('#' + datatableId).DataTable({
                 scrollX: true,
@@ -1124,7 +1079,7 @@ function table_add_new_row(table_id) {
 }
 
 function table_add_teatment_columns_modal(table_id) {
-    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/SearchTreatment" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: currently data in table will be wiped</p>');
+    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/SearchTreatment" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
     $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Treatment</button></div>');
     $('#treatmentModal').modal('show');
 }
@@ -1167,53 +1122,57 @@ function table_add_teatment_columns(table_id) {
         // $.each(existing_rows, function (i, v) {
         //    v.append("<td></td><td></td><td></td>");
         // });
-        var tdt = $('#' + table_id).DataTable({
-            scrollX: true,
-            "paging": false,
-            "aaSorting": [],
-            dom: 'lBfrtip',
-            buttons: [
-                {
-                    text: 'Add Row',
-                    className: 'btn btn-success new_row_button',
-                    action: function (e, dt, node, config) {
-                        table_add_new_row(dt.table().node().id);
-                    }
-                },
-                {
-                    text: 'Add Treatment',
-                    className: 'btn btn-success new_row_button',
-                    action: function (e, dt, node, config) {
-                        table_add_teatment_columns_modal(dt.table().node().id);
-                    }
-                },
-                $.extend(true, {}, buttonCommon, {
-                    extend: 'excelHtml5',
-                    className: 'btn btn-success new_row_button',
-                    titleAttr: 'Export to Excel',
-                    // text:'New Export',
-                    title: null,
-                    messageTop: null,
-                    messageBottom: null
-                })
-            ]
-        });
 
-        $('#' + table_id).on('change', 'input', function () {
-            //Get the cell of the input
-            var cell = $(this).closest('td');
-
-            //update the input value
-            $(this).attr('value', $(this).val());
-
-            //invalidate the DT cache
-            tdt.row($(cell)).data($(cell).html()).invalidate().draw();
-
-        });
-
+        add_plot_datatable(table_id);
         table_add_new_row(table_id);
     }
 
+}
+
+function add_plot_datatable(table_id){
+    var tdt = $('#' + table_id).DataTable({
+        scrollX: true,
+        "paging": false,
+        "aaSorting": [],
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                text: 'Add Row',
+                className: 'btn btn-success new_row_button',
+                action: function (e, dt, node, config) {
+                    table_add_new_row(dt.table().node().id);
+                }
+            },
+            {
+                text: 'Add Treatment',
+                className: 'btn btn-success new_row_button',
+                action: function (e, dt, node, config) {
+                    table_add_teatment_columns_modal(dt.table().node().id);
+                }
+            },
+            $.extend(true, {}, buttonCommon, {
+                extend: 'excelHtml5',
+                className: 'btn btn-success new_row_button',
+                titleAttr: 'Export to Excel',
+                // text:'New Export',
+                title: null,
+                messageTop: null,
+                messageBottom: null
+            })
+        ]
+    });
+
+    $('#' + table_id).on('change', 'input', function () {
+        //Get the cell of the input
+        var cell = $(this).closest('td');
+
+        //update the input value
+        $(this).attr('value', $(this).val());
+
+        //invalidate the DT cache
+        tdt.row($(cell)).data($(cell).html()).invalidate().draw();
+
+    });
 }
 
 function simpleOrAdvanced(string) {
