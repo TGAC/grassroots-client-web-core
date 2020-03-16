@@ -191,123 +191,127 @@ function populateService(service_name) {
     }
 }
 
-function populate_page_with_json(json){
-        response = json;
-        console.info(JSON.stringify(json));
+function populate_page_with_json(json) {
+    response = json;
+    console.info(JSON.stringify(json));
+    if (response['services'][0]['so:name'] != undefined) {
         $('#title').html(response['services'][0]['so:name']);
+    }
+    if (response['services'][0]['so:description'] != undefined) {
         $('#description').html(response['services'][0]['so:description']);
-        if (response['services'][0]['operation']['so:url'] != undefined) {
-            var infoLink = response['services'][0]['operation']['so:url'];
-            $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
+    }
+    if (response['services'][0]['operation']['so:url'] != undefined) {
+        var infoLink = response['services'][0]['operation']['so:url'];
+        $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
+    }
+    parameters = response['services'][0]['operation']['parameter_set']['parameters'];
+    groups = response['services'][0]['operation']['parameter_set']['groups'];
+    synchronous = response['services'][0]['operation']['synchronous'];
+    console.info('synchronous' + synchronous);
+    produce_form('form', parameters, groups);
+    simpleOrAdvanced('show_simple');
+    for (var i = 0; i < textareas.length; i++) {
+        document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
+        document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
+    }
+    $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
+    for (var idt = 0; idt < datatable_param_list.length; idt++) {
+        var datatableId = datatable_param_list[idt]['table_id'];
+        var buttons = [];
+        $('#' + datatableId).DataTable().destroy();
+        if (datatableId === 'PL_Upload') {
+
+            var tdt = $('#' + datatableId).DataTable({
+                scrollX: true,
+                "paging": false,
+                "aaSorting": [],
+                dom: 'lBfrtip',
+                buttons: [
+
+                    {
+                        text: 'Add Row',
+                        className: 'btn btn-success new_row_button',
+                        action: function (e, dt, node, config) {
+                            table_add_new_row(dt.table().node().id);
+                        }
+                    },
+                    {
+                        text: 'Add Treatment',
+                        className: 'btn btn-success new_row_button',
+                        action: function (e, dt, node, config) {
+                            table_add_teatment_columns_modal(dt.table().node().id);
+                        }
+                    },
+                    $.extend(true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        className: 'btn btn-success new_row_button',
+                        titleAttr: 'Export to Excel',
+                        // text:'New Export',
+                        title: null,
+                        messageTop: null,
+                        messageBottom: null
+                    })
+                ]
+            });
+
+            $('#' + datatableId).on('change', 'input', function () {
+                //Get the cell of the input
+                var cell = $(this).closest('td');
+                //update the input value
+
+                $(this).attr('value', $(this).val());
+                console.log($(this));
+
+                //invalidate the DT cache
+                tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
+            });
+        } else {
+            var ndt = $('#' + datatableId).DataTable({
+                scrollX: true,
+                "paging": false,
+                "aaSorting": [],
+                dom: 'lBfrtip',
+                buttons: [
+                    {
+                        text: 'Add Row',
+                        className: 'btn btn-success new_row_button',
+                        action: function (e, dt, node, config) {
+
+                            table_add_new_row(dt.table().node().id);
+                        }
+                    },
+                    $.extend(true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        className: 'btn btn-success new_row_button',
+                        titleAttr: 'Export to Excel',
+                        // text:'New Export',
+                        title: null,
+                        messageTop: null,
+                        messageBottom: null
+                    })
+                ]
+            });
+
+            $('#' + datatableId).on('change', 'input', function () {
+                //Get the cell of the input
+                var cell = $(this).closest('td');
+
+                //update the input value
+                $(this).attr('value', $(this).val());
+
+                //invalidate the DT cache
+                ndt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
+            });
         }
-        parameters = response['services'][0]['operation']['parameter_set']['parameters'];
-        groups = response['services'][0]['operation']['parameter_set']['groups'];
-        synchronous = response['services'][0]['operation']['synchronous'];
-        console.info('synchronous' + synchronous);
-        produce_form('form', parameters, groups);
-        simpleOrAdvanced('show_simple');
-        for (var i = 0; i < textareas.length; i++) {
-            document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
-            document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
-        }
-        $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
-        for (var idt = 0; idt < datatable_param_list.length; idt++) {
-            var datatableId = datatable_param_list[idt]['table_id'];
-            var buttons = [];
-            $('#' + datatableId).DataTable().destroy();
-            if (datatableId === 'PL_Upload') {
+        // if (datatableId != 'PL_Upload') {
+        //     table_add_new_row(datatableId);
+        // }
 
-                var tdt = $('#' + datatableId).DataTable({
-                    scrollX: true,
-                    "paging": false,
-                    "aaSorting": [],
-                    dom: 'lBfrtip',
-                    buttons: [
-
-                        {
-                            text: 'Add Row',
-                            className: 'btn btn-success new_row_button',
-                            action: function (e, dt, node, config) {
-                                table_add_new_row(dt.table().node().id);
-                            }
-                        },
-                        {
-                            text: 'Add Treatment',
-                            className: 'btn btn-success new_row_button',
-                            action: function (e, dt, node, config) {
-                                table_add_teatment_columns_modal(dt.table().node().id);
-                            }
-                        },
-                        $.extend(true, {}, buttonCommon, {
-                            extend: 'excelHtml5',
-                            className: 'btn btn-success new_row_button',
-                            titleAttr: 'Export to Excel',
-                            // text:'New Export',
-                            title: null,
-                            messageTop: null,
-                            messageBottom: null
-                        })
-                    ]
-                });
-
-                $('#' + datatableId).on('change', 'input', function () {
-                    //Get the cell of the input
-                    var cell = $(this).closest('td');
-                    //update the input value
-
-                    $(this).attr('value', $(this).val());
-                    console.log($(this));
-
-                    //invalidate the DT cache
-                    tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
-
-                });
-            } else {
-                var ndt = $('#' + datatableId).DataTable({
-                    scrollX: true,
-                    "paging": false,
-                    "aaSorting": [],
-                    dom: 'lBfrtip',
-                    buttons: [
-                        {
-                            text: 'Add Row',
-                            className: 'btn btn-success new_row_button',
-                            action: function (e, dt, node, config) {
-
-                                table_add_new_row(dt.table().node().id);
-                            }
-                        },
-                        $.extend(true, {}, buttonCommon, {
-                            extend: 'excelHtml5',
-                            className: 'btn btn-success new_row_button',
-                            titleAttr: 'Export to Excel',
-                            // text:'New Export',
-                            title: null,
-                            messageTop: null,
-                            messageBottom: null
-                        })
-                    ]
-                });
-
-                $('#' + datatableId).on('change', 'input', function () {
-                    //Get the cell of the input
-                    var cell = $(this).closest('td');
-
-                    //update the input value
-                    $(this).attr('value', $(this).val());
-
-                    //invalidate the DT cache
-                    ndt.cell($(cell)).data($(cell).html()).invalidate().draw();
-
-                });
-            }
-            // if (datatableId != 'PL_Upload') {
-            //     table_add_new_row(datatableId);
-            // }
-
-            document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
-            document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
-        }
+        document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
+        document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
+    }
 
 }
 
@@ -678,7 +682,7 @@ function refresh_service(input) {
 
         var parameter = {};
         var datatableId = datatable_param_list[idt]['table_id'];
-        $('#'+datatableId).DataTable().destroy();
+        // $('#' + datatableId).DataTable().destroy();
         var this_table_array = [];
         var current_value_array = [];
         var real_param = datatableId.replace(/_/g, " ");
@@ -766,9 +770,14 @@ function refresh_service(input) {
             //     var datatableId = datatable_param_list[idt]['table_id'];
             //     $('#'+datatableId).DataTable().destroy();
             // }
-            populate_page_with_json(json);
+            if (json['services'] !== undefined) {
+                if (json['services'].length > 0) {
+                    populate_page_with_json(json);
+                }
+            }
 
             $('#status').html('');
+            Utils.ui.reenableButton('submit_button', 'Submit');
         }
     });
 
@@ -1023,7 +1032,7 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
             var column_grassroots_type = cHeadings[j]['type'];
             var sheet_value = '';
             //row_json[column_param];
-            if (row_json[column_param]!== undefined){
+            if (row_json[column_param] !== undefined) {
                 sheet_value = row_json[column_param];
             }
             tbody_html.push('<td><input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/></td>');
@@ -1103,6 +1112,7 @@ function table_add_new_row(table_id) {
             cHeadings = datatable_param_list[i]['cHeadings'];
         }
     }
+    console.log(cHeadings);
     var row_array = [];
     var real_param = table_id.replace(/_/g, " ");
     for (var r = 0; r < cHeadings.length; r++) {
@@ -1114,7 +1124,7 @@ function table_add_new_row(table_id) {
 }
 
 function table_add_teatment_columns_modal(table_id) {
-    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/SearchTreatment" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control">');
+    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/SearchTreatment" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: currently data in table will be wiped</p>');
     $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Treatment</button></div>');
     $('#treatmentModal').modal('show');
 }
@@ -1146,6 +1156,7 @@ function table_add_teatment_columns(table_id) {
         each_table_obj['table_id'] = table_id;
         each_table_obj['cHeadings'] = cHeadings;
         datatable_param_list.push(each_table_obj);
+        console.log(datatable_param_list);
 
         t.destroy();
         var table_heading_html = table_thead_formatter(cHeadings);
@@ -1196,7 +1207,7 @@ function table_add_teatment_columns(table_id) {
             $(this).attr('value', $(this).val());
 
             //invalidate the DT cache
-            tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
+            tdt.row($(cell)).data($(cell).html()).invalidate().draw();
 
         });
 
