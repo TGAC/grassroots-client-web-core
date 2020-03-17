@@ -1085,8 +1085,8 @@ function table_add_new_row(table_id) {
 }
 
 function table_add_teatment_columns_modal(table_id) {
-    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/search_measured_variables" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
-    $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Treatment</button></div>');
+    $('#modal-body').html('<p><a href="https://grassroots.tools/public/service/search_measured_variables" class="newstyle_link" target="_blank">Search Measured Variables</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
+    $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Measured Variables</button></div>');
     $('#treatmentModal').modal('show');
 }
 
@@ -1150,7 +1150,7 @@ function add_plot_datatable(table_id){
                 }
             },
             {
-                text: 'Add Treatment',
+                text: 'Add Measured Variables',
                 className: 'btn btn-success new_row_button',
                 action: function (e, dt, node, config) {
                     table_add_teatment_columns_modal(dt.table().node().id);
