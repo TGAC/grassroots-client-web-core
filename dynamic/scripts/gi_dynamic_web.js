@@ -162,9 +162,9 @@ function populateService(service_name) {
     // $('#description').html('Search field trial treatment');
     $('#simpleAdvanceWrapper').show();
     selected_service_name = service_name;
-    if (selected_service_name === 'Search Treatment' || selected_service_name === 'SearchTreatment') {
-        $('#title').html('Search Treatment');
-        $('#description').html('Search field trial treatment');
+    if (selected_service_name === 'Search Treatment' || selected_service_name === 'search_measured_variables') {
+        $('#title').html('Search Measured Variables');
+        $('#description').html('Search field trial measured variables');
         var form_html = [];
 
         // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
@@ -1085,7 +1085,7 @@ function table_add_new_row(table_id) {
 }
 
 function table_add_teatment_columns_modal(table_id) {
-    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/SearchTreatment" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
+    $('#modal-body').html('<p><a href="https://grassroots.tools/beta/public/search_measured_variables" class="newstyle_link" target="_blank">Search Treatment</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
     $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Treatment</button></div>');
     $('#treatmentModal').modal('show');
 }
@@ -1182,7 +1182,7 @@ function add_plot_datatable(table_id){
 }
 
 function simpleOrAdvanced(string) {
-    if (selected_service_name === 'Search Treatment' || selected_service_name === 'SearchTreatment') {
+    if (selected_service_name === 'Search Treatment' || selected_service_name === 'search_measured_variables') {
         var treatment_table = $('#treatment_result').DataTable();
         if (string === 'show_simple') {
             treatment_table.column(1).visible(false);
