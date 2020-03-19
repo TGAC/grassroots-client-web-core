@@ -8,6 +8,18 @@ var level_simpleoradvanced = "simple";
 var wizard_bool = false;
 var wizard_count = 0;
 
+const service_blastn = 'blast-blastn';
+const service_blastp = 'blast-blastp';
+const service_blastx = 'blast-blastx';
+
+const service_field_trial_search = 'field_trial-search';
+
+const service_polymarker_search = 'polymarker-search';
+
+const service_gru_seedbank_search = 'germplasm-search';
+
+const service_pathogenomics_geoservice = 'pathogenomics-geoservice';
+
 function get_all_services_as_table() {
 
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
@@ -162,7 +174,7 @@ function populateService(service_altname) {
     // $('#description').html('Search field trial treatment');
     $('#simpleAdvanceWrapper').show();
     selected_service_name = service_altname;
-    if (selected_service_name === 'field_trial/search_measured_variables') {
+    if (selected_service_name === 'field_trial-search_measured_variables') {
         $('#title').html('Search Measured Variables');
         $('#description').html('Search field trial measured variables');
         var form_html = [];
@@ -182,6 +194,7 @@ function populateService(service_altname) {
         $.ajax({
             url: server_url,
             data: '{"services": [{"so:alternateName":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}',
+            // data:'{"services": [{"so:name":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}',
             type: "POST",
             dataType: "json",
             success: function (json) {
@@ -610,7 +623,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             outfmt_html.push('<option value="' + this_enum['value'] + '">' + option_text + '</option>');
         }
 
-        if ((selected_service_name === 'BlastN' || selected_service_name === 'BlastP' || selected_service_name === 'BlastX') && param === 'outfmt') {
+        if ((selected_service_name === service_blastn || selected_service_name === service_blastp || selected_service_name === service_blastx) && param === 'outfmt') {
             $('#output_format').html(outfmt_html.join(' '));
         }
         form_html.push('</select>');
@@ -623,7 +636,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 function refresh_service(input) {
     console.log(input);
 
-    $('#status').html('<img src="../../dynamic/images/ajax-loader.gif"/>');
+    $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     Utils.ui.disableButton('submit_button');
     var form = jQuery('#form').serializeArray();
     form = form.concat(
@@ -773,7 +786,7 @@ function do_ajax_search() {
 
     if (input.length > 1) {
 
-        $('#ajax_result').html('Searching <img src=\"../../dynamic/images/ajax-loader.gif\"/>');
+        $('#ajax_result').html('Searching <img src=\"../dynamic/images/ajax-loader.gif\"/>');
         var timer;
 
         var submit_json = {
@@ -1084,7 +1097,7 @@ function table_add_new_row(table_id) {
 }
 
 function table_add_teatment_columns_modal(table_id) {
-    $('#modal-body').html('<p><a href="https://grassroots.tools/public/service/field_trial/search_measured_variables" class="newstyle_link" target="_blank">Search Measured Variables</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
+    $('#modal-body').html('<p><a href="https://grassroots.tools/public/service/field_trial-search_measured_variables" class="newstyle_link" target="_blank">Search Measured Variables</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
     $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Measured Variables</button></div>');
     $('#treatmentModal').modal('show');
 }
@@ -1181,7 +1194,7 @@ function add_plot_datatable(table_id){
 }
 
 function simpleOrAdvanced(string) {
-    if (selected_service_name === 'field_trial/search_measured_variables') {
+    if (selected_service_name === 'field_trial-search_measured_variables') {
         var treatment_table = $('#treatment_result').DataTable();
         if (string === 'show_simple') {
             treatment_table.column(1).visible(false);
@@ -1213,7 +1226,7 @@ function simpleOrAdvanced(string) {
 
 
 function submit_form() {
-    $('#status').html('<img src="../../dynamic/images/ajax-loader.gif"/>');
+    $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     Utils.ui.disableButton('submit_button');
     var form = jQuery('#form').serializeArray();
     form = form.concat(
@@ -1295,7 +1308,7 @@ function submit_form() {
     }
 
     submit_job['start_service'] = true;
-    submit_job['so:name'] = selected_service_name;
+    submit_job['so:alternateName'] = selected_service_name;
 
     parameter_set['level'] = level_simpleoradvanced;
     parameter_set['parameters'] = parameters;
@@ -1327,7 +1340,7 @@ function submit_form() {
 function get_api_result(service, previousID) {
     selected_service_name = service;
     $('#title').html(service);
-    $('#status').html('<img src="../../dynamic/images/ajax-loader.gif"/>');
+    $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     $.ajax({
         url: server_url + '/service/' + encodeURIComponent(service) + '?Previous%20results=' + previousID,
         // type: "GET",
@@ -1354,7 +1367,7 @@ function display_result(json) {
     // response = json;
     console.info(JSON.stringify(json));
     //            if (synchronous){
-    if (selected_service_name == 'BlastN' || selected_service_name == 'BlastP' || selected_service_name == 'BlastX') {
+    if (selected_service_name == service_blastn || selected_service_name == service_blastp || selected_service_name == service_blastx) {
         $('#status').html('');
         $('#result').html('');
         // get each job and place html
@@ -1362,28 +1375,28 @@ function display_result(json) {
             var each_result = json['results'][i];
             var uuid = each_result['job_uuid'];
             var dbname = each_result['so:name'];
-            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"../../dynamic/images/ajax-loader.gif\"/></div></div></br></fieldset>');
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"../dynamic/images/ajax-loader.gif\"/></div></div></br></fieldset>');
 
             checkResult(each_result);
         }
         $('#output_format_div').show();
         changeDownloadFormat();
-    } else if (selected_service_name == 'Polymarker') {
+    } else if (selected_service_name == service_polymarker_search) {
         $('#status').html('');
         $('#result').html('');
         for (var i = 0; i < json['results'].length; i++) {
             var each_result = json['results'][i];
             var uuid = each_result['job_uuid'];
             var dbname = each_result['so:name'];
-            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"../../dynamic/images/ajax-loader.gif\"/></div></div></br></fieldset>');
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src=\"../dynamic/images/ajax-loader.gif\"/></div></div></br></fieldset>');
 
             checkResult(each_result);
         }
 
-    } else if (selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Pathogenomics Geoservice') {
+    } else if (selected_service_name == service_pathogenomics_geoservice) {
         $('#status').html('');
         $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
-    } else if (selected_service_name == 'Search GRU seedbank') {
+    } else if (selected_service_name == service_gru_seedbank_search) {
         $('#simpleAdvanceWrapper').hide();
         $('#status').html('');
         $('#form').html('');
@@ -1421,7 +1434,7 @@ function display_result(json) {
         //
         //     startFieldTrialGIS(json['results'][0]['results']);
     // }
-    else if (selected_service_name == 'Search Field Trials') {
+    else if (selected_service_name == service_field_trial_search) {
         // $('#simpleAdvanceWrapper').hide();
         $('#status').html('');
         $('#map').remove();
@@ -1498,7 +1511,7 @@ function format_fieldtrial_result(array) {
             info = array[i]['data']['trait']['so:name'];
         }
         if (type === 'Grassroots:FieldTrial' || type === 'Grassroots:Study') {
-            doi = '<a target="_blank" href="../../dynamic/fieldtrial_dynamic.html?id=' + id + '&type=' + type + '">View ' + typeText + '</a>'
+            doi = '<a target="_blank" href="../dynamic/fieldtrial_dynamic.html?id=' + id + '&type=' + type + '">View ' + typeText + '</a>'
         }
         html.push('<tr>');
         html.push('<td>');
@@ -1529,9 +1542,9 @@ function checkResult(each_result) {
     var status_text_key = each_result['status_text'];
     if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
         Utils.ui.reenableButton('submit_button', 'Submit');
-        if (selected_service_name == 'BlastN' || selected_service_name == 'BlastP' || selected_service_name == 'BlastX') {
+        if (selected_service_name == service_blastn || selected_service_name == service_blastp || selected_service_name == service_blastx) {
             $('#' + uuid).html(display_each_blast_result_grasroots_markup(each_result));
-        } else if (selected_service_name == 'Polymarker') {
+        } else if (selected_service_name == service_polymarker_search) {
             $('#' + uuid).html(display_polymarker_table(each_result));
         } else {
             $('#status').html('');
@@ -1552,12 +1565,12 @@ function checkResult(each_result) {
                     console.info(JSON.stringify(json));
                     status_text_key = json[0]['status_text'];
                     if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
-                        if (selected_service_name == 'BlastN' || selected_service_name == 'BlastP' || selected_service_name == 'BlastX') {
+                        if (selected_service_name == service_blastn || selected_service_name == service_blastp || selected_service_name == service_blastx) {
                             Utils.ui.reenableButton('submit_button', 'Submit');
                             $('#' + uuid).html(display_each_blast_result_grasroots_markup(json[0]));
-                        } else if (selected_service_name == 'Polymarker') {
+                        } else if (selected_service_name == service_polymarker_search) {
                             $('#' + uuid).html(display_polymarker_table(json[0]));
-                        } else if (selected_service_name == 'Search GRU seedbank' || selected_service_name == 'Pathogenomics Geoservice' || selected_service_name == 'Search Field Trials') {
+                        } else if (selected_service_name == service_gru_seedbank_search || selected_service_name == service_pathogenomics_geoservice || selected_service_name == service_field_trial_search) {
                             $('#' + uuid).html(JSON.stringify(json[0]['results'][0]['data']));
                         } else {
                             $('#status').html('');
@@ -1565,7 +1578,7 @@ function checkResult(each_result) {
                             downloadFile(json[0]['results'][0]['data'], selected_service_name);
                         }
                     } else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
-                        jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"../../dynamic/images/ajax-loader.gif\"/>');
+                        jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src=\"../dynamic/images/ajax-loader.gif\"/>');
                         var timer;
                         clearTimeout(timer);
                         timer = setTimeout(function () {
@@ -1811,7 +1824,7 @@ function changeDownloadFormat() {
 }
 
 function downloadJobFromServer(id) {
-    $('#' + id + 'status').html('<img src="../../dynamic/images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     $('#' + id + 'dl').removeAttr('onclick');
     var outfmt = $('#output_format').val();
 
@@ -1850,7 +1863,7 @@ function downloadJobFromServer(id) {
 
 
 function run_linked_service(id) {
-    $('#' + id + 'status').html('<img src="../../dynamic/images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
 
     var linked_service_request_json = linked_services_global[id];
@@ -1874,7 +1887,7 @@ function run_linked_service(id) {
 
 
 function run_linked_service_with_redirect(id) {
-    $('#' + id + 'status').html('<img src="../../dynamic/images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
 
     var linked_service_request_json = linked_services_global[id];
@@ -1889,7 +1902,7 @@ function run_linked_service_with_redirect(id) {
         success: function (json) {
             console.info(JSON.stringify(json));
             var uuid = json['results'][0]['job_uuid'];
-            window.open("../../dynamic/services_get.html?service=" + encodeURI(service_name) + '&Previous%20results=' + uuid, '_blank');
+            window.open("../dynamic/services_get.html?service=" + encodeURI(service_name) + '&Previous%20results=' + uuid, '_blank');
             $('#' + id + 'status').html('');
             $('#' + id).attr('onclick', 'run_linked_service_with_redirect(\'' + id + '\')');
 
