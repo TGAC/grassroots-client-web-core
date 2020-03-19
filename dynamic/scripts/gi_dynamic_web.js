@@ -208,8 +208,8 @@ function populateService(service_altname) {
 function populate_page_with_json(json) {
     response = json;
     console.info(JSON.stringify(json));
-    if(response['services']!== undefined){
-        if(response['services'].length>0){
+    if (response['services'] !== undefined) {
+        if (response['services'].length > 0) {
             if (response['services'][0]['so:name'] !== undefined) {
                 $('#title').html(response['services'][0]['so:name']);
             }
@@ -1148,7 +1148,7 @@ function table_add_teatment_columns(table_id) {
 
 }
 
-function add_plot_datatable(table_id){
+function add_plot_datatable(table_id) {
     var tdt = $('#' + table_id).DataTable({
         scrollX: true,
         "paging": false,
@@ -1327,12 +1327,14 @@ function submit_form() {
         type: "POST",
         dataType: "json",
         success: function (json) {
+            display_result(json);
             if (wizard_bool) {
-                //
-                Utils.ui.reenableButton('submit_button', 'Next Step');
                 wizard_count++;
-            } else {
-                display_result(json);
+                $('#submit_button').val('Next Step');
+                $('#submit_button').click(function(){
+                    var wizard_progress = wizard_count + 1;
+                    window.location.href='fieldtrial_submission.html?step=' + wizard_progress;
+                });
             }
         }
     });
@@ -1454,7 +1456,9 @@ function display_result(json) {
         var status_text_key = json['results'][0]['status_text'];
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             $('#result').html("Done");
-            downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
+            if (json['results'][0]['results'] !== undefined) {
+                downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
+            }
         } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
             $('#result').html('Job ' + status_text_key);
             //+ ': <br/>' + each_result['errors']['error']);
