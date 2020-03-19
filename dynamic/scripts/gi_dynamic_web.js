@@ -47,6 +47,7 @@ function get_all_services_as_table() {
                 searchHighlight: true,
                 scrollX: true,
                 scrollCollapse: true,
+                "paging": false,
                 "columns": [
                     {
                         title: "Service",
