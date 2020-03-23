@@ -1509,9 +1509,11 @@ function handle_errors(json) {
                         }
 
                         $('#' + elementId).css({'background-color': '#ff4d4d'});
+
                         // $('#' + elementId).tooltip({
                         //     title: error_messages,
-                        //     trigger: 'manual'
+                        //     trigger: 'manual',
+                        // animation: false
                         // }).tooltip('show');
                         // $('#' + elementId).on('click',function(){$(this).tooltip('toggle');});
 
@@ -1521,7 +1523,7 @@ function handle_errors(json) {
                             trigger: 'manual',
                             animation: false
                         }).popover('show');
-                        // $('#' + elementId).on('click',function(){$(this).popover('toggle');});
+                        $('#' + elementId).on('click',function(){$(this).popover('toggle');});
 
                     }
                 }
