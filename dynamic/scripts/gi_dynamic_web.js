@@ -1460,9 +1460,9 @@ function display_result(json) {
                 downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
             }
         } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
-            var general_error = get_general_errors(each_result);
+            var general_error = get_general_errors(json['results'][0]);
             $('#result').html('Job ' + status_text_key + ':  ' + general_error);
-            handle_errors(each_result);
+            handle_errors(json['results'][0]);
             Utils.ui.reenableButton('submit_button', 'Submit');
         }
 
@@ -1494,7 +1494,7 @@ function handle_errors(json) {
             if (key !== 'error') {
                 if (data['grassroots_type'] != undefined) {
                     var grassroots_type = data['grassroots_type'];
-                    var elementId = key + '^' + grassroots_type;
+                    var elementId = key;
                     if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
 
                     } else {
