@@ -1460,12 +1460,30 @@ function display_result(json) {
                 downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
             }
         } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
-            $('#result').html('Job ' + status_text_key);
-            //+ ': <br/>' + each_result['errors']['error']);
+            var general_error = get_general_errors(each_result);
+            $('#result').html('Job ' + status_text_key + ':  ' + general_error);
             Utils.ui.reenableButton('submit_button', 'Submit');
         }
 
     }
+}
+
+function get_general_errors(json){
+    var html=[];
+    var general_error_array = []
+
+    if (json['errors']!= undefined){
+        if(json['errors']['error']!= undefined) {
+            if(json['errors']['error']['errors']!= undefined) {
+                general_error_array = json['errors']['error']['errors'];
+                for (var i = 0; i < general_error_array.length; i++) {
+                    html.push(general_error_array[i] + ' ');
+                }
+
+            }
+        }
+    }
+    return html.join(' ');
 }
 
 function format_fieldtrial_result(array) {
@@ -1557,8 +1575,8 @@ function checkResult(each_result) {
             $('#' + uuid).html(JSON.stringify(each_result['results'][0]['data']));
         }
     } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
-        $('#' + uuid).html('Job ' + status_text_key);
-        //+ ': <br/>' + each_result['errors']['error']);
+        var general_error = get_general_errors(each_result);
+        $('#' + uuid).html('Job ' + status_text_key + ':  ' + general_error);
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
@@ -1590,7 +1608,8 @@ function checkResult(each_result) {
                             checkResult(each_result);
                         }, 6500);
                     } else {
-                        jQuery('#' + uuid).html('Job ' + status_text_key + ' ' + json[0]['errors']);
+                        var general_error = get_general_errors(json[0]);
+                        jQuery('#' + uuid).html('Job ' + status_text_key + ' : ' + general_error);
                         Utils.ui.reenableButton('submit_button', 'Submit');
                     }
                 }
