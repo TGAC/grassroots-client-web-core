@@ -483,7 +483,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             // form_html.push('</div>');
             form_html.push('<div class="form-check ' + level + '">');
             form_html.push('<label class="form-check-label"  title="' + description + '">');
-            form_html.push(' <input type="checkbox" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + 'true" value="true" ' + selected_option(default_value, true, false) + '> ');
+            form_html.push(' <input type="checkbox" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + 'true" value="true" ' + selected_option(default_value, true, false) + '> ');
             // form_html.push(display_name + ' <small>' + description + '</small>');
             form_html.push(display_name);
             form_html.push('</label>');
@@ -496,7 +496,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '" value="' + default_value + '"/>');
             form_html.push('</div>');
 
         }
@@ -505,7 +505,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '" value="' + default_value + '"/>');
             form_html.push('</div>');
 
         }
@@ -514,14 +514,14 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '" value="' + default_value + '"/>');
             form_html.push('</div>');
         }
         // textarea
         else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" rows="3">' + default_value + '</textarea>');
+            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '" rows="3">' + default_value + '</textarea>');
             form_html.push('</div>');
             textareas.push(param);
 
@@ -530,7 +530,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:fasta") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" rows="6" data-fasta required>' + default_value + '</textarea>');
+            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '" rows="6" data-fasta required>' + default_value + '</textarea>');
             form_html.push('<div class="help-block with-errors">FASTA format required</div>');
             form_html.push('</div>');
             textareas.push(param);
@@ -550,21 +550,21 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:password") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '^' + grassroots_type + '" value="' + default_value + '"/>');
             form_html.push('</div>');
         }
         // directory
         else if (grassroots_type == "params:directory") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '^' + grassroots_type + '" value="' + default_value + '"/>');
             form_html.push('</div>');
         }
         // date
         else if (grassroots_type == "xsd:date") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/" "/g, "_") + '" value="' + default_value + '"/>');
             form_html.push('</div>');
         }
         // tabular
@@ -1494,7 +1494,7 @@ function handle_errors(json) {
             if (key !== 'error') {
                 if (data['grassroots_type'] != undefined) {
                     var grassroots_type = data['grassroots_type'];
-                    var elementId = key;
+                    var elementId = key.replace(/" "/g, "_");
                     if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
 
                     } else {
