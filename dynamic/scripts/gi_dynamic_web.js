@@ -1331,9 +1331,9 @@ function submit_form() {
             if (wizard_bool) {
                 wizard_count++;
                 $('#submit_button').val('Next Step');
-                $('#submit_button').click(function(){
+                $('#submit_button').click(function () {
                     var wizard_progress = wizard_count + 1;
-                    window.location.href='fieldtrial_submission.html?step=' + wizard_progress;
+                    window.location.href = 'fieldtrial_submission.html?step=' + wizard_progress;
                 });
             }
         }
@@ -1462,19 +1462,20 @@ function display_result(json) {
         } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
             var general_error = get_general_errors(each_result);
             $('#result').html('Job ' + status_text_key + ':  ' + general_error);
+            handle_errors(each_result);
             Utils.ui.reenableButton('submit_button', 'Submit');
         }
 
     }
 }
 
-function get_general_errors(json){
-    var html=[];
+function get_general_errors(json) {
+    var html = [];
     var general_error_array = []
 
-    if (json['errors']!= undefined){
-        if(json['errors']['error']!= undefined) {
-            if(json['errors']['error']['errors']!= undefined) {
+    if (json['errors'] != undefined) {
+        if (json['errors']['error'] != undefined) {
+            if (json['errors']['error']['errors'] != undefined) {
                 general_error_array = json['errors']['error']['errors'];
                 for (var i = 0; i < general_error_array.length; i++) {
                     html.push(general_error_array[i] + ' ');
@@ -1484,6 +1485,41 @@ function get_general_errors(json){
         }
     }
     return html.join(' ');
+}
+
+function handle_errors(json) {
+    if (json['errors'] != undefined) {
+        $.each(json['errors'], function (key, data) {
+            console.log(key);
+            if (key !== 'error') {
+                if (data['grassroots_type'] != undefined) {
+                    var grassroots_type = data['grassroots_type'];
+                    var elementId = key + '^' + grassroots_type;
+                    if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
+
+                    } else {
+                        var error_messages = '';
+                        var element_error_array = [];
+
+                        if (data['errors'] != undefined) {
+                            element_error_array = data['errors'];
+                            for (var i = 0; i < element_error_array.length; i++) {
+                                error_messages = (error_messages + ' ' + element_error_array[i]);
+                            }
+                        }
+
+                        $('#' + elementId).css({'background-color': '#ff4d4d'});
+                        $('#' + elementId).tooltip({
+                            title: error_messages
+                        });
+                    }
+                }
+            }
+
+        })
+    }
+
+
 }
 
 function format_fieldtrial_result(array) {
@@ -1577,6 +1613,7 @@ function checkResult(each_result) {
     } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
         var general_error = get_general_errors(each_result);
         $('#' + uuid).html('Job ' + status_text_key + ':  ' + general_error);
+        handle_errors(each_result);
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
@@ -1610,6 +1647,7 @@ function checkResult(each_result) {
                     } else {
                         var general_error = get_general_errors(json[0]);
                         jQuery('#' + uuid).html('Job ' + status_text_key + ' : ' + general_error);
+                        handle_errors(json[0]);
                         Utils.ui.reenableButton('submit_button', 'Submit');
                     }
                 }
