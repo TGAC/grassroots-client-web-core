@@ -1239,15 +1239,28 @@ function simpleOrAdvanced(string) {
 
 function submit_form() {
     var required = $('input,textarea,select').filter('[required]:visible');
+    required.each(function(){
+        $(this).css({'background-color': ''});
+    });
     var allRequired = true;
     required.each(function(){
         if($(this).val() == ''){
+            $(this).css({'background-color': '#ff4d4d'});
+            $(this).popover({
+                content: 'Required field',
+                placement: 'top',
+                trigger: 'manual',
+                animation: false
+            }).popover('show');
+            $(this).on('click', function () {
+                $(this).popover('toggle');
+            });
             allRequired = false;
         }
     });
 
     if(!allRequired){
-        alert('Please fill all the fields');
+        alert('Please fill all required fields with *');
     }
     else{
         $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
