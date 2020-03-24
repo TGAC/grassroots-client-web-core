@@ -507,7 +507,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
+            form_html.push('<input type="number" class="form-control ' + required + '"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
 
         }
@@ -516,7 +516,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
+            form_html.push('<input type="number" class="form-control ' + required + '"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
 
         }
@@ -525,14 +525,14 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
+            form_html.push('<input type="text" class="form-control ' + required + '"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // textarea
         else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3" ' + required + '>' + default_value + '</textarea>');
+            form_html.push('<textarea class="form-control ' + required + '" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3" ' + required + '>' + default_value + '</textarea>');
             form_html.push('</div>');
             textareas.push(param.replace(/\s+/g, "_"));
 
@@ -541,7 +541,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:fasta") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="6" data-fasta required>' + default_value + '</textarea>');
+            form_html.push('<textarea class="form-control ' + required + '" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="6" data-fasta required>' + default_value + '</textarea>');
             form_html.push('<div class="help-block with-errors">FASTA format required</div>');
             form_html.push('</div>');
             textareas.push(param.replace(/\s+/g, "_"));
@@ -561,21 +561,21 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:password") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '" ' + required + '/>');
+            form_html.push('<input type="password" class="form-control ' + required + '"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // directory
         else if (grassroots_type == "params:directory") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '" ' + required + '/>');
+            form_html.push('<input type="password" class="form-control ' + required + '"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // date
         else if (grassroots_type == "xsd:date") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
-            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
+            form_html.push('<input  type="text" class="datepicker form-control ' + required + '"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // tabular
@@ -1238,117 +1238,130 @@ function simpleOrAdvanced(string) {
 
 
 function submit_form() {
-    $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
-    Utils.ui.disableButton('submit_button');
-    var form = jQuery('#form').serializeArray();
-    form = form.concat(
-        jQuery('#form input[type=checkbox]:not(:checked)').map(
-            function () {
-                return {"name": this.name, "value": "false"}
-            }).get()
-    );
-    var submission = {};
-    var submit_job = {};
-    var parameters = [];
-    var services_array = [];
-    var parameter_set = {};
-
-    for (var idt = 0; idt < datatable_param_list.length; idt++) {
-
-        var parameter = {};
-        var datatableId = datatable_param_list[idt]['table_id'];
-        var this_table_array = [];
-        var current_value_array = [];
-        var real_param = datatableId.replace(/_/g, " ");
-        parameter['param'] = real_param;
-        var this_table = $('#' + datatableId).DataTable();
-        this_table_array = this_table.$('input, select').serializeArray();
-        var row_length = this_table.rows().count();
-        for (var rowsi = 0; rowsi < row_length; rowsi++) {
-            var row_object = {};
-            for (var ttai = 0; ttai < this_table_array.length; ttai++) {
-                var name = this_table_array[ttai]['name'].split('^');
-                var column_name = name[3];
-                if (name[2] == rowsi) {
-                    row_object[column_name] = this_table_array[ttai]['value'];
-                }
-
-            }
-            current_value_array.push(row_object);
-            console.log(JSON.stringify(current_value_array));
-        }
-        parameter['current_value'] = current_value_array;
-        parameters.push(parameter);
-
-    }
-
-    for (var i = 0; i < form.length; i++) {
-        var name = form[i]['name'].split('^');
-        if (name[0] === 'tabular') {
-            //do nothing? DataTable().serializeArray() takes over
-        } else {
-            var param = name[0];
-            var grassroots_type = name[1];
-            var type = name[2];
-            var group = name[3];
-            var value = form[i]['value'];
-            var parameter = {};
-            parameter['param'] = param;
-            if (param === 'FT Facet') {
-                fieldTrailSearchType = value;
-            }
-            // parameter['grassroots_type'] = grassroots_type;
-            if (group != 'none') {
-                if (name[4] == 0) {
-                    parameter['group'] = repeatable_groups[group]['group'];
-                } else {
-                    parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
-                }
-            }
-
-            if (type == 'boolean') {
-                parameter['current_value'] = JSON.parse(value);
-            } else if (type == 'integer') {
-                parameter['current_value'] = parseInt(value);
-            } else if (type == 'number') {
-                parameter['current_value'] = parseFloat(value);
-            } else {
-                parameter['current_value'] = value;
-            }
-            parameters.push(parameter);
-        }
-    }
-
-    submit_job['start_service'] = true;
-    submit_job['so:alternateName'] = selected_service_name;
-
-    parameter_set['level'] = level_simpleoradvanced;
-    parameter_set['parameters'] = parameters;
-    submit_job['parameter_set'] = parameter_set;
-
-    services_array.push(submit_job);
-    submission['services'] = services_array;
-
-
-    console.info(JSON.stringify(submission));
-    console.info(server_url);
-    $.ajax({
-        url: server_url,
-        data: JSON.stringify(submission),
-        type: "POST",
-        dataType: "json",
-        success: function (json) {
-            display_result(json);
-            if (wizard_bool) {
-                wizard_count++;
-                $('#submit_button').val('Next Step');
-                $('#submit_button').click(function () {
-                    var wizard_progress = wizard_count + 1;
-                    window.location.href = 'fieldtrial_submission.html?step=' + wizard_progress;
-                });
-            }
+    var required = $('input,textarea,select').filter('[required]:visible');
+    var allRequired = true;
+    required.each(function(){
+        if($(this).val() == ''){
+            allRequired = false;
         }
     });
+
+    if(!allRequired){
+        alert('Please fill all the fields');
+    }
+    else{
+        $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
+        Utils.ui.disableButton('submit_button');
+        var form = jQuery('#form').serializeArray();
+        form = form.concat(
+            jQuery('#form input[type=checkbox]:not(:checked)').map(
+                function () {
+                    return {"name": this.name, "value": "false"}
+                }).get()
+        );
+        var submission = {};
+        var submit_job = {};
+        var parameters = [];
+        var services_array = [];
+        var parameter_set = {};
+
+        for (var idt = 0; idt < datatable_param_list.length; idt++) {
+
+            var parameter = {};
+            var datatableId = datatable_param_list[idt]['table_id'];
+            var this_table_array = [];
+            var current_value_array = [];
+            var real_param = datatableId.replace(/_/g, " ");
+            parameter['param'] = real_param;
+            var this_table = $('#' + datatableId).DataTable();
+            this_table_array = this_table.$('input, select').serializeArray();
+            var row_length = this_table.rows().count();
+            for (var rowsi = 0; rowsi < row_length; rowsi++) {
+                var row_object = {};
+                for (var ttai = 0; ttai < this_table_array.length; ttai++) {
+                    var name = this_table_array[ttai]['name'].split('^');
+                    var column_name = name[3];
+                    if (name[2] == rowsi) {
+                        row_object[column_name] = this_table_array[ttai]['value'];
+                    }
+
+                }
+                current_value_array.push(row_object);
+                console.log(JSON.stringify(current_value_array));
+            }
+            parameter['current_value'] = current_value_array;
+            parameters.push(parameter);
+
+        }
+
+        for (var i = 0; i < form.length; i++) {
+            var name = form[i]['name'].split('^');
+            if (name[0] === 'tabular') {
+                //do nothing? DataTable().serializeArray() takes over
+            } else {
+                var param = name[0];
+                var grassroots_type = name[1];
+                var type = name[2];
+                var group = name[3];
+                var value = form[i]['value'];
+                var parameter = {};
+                parameter['param'] = param;
+                if (param === 'FT Facet') {
+                    fieldTrailSearchType = value;
+                }
+                // parameter['grassroots_type'] = grassroots_type;
+                if (group != 'none') {
+                    if (name[4] == 0) {
+                        parameter['group'] = repeatable_groups[group]['group'];
+                    } else {
+                        parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+                    }
+                }
+
+                if (type == 'boolean') {
+                    parameter['current_value'] = JSON.parse(value);
+                } else if (type == 'integer') {
+                    parameter['current_value'] = parseInt(value);
+                } else if (type == 'number') {
+                    parameter['current_value'] = parseFloat(value);
+                } else {
+                    parameter['current_value'] = value;
+                }
+                parameters.push(parameter);
+            }
+        }
+
+        submit_job['start_service'] = true;
+        submit_job['so:alternateName'] = selected_service_name;
+
+        parameter_set['level'] = level_simpleoradvanced;
+        parameter_set['parameters'] = parameters;
+        submit_job['parameter_set'] = parameter_set;
+
+        services_array.push(submit_job);
+        submission['services'] = services_array;
+
+
+        console.info(JSON.stringify(submission));
+        console.info(server_url);
+        $.ajax({
+            url: server_url,
+            data: JSON.stringify(submission),
+            type: "POST",
+            dataType: "json",
+            success: function (json) {
+                display_result(json);
+                if (wizard_bool) {
+                    wizard_count++;
+                    $('#submit_button').val('Next Step');
+                    $('#submit_button').click(function () {
+                        var wizard_progress = wizard_count + 1;
+                        window.location.href = 'fieldtrial_submission.html?step=' + wizard_progress;
+                    });
+                }
+            }
+        });
+    }
 }
 
 function get_api_result(service, previousID) {
