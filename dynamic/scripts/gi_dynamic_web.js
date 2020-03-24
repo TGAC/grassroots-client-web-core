@@ -1461,7 +1461,7 @@ function display_result(json) {
             }
         } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
             var general_error = get_general_errors(json['results'][0]);
-            $('#result').html('Job ' + status_text_key + ':  ' + general_error);
+            $('#result').html('Job ID: ' + json['results'][0]['job_uuid'] + ' ' + status_text_key + '<br/>  ' + general_error);
             handle_errors(json['results'][0]);
             Utils.ui.reenableButton('submit_button', 'Submit');
         }
@@ -1496,6 +1496,34 @@ function handle_errors(json) {
                     var grassroots_type = data['grassroots_type'];
                     var elementId = key.replace(/\s+/g, "_")
                     if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
+                        var tabular_error_array = [];
+
+                        if (data['errors'] != undefined) {
+                            tabular_error_array = data['errors'];
+                            if (tabular_error_array.length > 0) {
+                                // var error_table = $('#'+elementId).DataTable();
+                                var error_table = $('#' + elementId + ' tbody');
+                                for (var t = 0; t < tabular_error_array.length; t++) {
+                                    var row = tabular_error_array[t]['row'];
+                                    var column = tabular_error_array[t]['column'];
+                                    var cell_error = tabular_error_array[t]['error'];
+
+                                    var cell = error_table.rows[row].cells[column];
+
+                                    $(cell).popover({
+                                        content: cell_error,
+                                        placement: 'top',
+                                        trigger: 'manual',
+                                        animation: false
+                                    }).popover('show');
+                                    $(cell).on('click', function () {
+                                        $(this).popover('toggle');
+                                    });
+
+
+                                }
+                            }
+                        }
 
                     } else {
                         var error_messages = '';
@@ -1523,7 +1551,9 @@ function handle_errors(json) {
                             trigger: 'manual',
                             animation: false
                         }).popover('show');
-                        $('#' + elementId).on('click',function(){$(this).popover('toggle');});
+                        $('#' + elementId).on('click', function () {
+                            $(this).popover('toggle');
+                        });
 
                     }
                 }
