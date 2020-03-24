@@ -1238,10 +1238,15 @@ function simpleOrAdvanced(string) {
 
 
 function submit_form() {
-    var required = $('input,textarea,select').filter('[required]:visible');
-    required.each(function(){
+    var all_parameter = $('input,textarea,select');
+    $('.popover').each(function(){
+        $(this).remove();
+    });
+    all_parameter.each(function(){
         $(this).css({'background-color': ''});
     });
+
+    var required = $('input,textarea,select').filter('[required]:visible');
     var allRequired = true;
     required.each(function(){
         if($(this).val() == ''){
