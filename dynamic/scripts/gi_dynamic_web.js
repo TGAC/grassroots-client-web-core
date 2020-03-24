@@ -534,7 +534,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3" ' + required + '>' + default_value + '</textarea>');
             form_html.push('</div>');
-            textareas.push(param);
+            textareas.push(param.replace(/\s+/g, "_"));
 
         }
         //fasta (textarea)
@@ -544,7 +544,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="6" data-fasta required>' + default_value + '</textarea>');
             form_html.push('<div class="help-block with-errors">FASTA format required</div>');
             form_html.push('</div>');
-            textareas.push(param);
+            textareas.push(param.replace(/\s+/g, "_"));
 
         }
         //file
@@ -1512,7 +1512,6 @@ function handle_errors(json) {
                         if (data['errors'] != undefined) {
                             tabular_error_array = data['errors'];
                             if (tabular_error_array.length > 0) {
-                                // var error_table = $('#'+elementId).DataTable();
                                 var error_table = $('#' + elementId + ' tbody');
                                 for (var t = 0; t < tabular_error_array.length; t++) {
                                     var row = tabular_error_array[t]['row'];
