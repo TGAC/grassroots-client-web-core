@@ -439,6 +439,17 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
     var group = "none";
     var refresh = false;
 
+    var required = '';
+    var required_param_name = '';
+
+    if (parameter['required'] != undefined) {
+        if (parameter['required']) {
+            required = 'required';
+            required_param_name = '*';
+        }
+    }
+
+
     if (parameter['group'] !== undefined) {
         if (repeatable) {
             var counter;
@@ -495,8 +506,8 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:signed_integer" || grassroots_type == "params:unsigned_integer" || grassroots_type == "params:negative_integer" || grassroots_type == "params:unsigned_number") {
 
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '"/>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
 
         }
@@ -504,8 +515,8 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "params:unsigned_integer" || grassroots_type == "xsd:double") {
 
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '"/>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<input type="number" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
 
         }
@@ -513,15 +524,15 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         else if (grassroots_type == "xsd:string"
             || grassroots_type == "params:character" || grassroots_type == "params:keyword") {
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '"/>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<input type="text" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // textarea
         else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3">' + default_value + '</textarea>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3" ' + required + '>' + default_value + '</textarea>');
             form_html.push('</div>');
             textareas.push(param);
 
@@ -529,7 +540,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         //fasta (textarea)
         else if (grassroots_type == "params:fasta") {
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
             form_html.push('<textarea class="form-control" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="6" data-fasta required>' + default_value + '</textarea>');
             form_html.push('<div class="help-block with-errors">FASTA format required</div>');
             form_html.push('</div>');
@@ -549,22 +560,22 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
         // password
         else if (grassroots_type == "params:password") {
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // directory
         else if (grassroots_type == "params:directory") {
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '"/>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<input type="password" class="form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '^' + grassroots_type + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // date
         else if (grassroots_type == "xsd:date") {
             form_html.push('<div class="form-group ' + level + '">');
-            form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '"/>');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<input  type="text" class="datepicker form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" value="' + default_value + '" ' + required + '/>');
             form_html.push('</div>');
         }
         // tabular
