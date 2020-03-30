@@ -1,5 +1,7 @@
 var plotsHTMLArray = {};
 var plotsGRUArray = [];
+var plot_json = [];
+var plotsPhenotypeArray = [];
 var global_width = 0;
 var global_height = 0;
 var colorJSON = {
@@ -800,6 +802,114 @@ function CreatePlotsRequestForAllFieldTrials(keyword) {
 
     return request;
 
+}
+
+// plot page
+
+function LoadTable(experimental_area_json) {
+    $('#control').show();
+    var jsonArray = experimental_area_json['results'][0]['results'];
+    var filtered_data = [];
+    jQuery('#status').html('');
+    var fieldTrialName = '';
+    var team = '';
+    for (i = 0; i < jsonArray.length; i++) {
+        let exp_area = jsonArray[i]['data'];
+
+        let plots_table = GeneratePlotsForExperimentalArea(exp_area);
+        $('#plots').html(plots_table);
+        /*
+                        for (j = 0; j < exp_areas_array.length; j++) {
+                            let address = exp_areas_array [j]['address'];
+
+                            if (address != undefined) {
+
+                                fieldTrialName = jsonArray [i]['data']['so:name'];
+                                team = jsonArray [i]['data']['team'];
+                                if (address ['address']['location']['centre'] != undefined) {
+                                    filtered_data.push (exp_areas_array [j]);
+                                }
+                            }
+                        }
+        */
+    }
+    console.log(JSON.stringify(plotsHTMLArray));
+
+}
+
+function GeneratePlotsForExperimentalArea(experimental_area_json) {
+    console.log(JSON.stringify(experimental_area_json));
+
+    plot_json = experimental_area_json['plots'];
+    console.log(JSON.stringify(plot_json));
+    var expAreaId = experimental_area_json['_id']['$oid'];
+    var plots = experimental_area_json['plots'];
+
+    if (plots.length > 0) {
+        var htmlarray = [];
+
+        var row = 1;
+        var column = 1;
+
+        for (j = 0; j < plots.length; j++) {
+
+            if (plots[j]['row_index'] === row) {
+                if (plots[j]['column_index'] === column) {
+                    htmlarray.push(formatPlot(plots[j]));
+                    column++;
+                }
+            } else if (plots[j]['row_index'] > row) {
+
+                row++;
+                column = 2;
+                htmlarray.push('</tr><tr>');
+                htmlarray.push('<td>' + row + '</td>');
+                htmlarray.push(formatPlot(plots[j]));
+            }
+        }
+        var tableString = '<td>1</td>' + htmlarray.join("");
+        var tableArray = tableString.split("</tr><tr>");
+        var reversedString = tableArray.reverse().join("</tr><tr>");
+
+        return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
+    } else {
+        return '<div id="plot"><p>No plot data available.</p></div>'
+    }
+}
+
+function filter_plot() {
+    // $('#5e0f3088de68e726d027cb9f').css('background-color', '#FF4136');
+    // $('#5e0f3088de68e726d027caf3').css('background-color', '#FF4136');
+    // $('#5e0f3088de68e726d027ca3b').css('background-color', '#FF4136');
+    // $('#5e0f3088de68e726d027ca49').css('background-color', '#FF4136');
+    $('.plot').css('background-color', '#2ECC40');
+    $('#filter_result').html('');
+    var result = 0;
+    var searchStr = $('#searchPlotsInput').val().toLowerCase();
+    if (searchStr !== '') {
+        for (i = 0; i < plot_json.length; i++) {
+            // var bool = false;
+            const plotId = plot_json[i]['_id']['$oid'];
+            var rows = plot_json[i]['rows'];
+            for (r = 0; r < rows.length; r++) {
+                var accession = rows[r]['material']['accession'].toLowerCase();
+                if (accession != undefined) {
+                    if (searchStr === accession || accession.includes(searchStr)) {
+                        // bool = true;
+                        $('#' + plotId).css('background-color', '#FF4136');
+                        result++;
+                        break;
+                    }
+                }
+            }
+            // if (bool) {
+            //     var plotId = plot_json[i]['_id']['$oid'];
+            //     console.log(plotId);
+            //     $('#' + plotId).css('background-color', '#FF4136');
+            // }
+        }
+    }
+    $('#filter_result').html('<p>Filtered result: ' + result + '</p>');
 }
 
 
