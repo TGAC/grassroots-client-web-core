@@ -328,14 +328,14 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</div>');
 
     // htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
-    htmlarray.push('<b>Study Description:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
-    htmlarray.push(SafePrint(studyJson['so:description']));
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+    // htmlarray.push('<div class="row">');
+    // htmlarray.push('<div class="col-2">');
+    // htmlarray.push('<b>Study Description:</b> ');
+    // htmlarray.push('</div>');
+    // htmlarray.push('<div class="col-10">');
+    // htmlarray.push(SafePrint(studyJson['so:description']));
+    // htmlarray.push('</div>');
+    // htmlarray.push('</div>');
 
     // htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
     htmlarray.push('<div class="row">');

@@ -313,3 +313,7 @@ table.plots td {
 .fa-arrow-right{
     color: #18bc9c;
 }
+
+.leaflet-popup-content {
+    min-width: 400px;
+}
