@@ -167,17 +167,18 @@ function produceFieldtrialTable(data, type_param) {
 
     jQuery('#resultTable tbody').on('click', 'td', function () {
         var cellIdx = yrtable.cell(this).index();
+        console.log(cellIdx);
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        if (json['address'] != undefined) {
-            if (json['address']['address']['location']['centre'] != undefined) {
+        if (json['address'] !== undefined && cellIdx['column'] !== 7) {
+            if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
                 map.setView([la, lo], 16, {animate: true});
+                $(window).scrollTop($('#map').offset().top - 90);
+
             }
         }
-        $(window).scrollTop($('#map').offset().top - 90);
-
     });
 
     if (type_param === 'AllFieldTrials') {
