@@ -303,19 +303,104 @@ function create_study_modal_html(array) {
 
 function create_study_info_html(studyJson) {
     var htmlarray = [];
-
+    htmlarray.push('<div class="container">');
     if (studyJson["parent_field_trial_name"] != undefined) {
-        htmlarray.push('Field Trial Name: ' + studyJson["parent_field_trial_name"] + '<br/>');
+        htmlarray.push('<div class="row">');
+        htmlarray.push('<div class="col-2">');
+        htmlarray.push('<b>Field Trial Name:</b> ');
+        htmlarray.push('</div>');
+        htmlarray.push('<div class="col-10">');
+        htmlarray.push(studyJson["parent_field_trial_name"]);
+        htmlarray.push('</div>');
+        htmlarray.push('</div>');
+        htmlarray.push('<br/>');
     }
 
-    htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
-    htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
-    htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
-    htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
-    htmlarray.push('Sowing Date: ' + SafePrint(studyJson['sowing_date']) + '<br/>');
-    htmlarray.push('Harvest Date: ' + SafePrint(studyJson['harvest_date']) + '<br/>');
-    htmlarray.push('Plots: ' + get_study_plots_link(studyJson) + '<br/>');
-    htmlarray.push('Address: ' + get_study_address(studyJson, false) + '<br/>');
+    // htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Study Name:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(studyJson['so:name']);
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Study Description:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['so:description']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Study Design:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['study_design']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Team:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['team']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+    htmlarray.push('<br/>');
+
+    // htmlarray.push('Sowing Date: ' + SafePrint(studyJson['sowing_date']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Sowing Date:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['sowing_date']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Harvest Date: ' + SafePrint(studyJson['harvest_date']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Harvest Date:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['harvest_date']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Plots: ' + get_study_plots_link(studyJson) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Plots:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(get_study_plots_link(studyJson));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+    htmlarray.push('<br/>');
+
+    // htmlarray.push('Address: ' + get_study_address(studyJson, false) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Address:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(get_study_address(studyJson, false));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+
+
+    htmlarray.push('</div>');
     htmlarray.push('<hr/>');
 
     return htmlarray.join("");
