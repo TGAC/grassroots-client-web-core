@@ -305,7 +305,7 @@ function create_study_info_html(studyJson) {
     var htmlarray = [];
 
     if (studyJson["parent_field_trial_name"] != undefined) {
-        htmlarray.push('Field Trail Name: ' + studyJson["parent_field_trial_name"]);
+        htmlarray.push('Field Trial Name: ' + studyJson["parent_field_trial_name"] + '<br/>');
     }
 
     htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
