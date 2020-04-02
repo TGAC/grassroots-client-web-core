@@ -89,6 +89,7 @@ function produceFieldtrialTable(data, type_param) {
     // yrtable.destroy();
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
+        "ordering": false,
         "columns": [
             {
                 title: "Name",
