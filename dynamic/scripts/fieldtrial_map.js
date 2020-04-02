@@ -304,7 +304,7 @@ function create_study_modal_html(array) {
 
 function create_study_info_html(studyJson) {
     var htmlarray = [];
-    htmlarray.push('<div class="container">');
+    // htmlarray.push('<div class="container">');
     if (studyJson["parent_field_trial_name"] != undefined) {
         htmlarray.push('<div class="row">');
         htmlarray.push('<div class="col-2">');
@@ -399,9 +399,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</div>');
     htmlarray.push('</div>');
 
-
-
-    htmlarray.push('</div>');
+    // htmlarray.push('</div>');
     htmlarray.push('<hr/>');
 
     return htmlarray.join("");
