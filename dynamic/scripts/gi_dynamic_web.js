@@ -21,6 +21,48 @@ const service_gru_seedbank_search = 'germplasm-search';
 const service_pathogenomics_geoservice = 'pathogenomics-geoservice';
 
 function get_all_services_as_table() {
+    var search_measured_variables_json =  {
+        "@type": "grassroots_service",
+        "so:name": "Search Measured Variables",
+        "so:description": "Search field trial measured variables",
+        "so:alternateName": "field_trial-search_measured_variables",
+        "provider": {
+            "@type": "so:Organization",
+            "so:name": "EI Grassroots server",
+            "so:description": "The Earlham Institute Grassroots server",
+            "so:url": "https://grassroots.tools/",
+            "so:logo": "https://grassroots.tools/images/ei_logo.png"
+        },
+        "category": {
+            "application_category": {
+                "so:sameAs": "eo:topic_3810",
+                "so:name": "Agricultural science",
+                "so:description": "Multidisciplinary study, research and development within the field of agriculture."
+            },
+            "application_subcategory": {
+                "so:sameAs": "eo:operation_3431",
+                "so:name": "Deposition",
+                "so:description": "Deposit some data in a database or some other type of repository or software system."
+            },
+            "input": [
+                {
+                    "so:sameAs": "eo:data_0968",
+                    "so:name": "Keyword",
+                    "so:description": "Boolean operators (AND, OR and NOT) and wildcard characters may be allowed. Keyword(s) or phrase(s) used (typically) for text-searching purposes."
+                }
+            ],
+            "output": [
+                {
+                    "so:sameAs": "so:measurementTechnique",
+                    "so:name": "measurementTechnique",
+                    "so:description": "Measurement technique."
+                }
+            ]
+        },
+        "operation": {
+            "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
+        }
+    };
 
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
 
@@ -41,9 +83,12 @@ function get_all_services_as_table() {
             // }
             // list_html.push('</ul>');
             // $('#form').html(list_html.join(' '));
+            var service_list_json = [];
+            service_list_json = json['services'];
+            service_list_json.push(search_measured_variables_json);
             var context_json = json['@context'];
             var listTable = jQuery('#listTable').DataTable({
-                data: json['services'],
+                data: service_list_json,
                 searchHighlight: true,
                 scrollX: true,
                 scrollCollapse: true,
@@ -123,15 +168,6 @@ function get_all_services_as_table() {
 
                 ]
             });
-            // listTable.row.add([
-            //     '<a class="newstyle_link" href="/service/Search%20Treatment"><img src="https://grassroots.tools/grassroots-test/5/images/polygonchange"> <u>Search Treatment</u></a>',
-            //     'Search field trial treatment',
-            //     '',
-            //     '',
-            //     '',
-            //     'Keyword',
-            //     'Treatment'
-            // ]).draw(false);
         }
     });
 
