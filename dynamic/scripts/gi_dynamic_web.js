@@ -731,7 +731,7 @@ function refresh_service(input) {
     }
 
     submit_job['refresh_service'] = true;
-    submit_job['so:name'] = selected_service_name;
+    submit_job['so:alternateName'] = selected_service_name;
 
     parameter_set['level'] = level_simpleoradvanced;
     parameter_set['parameters'] = parameters;
