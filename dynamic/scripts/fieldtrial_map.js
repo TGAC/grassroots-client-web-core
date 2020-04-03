@@ -23,10 +23,12 @@ function startFieldTrialGIS(jsonArray, type_param) {
     jQuery('#status').html('');
     var fieldTrialName = '';
     var team = '';
+    var fieldTrialId = '';
     for (i = 0; i < jsonArray.length; i++) {
         if (type_param === 'Grassroots:FieldTrial' || type_param === 'AllFieldTrials') {
             fieldTrialName = jsonArray[i]['data']['so:name'];
             team = jsonArray[i]['data']['team'];
+            fieldTrialId = jsonArray[i]['data']['_id']['$oid'];
             if (jsonArray[i]['data']['studies'] != null) {
                 for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
                     if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
@@ -34,6 +36,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
                             var study_json = jsonArray[i]['data']['studies'][j];
                             study_json["team"] = team;
                             study_json["parent_field_trial_name"] = fieldTrialName;
+                            study_json["parent_field_trial_id"] = fieldTrialId;
                             filtered_data_with_location.push(study_json);
                         }
                     } else {
@@ -152,13 +155,23 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     return get_study_address(full, true);
                 }
-            }
-            ,
+            },
             {
-                title: "Additional Info",
+                title: "Popup Info",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
                     return '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
+                }
+            },
+            {
+                title: "Links",
+                "render": function (data, type, full, meta) {
+                    var studyId = full['_id']['$oid'];
+                    var fieldtrial_link = '';
+                    if (full["parent_field_trial_id"] !== undefined){
+                        fieldtrial_link = '<li><a href="fieldtrial_dynamic.html?id=' + full["parent_field_trial_id"] + '&type=Grassroots:FieldTrial" target="_blank">Field Trial</a></li>'
+                    }
+                    return '<ul><li><a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">Study</a></li>' + fieldtrial_link+'</ul>';
                 }
             }
 
@@ -171,7 +184,7 @@ function produceFieldtrialTable(data, type_param) {
         console.log(cellIdx);
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        if (json['address'] !== undefined && cellIdx['column'] !== 7) {
+        if (json['address'] !== undefined && cellIdx['column'] === 6) {
             if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
