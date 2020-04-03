@@ -254,7 +254,7 @@ function populate_page_with_json(json) {
             }
             if (response['services'][0]['operation']['so:url'] !== undefined) {
                 var infoLink = response['services'][0]['operation']['so:url'];
-                $('#moreinfo').html('For more information, go to <a href="' + infoLink + '" target="_blank">' + infoLink + '</a>');
+                $('#moreinfo').html('For more information and help, go to the <a href="' + infoLink + '" target="_blank">user documentation</a>');
             }
         }
     }
