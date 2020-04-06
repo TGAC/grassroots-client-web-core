@@ -1431,7 +1431,7 @@ function construct_parameters(form) {
             parameters.push(parameter);
         }
     }
-    return paramters;
+    return parameters;
 }
 
 function get_api_result(service, previousID) {
