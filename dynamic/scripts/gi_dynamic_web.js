@@ -21,7 +21,7 @@ const service_gru_seedbank_search = 'germplasm-search';
 const service_pathogenomics_geoservice = 'pathogenomics-geoservice';
 
 function get_all_services_as_table() {
-    var search_measured_variables_json =  {
+    var search_measured_variables_json = {
         "@type": "grassroots_service",
         "so:name": "Search Measured Variables",
         "so:description": "Search field trial measured variables",
@@ -700,72 +700,77 @@ function refresh_service(input) {
     var services_array = [];
     var parameter_set = {};
 
-    for (var idt = 0; idt < datatable_param_list.length; idt++) {
 
-        var parameter = {};
-        var datatableId = datatable_param_list[idt]['table_id'];
-        // $('#' + datatableId).DataTable().destroy();
-        var this_table_array = [];
-        var current_value_array = [];
-        var real_param = datatableId.replace(/_/g, " ");
-        parameter['param'] = real_param;
-        var this_table = $('#' + datatableId).DataTable();
-        this_table_array = this_table.$('input, select').serializeArray();
-        var row_length = this_table.rows().count();
-        for (var rowsi = 0; rowsi < row_length; rowsi++) {
-            var row_object = {};
-            for (var ttai = 0; ttai < this_table_array.length; ttai++) {
-                var name = this_table_array[ttai]['name'].split('^');
-                var column_name = name[3];
-                if (name[2] == rowsi) {
-                    row_object[column_name] = this_table_array[ttai]['value'];
-                }
+    parameters = construct_parameters(form);
 
-            }
-            current_value_array.push(row_object);
-            console.log(JSON.stringify(current_value_array));
-        }
-        parameter['current_value'] = current_value_array;
-        parameters.push(parameter);
-
-    }
-
-    for (var i = 0; i < form.length; i++) {
-        var name = form[i]['name'].split('^');
-        if (name[0] === 'tabular') {
-            //do nothing? DataTable().serializeArray() takes over
-        } else {
-            var param = name[0];
-            var grassroots_type = name[1];
-            var type = name[2];
-            var group = name[3];
-            var value = form[i]['value'];
-            var parameter = {};
-            parameter['param'] = param;
-            if (param === 'FT Facet') {
-                fieldTrailSearchType = value;
-            }
-            // parameter['grassroots_type'] = grassroots_type;
-            if (group != 'none') {
-                if (name[4] == 0) {
-                    parameter['group'] = repeatable_groups[group]['group'];
-                } else {
-                    parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
-                }
-            }
-
-            if (type == 'boolean') {
-                parameter['current_value'] = JSON.parse(value);
-            } else if (type == 'integer') {
-                parameter['current_value'] = parseInt(value);
-            } else if (type == 'number') {
-                parameter['current_value'] = parseFloat(value);
-            } else {
-                parameter['current_value'] = value;
-            }
-            parameters.push(parameter);
-        }
-    }
+    // for (var idt = 0; idt < datatable_param_list.length; idt++) {
+    //
+    //     var parameter = {};
+    //     var datatableId = datatable_param_list[idt]['table_id'];
+    //     var this_table_array = [];
+    //     var current_value_array = [];
+    //     var real_param = datatableId.replace(/_/g, " ");
+    //     parameter['param'] = real_param;
+    //     var this_table = $('#' + datatableId).DataTable();
+    //     this_table_array = this_table.$('input, select').serializeArray();
+    //     var row_length = this_table.rows().count();
+    //     for (var rowsi = 0; rowsi < row_length; rowsi++) {
+    //         var row_object = {};
+    //         for (var ttai = 0; ttai < this_table_array.length; ttai++) {
+    //             var name = this_table_array[ttai]['name'].split('^');
+    //             var column_name = name[3];
+    //             if (name[2] == rowsi) {
+    //                 row_object[column_name] = this_table_array[ttai]['value'];
+    //             }
+    //
+    //         }
+    //         current_value_array.push(row_object);
+    //         console.log(JSON.stringify(current_value_array));
+    //     }
+    //     parameter['current_value'] = current_value_array;
+    //     parameters.push(parameter);
+    //
+    // }
+    //
+    // for (var i = 0; i < form.length; i++) {
+    //     var name = form[i]['name'].split('^');
+    //     if (name[0] === 'tabular') {
+    //         //do nothing? DataTable().serializeArray() takes over
+    //     } else {
+    //         var param = name[0];
+    //         var grassroots_type = name[1];
+    //         var type = name[2];
+    //         var group = name[3];
+    //         var value = form[i]['value'];
+    //         if (form[i]['value'] === ""){
+    //             value = null;
+    //         }
+    //         var parameter = {};
+    //         parameter['param'] = param;
+    //         if (param === 'FT Facet') {
+    //             fieldTrailSearchType = value;
+    //         }
+    //         // parameter['grassroots_type'] = grassroots_type;
+    //         if (group != 'none') {
+    //             if (name[4] == 0) {
+    //                 parameter['group'] = repeatable_groups[group]['group'];
+    //             } else {
+    //                 parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+    //             }
+    //         }
+    //
+    //         if (type == 'boolean') {
+    //             parameter['current_value'] = JSON.parse(value);
+    //         } else if (type == 'integer') {
+    //             parameter['current_value'] = parseInt(value);
+    //         } else if (type == 'number') {
+    //             parameter['current_value'] = parseFloat(value);
+    //         } else {
+    //             parameter['current_value'] = value;
+    //         }
+    //         parameters.push(parameter);
+    //     }
+    // }
 
     submit_job['refresh_service'] = true;
     submit_job['so:alternateName'] = selected_service_name;
@@ -1276,17 +1281,17 @@ function simpleOrAdvanced(string) {
 
 function submit_form() {
     var all_parameter = $('input,textarea,select');
-    $('.popover').each(function(){
+    $('.popover').each(function () {
         $(this).remove();
     });
-    all_parameter.each(function(){
+    all_parameter.each(function () {
         $(this).css({'background-color': ''});
     });
 
     var required = $('input,textarea,select').filter('[required]:visible');
     var allRequired = true;
-    required.each(function(){
-        if($(this).val() == ''){
+    required.each(function () {
+        if ($(this).val() == '') {
             $(this).css({'background-color': '#ff4d4d'});
             $(this).popover({
                 content: 'Required field',
@@ -1301,10 +1306,9 @@ function submit_form() {
         }
     });
 
-    if(!allRequired){
+    if (!allRequired) {
         alert('Please fill all required fields with *');
-    }
-    else{
+    } else {
         $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
         Utils.ui.disableButton('submit_button');
         var form = jQuery('#form').serializeArray();
@@ -1320,71 +1324,7 @@ function submit_form() {
         var services_array = [];
         var parameter_set = {};
 
-        for (var idt = 0; idt < datatable_param_list.length; idt++) {
-
-            var parameter = {};
-            var datatableId = datatable_param_list[idt]['table_id'];
-            var this_table_array = [];
-            var current_value_array = [];
-            var real_param = datatableId.replace(/_/g, " ");
-            parameter['param'] = real_param;
-            var this_table = $('#' + datatableId).DataTable();
-            this_table_array = this_table.$('input, select').serializeArray();
-            var row_length = this_table.rows().count();
-            for (var rowsi = 0; rowsi < row_length; rowsi++) {
-                var row_object = {};
-                for (var ttai = 0; ttai < this_table_array.length; ttai++) {
-                    var name = this_table_array[ttai]['name'].split('^');
-                    var column_name = name[3];
-                    if (name[2] == rowsi) {
-                        row_object[column_name] = this_table_array[ttai]['value'];
-                    }
-
-                }
-                current_value_array.push(row_object);
-                console.log(JSON.stringify(current_value_array));
-            }
-            parameter['current_value'] = current_value_array;
-            parameters.push(parameter);
-
-        }
-
-        for (var i = 0; i < form.length; i++) {
-            var name = form[i]['name'].split('^');
-            if (name[0] === 'tabular') {
-                //do nothing? DataTable().serializeArray() takes over
-            } else {
-                var param = name[0];
-                var grassroots_type = name[1];
-                var type = name[2];
-                var group = name[3];
-                var value = form[i]['value'];
-                var parameter = {};
-                parameter['param'] = param;
-                if (param === 'FT Facet') {
-                    fieldTrailSearchType = value;
-                }
-                // parameter['grassroots_type'] = grassroots_type;
-                if (group != 'none') {
-                    if (name[4] == 0) {
-                        parameter['group'] = repeatable_groups[group]['group'];
-                    } else {
-                        parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
-                    }
-                }
-
-                if (type == 'boolean') {
-                    parameter['current_value'] = JSON.parse(value);
-                } else if (type == 'integer') {
-                    parameter['current_value'] = parseInt(value);
-                } else if (type == 'number') {
-                    parameter['current_value'] = parseFloat(value);
-                } else {
-                    parameter['current_value'] = value;
-                }
-                parameters.push(parameter);
-            }
-        }
+        parameters = construct_parameters(form);
 
         submit_job['start_service'] = true;
         submit_job['so:alternateName'] = selected_service_name;
@@ -1417,6 +1357,81 @@ function submit_form() {
             }
         });
     }
+}
+
+function construct_parameters(form) {
+    var parameters = [];
+
+    for (var idt = 0; idt < datatable_param_list.length; idt++) {
+
+        var parameter = {};
+        var datatableId = datatable_param_list[idt]['table_id'];
+        var this_table_array = [];
+        var current_value_array = [];
+        var real_param = datatableId.replace(/_/g, " ");
+        parameter['param'] = real_param;
+        var this_table = $('#' + datatableId).DataTable();
+        this_table_array = this_table.$('input, select').serializeArray();
+        var row_length = this_table.rows().count();
+        for (var rowsi = 0; rowsi < row_length; rowsi++) {
+            var row_object = {};
+            for (var ttai = 0; ttai < this_table_array.length; ttai++) {
+                var name = this_table_array[ttai]['name'].split('^');
+                var column_name = name[3];
+                if (name[2] == rowsi) {
+                    row_object[column_name] = this_table_array[ttai]['value'];
+                }
+
+            }
+            current_value_array.push(row_object);
+            console.log(JSON.stringify(current_value_array));
+        }
+        parameter['current_value'] = current_value_array;
+        parameters.push(parameter);
+
+    }
+
+    for (var i = 0; i < form.length; i++) {
+        var name = form[i]['name'].split('^');
+        if (name[0] === 'tabular') {
+            //do nothing? DataTable().serializeArray() takes over
+        } else {
+            var param = name[0];
+            var grassroots_type = name[1];
+            var type = name[2];
+            var group = name[3];
+            var value = form[i]['value'];
+            if (form[i]['value'] === "") {
+                value = null;
+            }
+            var parameter = {};
+            parameter['param'] = param;
+            if (param === 'FT Facet') {
+                fieldTrailSearchType = value;
+            }
+            // parameter['grassroots_type'] = grassroots_type;
+            if (group != 'none') {
+                if (name[4] == 0) {
+                    parameter['group'] = repeatable_groups[group]['group'];
+                } else {
+                    parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+                }
+            }
+            if (value !== null) {
+                if (type === 'boolean') {
+                    parameter['current_value'] = JSON.parse(value);
+                } else if (type === 'integer') {
+                    parameter['current_value'] = parseInt(value);
+                } else if (type === 'number') {
+                    parameter['current_value'] = parseFloat(value);
+                }
+            } else {
+                parameter['current_value'] = value;
+            }
+            parameters.push(parameter);
+        }
+    }
+    return paramters;
 }
 
 function get_api_result(service, previousID) {
