@@ -214,7 +214,7 @@ function populateService(service_altname) {
     if (selected_service_name === 'field_trial-search_measured_variables') {
         $('#title').html('Search Measured Variables');
         $('#description').html('Search field trial measured variables - abbreviations for crop phenotypes (including measurements and units) following Crop Ontology');
-        $('#moreinfo').html('For more information and help, go to the <a href="https://grassroots.tools/docs/user/services/field_trial/search_services.html" target="_blank">user documentation</a>');
+        $('#moreinfo').html('For more information and help, go to the <a href="https://grassroots.tools/docs/user/services/field_trial/search_measured_variables.md" target="_blank">user documentation</a>');
         var form_html = [];
 
         // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
