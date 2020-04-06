@@ -1417,14 +1417,13 @@ function construct_parameters(form) {
                     parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
                 }
             }
-            if (value !== null) {
-                if (type === 'boolean') {
-                    parameter['current_value'] = JSON.parse(value);
-                } else if (type === 'integer') {
-                    parameter['current_value'] = parseInt(value);
-                } else if (type === 'number') {
-                    parameter['current_value'] = parseFloat(value);
-                }
+            // if (value !== null) {
+            if (type === 'boolean') {
+                parameter['current_value'] = JSON.parse(value);
+            } else if (type === 'integer') {
+                parameter['current_value'] = parseInt(value);
+            } else if (type === 'number') {
+                parameter['current_value'] = parseFloat(value);
             } else {
                 parameter['current_value'] = value;
             }
