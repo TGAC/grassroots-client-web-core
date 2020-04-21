@@ -249,7 +249,11 @@ table.plots td {
 }
 
 .modal-dialog {
-    max-width: 100%;
+    max-width: 70%;
+}
+
+.modal-backdrop {
+    opacity:0.5 !important;
 }
 
 .form-check-label {
