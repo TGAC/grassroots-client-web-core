@@ -253,7 +253,7 @@ table.plots td {
 }
 
 .modal-backdrop {
-    opacity:0.5 !important;
+    opacity: 0.5 !important;
 }
 
 .form-check-label {
@@ -280,20 +280,20 @@ table.plots td {
 
 }
 
-.sheet-drop{
+.sheet-drop {
     border: 2px dashed #bbb;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 25px;
     text-align: center;
-    font: 20pt bold,"Vollkorn";
+    font: 20pt bold, "Vollkorn";
     color: #bbb;
     margin-bottom: 20px;
 }
 
-#ajax_result{
-    margin-top:20px;
+#ajax_result {
+    margin-top: 20px;
 }
 
 #message {
@@ -307,6 +307,7 @@ table.plots td {
     padding: 15px 50px;
     z-index: 99999;
 }
+
 #message p {
     margin: 0;
     padding: 0 40px 0 20px;
@@ -314,7 +315,7 @@ table.plots td {
     color: white;
 }
 
-.fa-arrow-right{
+.fa-arrow-right {
     color: #18bc9c;
 }
 
