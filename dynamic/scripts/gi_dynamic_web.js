@@ -326,6 +326,7 @@ function populate_page_with_json(json) {
 
 }
 
+
 var buttonCommon = {
     exportOptions: {
         format: {
@@ -335,6 +336,27 @@ var buttonCommon = {
         }
     }
 };
+
+function check_GRU_by_accession(accession, name) {
+    console.log('check gru '+ accession);
+    var bool = false;
+    $.ajax({
+        type: "GET",
+        url: '/seedstor/apisearch-unified.php?query=' + accession,
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (gru_json) {
+
+            console.log(gru_json);
+            if (gru_json != undefined && gru_json.length > 0) {
+                $('input[name ="'+ name +'"]').css({'background-color': '#A2FF33'});
+            }else{
+                $('input[name ="'+ name +'"]').css({'background-color': '#07C9FD'});
+            }
+        }
+    });
+    return bool;
+}
 
 function produce_form(div, parameters, groups) {
     var form_html = [];
@@ -1243,6 +1265,11 @@ function add_plot_datatable(table_id) {
 
         //invalidate the DT cache
         tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
+
+        var name = $(this).attr("name");
+        if (name.includes('Accession')){
+          check_GRU_by_accession($(this).val(), name);
+        }
 
     });
 }
