@@ -85,7 +85,9 @@ function get_all_services_as_table() {
             // $('#form').html(list_html.join(' '));
             var service_list_json = [];
             service_list_json = json['services'];
-            service_list_json.push(search_measured_variables_json);
+            if (server_url !== "/private_backend") {
+                service_list_json.push(search_measured_variables_json);
+            }
             var context_json = json['@context'];
             var listTable = jQuery('#listTable').DataTable({
                 data: service_list_json,
@@ -338,7 +340,7 @@ var buttonCommon = {
 };
 
 function check_GRU_by_accession(accession, name) {
-    console.log('check gru '+ accession);
+    console.log('check gru ' + accession);
     var bool = false;
     $.ajax({
         type: "GET",
@@ -349,9 +351,9 @@ function check_GRU_by_accession(accession, name) {
 
             console.log(gru_json);
             if (gru_json != undefined && gru_json.length > 0) {
-                $('input[name ="'+ name +'"]').css({'background-color': '#A2FF33'});
-            }else{
-                $('input[name ="'+ name +'"]').css({'background-color': '#07C9FD'});
+                $('input[name ="' + name + '"]').css({'background-color': '#A2FF33'});
+            } else {
+                $('input[name ="' + name + '"]').css({'background-color': '#07C9FD'});
             }
         }
     });
@@ -1267,8 +1269,8 @@ function add_plot_datatable(table_id) {
         tdt.cell($(cell)).data($(cell).html()).invalidate().draw();
 
         var name = $(this).attr("name");
-        if (name.includes('Accession')){
-          check_GRU_by_accession($(this).val(), name);
+        if (name.includes('Accession')) {
+            check_GRU_by_accession($(this).val(), name);
         }
 
     });
