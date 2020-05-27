@@ -168,10 +168,10 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
                     var fieldtrial_link = '';
-                    if (full["parent_field_trial_id"] !== undefined){
+                    if (full["parent_field_trial_id"] !== undefined) {
                         fieldtrial_link = '<li><a href="fieldtrial_dynamic.html?id=' + full["parent_field_trial_id"] + '&type=Grassroots:FieldTrial" target="_blank">Field Trial</a></li>'
                     }
-                    return '<ul><li><a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">Study</a></li>' + fieldtrial_link+'</ul>';
+                    return '<ul><li><a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">Study</a></li>' + fieldtrial_link + '</ul>';
                 }
             }
 
@@ -290,19 +290,34 @@ function get_study_address(full, link_bool) {
 }
 
 function get_study_plots_link(full) {
-    if (full['_id'] != undefined && full['number_of_plots'] != undefined) {
-        if (full['number_of_plots'] > 0) {
-            var id = full['_id']['$oid'];
+    if (check_plots(full)) {
+        var id = full['_id']['$oid'];
 
-            /* remove the quotes */
-            id = id.replace(/"/g, "");
+        /* remove the quotes */
+        id = id.replace(/"/g, "");
 
-            return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
-        } else {
-            return '';
-        }
+        return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
     } else {
         return '';
+    }
+}
+
+function check_plots(full) {
+    if (full['_id'] != undefined) {
+        if (full['number_of_plots'] != undefined) {
+            if (full['number_of_plots'] > 0) {
+                return true;
+            }
+        }
+        if (full['plots'] != undefined) {
+            if (full['plots'].length > 0) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    } else {
+        return false;
     }
 }
 
@@ -656,7 +671,7 @@ function formatPlot(plot) {
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
     // return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
-    return '<td class="plot" id="'+plotId+'" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
+    return '<td class="plot" id="' + plotId + '" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
 }
 
 function plotModal(plotId) {
@@ -777,7 +792,7 @@ function format_gru_json(gru_json) {
     var htmlarray = [];
     if (gru_json != undefined && gru_json.length > 0) {
         for (i = 0; i < gru_json.length; i++) {
-        // if (gru_json.length > 0) {
+            // if (gru_json.length > 0) {
             if (gru_json[0]['idPlant'] != undefined) {
                 var idPlant = gru_json[i]['idPlant'];
                 htmlarray.push('<a target="_blank" class="newstyle_link" href="https://seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a> ');
