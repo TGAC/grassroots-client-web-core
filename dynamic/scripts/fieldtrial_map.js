@@ -751,11 +751,11 @@ function formatPlotModal(plot) {
     phenotypearray.push('</tbody></table>');
     htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
     htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
-    htmlarray.push('Length: ' + plot['length'] + 'm<br/>');
-    htmlarray.push('Width: ' + plot['width'] + 'm<br/>');
-    htmlarray.push('Trial Design: ' + SafePrint(plot['trial_desgin']) + '<br/>');
-    htmlarray.push('Sowing Date: ' + SafePrint(plot['sowing_date']) + '<br/>');
-    htmlarray.push('Harvest Date: ' + SafePrint(plot['harvest_date']) + '<br/>');
+    htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
+    htmlarray.push('Width: ' + SafePrint_with_value(plot['width'], default_width) + 'm<br/>');
+    htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
+    htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
+    htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
     htmlarray.push('<hr/>');
     htmlarray.push(rowsInfoarray.join(""));
     htmlarray.push('<hr/>');
@@ -810,6 +810,15 @@ function format_gru_json(gru_json) {
 function SafePrint(obj) {
     if (obj === undefined) {
         return "";
+    } else {
+        return obj;
+    }
+}
+
+function SafePrint_with_value(obj, value) {
+    if (obj === undefined || obj === null) {
+        return value;
+        console.log(value);
     } else {
         return obj;
     }
@@ -919,9 +928,24 @@ function CreatePlotsRequestForAllFieldTrials(keyword) {
 
 // plot page
 
+let default_length = "";
+let default_width = "";
+let default_design = "";
+let default_sowing_date = "";
+let default_harvest_date = "";
+
 function LoadTable(experimental_area_json) {
     $('#control').show();
+    console.log(JSON.stringify(experimental_area_json));
     var jsonArray = experimental_area_json['results'][0]['results'];
+
+    default_length = SafePrint(jsonArray[0]['data']['plot_length']);
+    default_width = SafePrint(jsonArray[0]['data']['plot_width']);
+    default_design = SafePrint(jsonArray[0]['data']['study_design']);
+    default_sowing_date = SafePrint(jsonArray[0]['data']['sowing_date']);
+    default_harvest_date = SafePrint(jsonArray[0]['data']['harvest_date']);
+
+    console.log(">>>>>>>>>>>>"+default_sowing_date);
     var filtered_data = [];
     jQuery('#status').html('');
     var fieldTrialName = '';
@@ -946,7 +970,7 @@ function LoadTable(experimental_area_json) {
                         }
         */
     }
-    console.log(JSON.stringify(plotsHTMLArray));
+    // console.log(JSON.stringify(plotsHTMLArray));
 
 }
 
@@ -954,7 +978,6 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
     console.log(JSON.stringify(experimental_area_json));
 
     plot_json = experimental_area_json['plots'];
-    console.log(JSON.stringify(plot_json));
     var expAreaId = experimental_area_json['_id']['$oid'];
     var plots = experimental_area_json['plots'];
 
