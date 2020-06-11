@@ -925,7 +925,7 @@ function do_ajax_search() {
                                     messageBottom: null,
                                     header: false,
                                     exportOptions: {
-                                        columns: [8]
+                                        columns: [8, 10, 11]
                                     }
                                 },
                                 {
@@ -935,7 +935,7 @@ function do_ajax_search() {
                                     messageBottom: null,
                                     header: false,
                                     exportOptions: {
-                                        columns: [8]
+                                        columns: [8, 10, 11]
                                     }
                                 },
                                 {
@@ -945,7 +945,7 @@ function do_ajax_search() {
                                     messageBottom: null,
                                     header: false,
                                     exportOptions: {
-                                        columns: [8]
+                                        columns: [8, 10, 11]
                                     }
                                 }
                             ],
@@ -1007,6 +1007,8 @@ function format_treatment_ajax_result(array) {
     html.push('<th>Unit Ontology</th>');
     html.push('<th>Variable Name</th>');
     html.push('<th>Variable Ontology</th>');
+    html.push('<th>Variable Date</th>');
+    html.push('<th>Variable Corrected</th>');
     html.push('</tr>');
     html.push('</thead>');
 
@@ -1047,6 +1049,12 @@ function format_treatment_ajax_result(array) {
         html.push('</td>');
         html.push('<td>');
         html.push(variable['so:sameAs']);
+        html.push('</td>');
+        html.push('<td>');
+        html.push(variable['so:name'] + ' date');
+        html.push('</td>');
+        html.push('<td>');
+        html.push(variable['so:name'] + ' corrected');
         html.push('</td>');
         html.push('</tr>');
     }
@@ -1284,6 +1292,8 @@ function simpleOrAdvanced(string) {
             treatment_table.column(5).visible(false);
             treatment_table.column(7).visible(false);
             treatment_table.column(9).visible(false);
+            treatment_table.column(10).visible(false);
+            treatment_table.column(11).visible(false);
             level_simpleoradvanced = "simple";
         } else if (string === 'show_advanced') {
             treatment_table.column(1).visible(true);
