@@ -1069,9 +1069,15 @@ function table_thead_formatter(cHeadings) {
     var thead_html = [];
     // thead_html.push('<thead>');
     thead_html.push('<tr>');
-    // Column Headings : "[ { "param": "Accession", "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
+    // Column Headings : "[ { "param": "Accession","so:description": "Sowing d", "required": true,  "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
     for (var i = 0; i < cHeadings.length; i++) {
-        thead_html.push('<th>' + cHeadings[i]['param'] + '</th>');
+        var required = '';
+        if (cHeadings[i]['required'] != undefined){
+            if(cHeadings[i]['required']){
+                required = '*';
+            }
+        }
+        thead_html.push('<th title="' + SafePrint(cHeadings[i]['param']) + '">' + cHeadings[i]['param'] + required + '</th>');
     }
     thead_html.push('</tr>');
     // thead_html.push('</thead>');
@@ -1090,11 +1096,18 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
             var column_param = cHeadings[j]['param'];
             var column_grassroots_type = cHeadings[j]['type'];
             var sheet_value = '';
+
+            var required = '';
+            if (cHeadings[j]['required'] != undefined){
+                if(cHeadings[j]['required']){
+                    required = 'required';
+                }
+            }
             //row_json[column_param];
             if (row_json[column_param] !== undefined) {
                 sheet_value = row_json[column_param];
             }
-            tbody_html.push('<td><input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/></td>');
+            tbody_html.push('<td><input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '" ' + required +'/></td>');
         }
         tbody_html.push('</tr>');
     }
