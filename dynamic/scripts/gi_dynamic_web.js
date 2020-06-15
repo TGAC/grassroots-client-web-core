@@ -1099,8 +1099,10 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
 
             var required = '';
             if (cHeadings[j]['required'] != undefined){
+                console.log('found required1');
                 if(cHeadings[j]['required']){
                     required = 'required';
+                    console.log('found required2');
                 }
             }
             //row_json[column_param];
@@ -1188,9 +1190,17 @@ function table_add_new_row(table_id) {
     var row_array = [];
     var real_param = table_id.replace(/_/g, " ");
     for (var r = 0; r < cHeadings.length; r++) {
+
+        var required = '';
+        if (cHeadings[r]['required'] != undefined){
+            if(cHeadings[r]['required']){
+                required = 'required';
+            }
+        }
+
         var column_param = cHeadings[r]['param'];
         var column_grassroots_type = cHeadings[r]['type'];
-        row_array.push('<input type="text"  name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value=""/>');
+        row_array.push('<input type="text"  name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="" ' + required + '/>');
     }
     t.row.add(row_array).draw(false);
 }
