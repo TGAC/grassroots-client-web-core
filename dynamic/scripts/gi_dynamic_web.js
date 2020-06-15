@@ -1077,7 +1077,7 @@ function table_thead_formatter(cHeadings) {
                 required = '*';
             }
         }
-        thead_html.push('<th title="' + SafePrint(cHeadings[i]['param']) + '">' + cHeadings[i]['param'] + required + '</th>');
+        thead_html.push('<th title="' + SafePrint(cHeadings[i]['so:description']) + '">' + cHeadings[i]['param'] + required + '</th>');
     }
     thead_html.push('</tr>');
     // thead_html.push('</thead>');
@@ -1247,6 +1247,17 @@ function table_add_teatment_columns(table_id) {
 }
 
 function add_plot_datatable(table_id) {
+
+    // var cHeadings = [];
+    // var columnDefsList = [];
+    // for (var i = 0; i < datatable_param_list.length; i++) {
+    //     if (datatable_param_list[i]['table_id'] === table_id) {
+    //         cHeadings = datatable_param_list[i]['cHeadings'];
+    //     }
+    // }
+    // for (var ci = 0; ci < cHeadings.length; ci++){
+    //     columnDefsList.push(SafePrint(cHeadings[ci]['so:description']));
+    // }
     var tdt = $('#' + table_id).DataTable({
         scrollX: true,
         "paging": false,
