@@ -1889,9 +1889,8 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
         if (each_db_result['status_text'] == 'Succeeded') {
 
             var db_name = each_db_result['name'];
-
-            result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat"></span> format <span id=\"' + uuid + 'status\"></span><br/>');
-            changeDownloadFormat();
+            var dl_format_text = jQuery("#output_format option:selected").text();
+            result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat">' + dl_format_text + '</span> format <span id=\"' + uuid + 'status\"></span><br/>');
 
             for (var dbi = 0; dbi < each_db_result['results'][0]['data']['blast_search_results']['reports'].length; dbi++) {
 
