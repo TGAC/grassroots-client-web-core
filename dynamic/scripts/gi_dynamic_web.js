@@ -1072,8 +1072,8 @@ function table_thead_formatter(cHeadings) {
     // Column Headings : "[ { "param": "Accession","so:description": "Sowing d", "required": true,  "type": "xsd:string" }, { "param": "Trait Identifier", "type": "xsd:string" }, { "param": "Trait Abbreviation", "type": "xsd:string" }, { "param": "Trait Name", "type": "xsd:string" }, { "param": "Trait Description", "type": "xsd:string" }, { "param": "Method Identifier", "type": "xsd:string" }, { "param": "Method Abbreviation", "type": "xsd:string" }, { "param": "Method Name", "type": "xsd:string" }, { "param": "Method Description", "type": "xsd:string" }, { "param": "Unit Identifier", "type": "xsd:string" }, { "param": "Unit Abbreviation", "type": "xsd:string" }, { "param": "Unit Name", "type": "xsd:string" }, { "param": "Unit Description", "type": "xsd:string" }, { "param": "Form Identifier", "type": "xsd:string" }, { "param": "Form Abbreviation", "type": "xsd:string" }, { "param": "Form Name", "type": "xsd:string" }, { "param": "Form Description", "type": "xsd:string" } ]"
     for (var i = 0; i < cHeadings.length; i++) {
         var required = '';
-        if (cHeadings[i]['required'] != undefined){
-            if(cHeadings[i]['required']){
+        if (cHeadings[i]['required'] != undefined) {
+            if (cHeadings[i]['required']) {
                 required = '*';
             }
         }
@@ -1098,9 +1098,9 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
             var sheet_value = '';
 
             var required = '';
-            if (cHeadings[j]['required'] != undefined){
+            if (cHeadings[j]['required'] != undefined) {
                 console.log('found required1');
-                if(cHeadings[j]['required']){
+                if (cHeadings[j]['required']) {
                     required = 'required';
                     console.log('found required2');
                 }
@@ -1109,7 +1109,7 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
             if (row_json[column_param] !== undefined) {
                 sheet_value = row_json[column_param];
             }
-            tbody_html.push('<td><input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '" ' + required +'/></td>');
+            tbody_html.push('<td><input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '" ' + required + '/></td>');
         }
         tbody_html.push('</tr>');
     }
@@ -1192,8 +1192,8 @@ function table_add_new_row(table_id) {
     for (var r = 0; r < cHeadings.length; r++) {
 
         var required = '';
-        if (cHeadings[r]['required'] != undefined){
-            if(cHeadings[r]['required']){
+        if (cHeadings[r]['required'] != undefined) {
+            if (cHeadings[r]['required']) {
                 required = 'required';
             }
         }
@@ -1890,7 +1890,8 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
 
             var db_name = each_db_result['name'];
 
-            result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat">Pairwise</span> format <span id=\"' + uuid + 'status\"></span><br/>');
+            result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat"></span> format <span id=\"' + uuid + 'status\"></span><br/>');
+            changeDownloadFormat();
 
             for (var dbi = 0; dbi < each_db_result['results'][0]['data']['blast_search_results']['reports'].length; dbi++) {
 
@@ -2096,7 +2097,7 @@ function changeDownloadFormat() {
 function downloadJobFromServer(id) {
     $('#' + id + 'status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     $('#' + id + 'dl').removeAttr('onclick');
-    var outfmt = $('#output_format').val();
+    var outfmt = parseInt($('#output_format').val());
 
     var previousjob_request_json = {
         "services": [{
@@ -2105,9 +2106,13 @@ function downloadJobFromServer(id) {
             "parameter_set": {
                 "parameters": [{
                     "param": "job_id",
-                    "grassroots_type": "xsd:string",
                     "current_value": id
-                }, {"param": "outfmt", "grassroots_type": "xsd:string", "current_value": outfmt}]
+                },
+                    {
+                        "param": "outfmt",
+                        "current_value": outfmt
+                    }
+                ]
             }
         }]
     };
