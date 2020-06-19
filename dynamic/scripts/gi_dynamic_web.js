@@ -267,7 +267,7 @@ function populate_page_with_json(json) {
     synchronous = response['services'][0]['operation']['synchronous'];
     console.info('synchronous' + synchronous);
     produce_form('form', parameters, groups);
-    simpleOrAdvanced('show_simple');
+    simpleOrAdvanced(get_simpleOrAdvanced());
     for (var i = 0; i < textareas.length; i++) {
         document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
         document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
@@ -951,7 +951,7 @@ function do_ajax_search() {
                             ],
                             select: true
                         });
-                        simpleOrAdvanced('show_simple');
+                        simpleOrAdvanced(get_simpleOrAdvanced());
                         //
                         // $('#treatment_result tbody').on('click', 'tr', function () {
                         //     var data = datatable.row(this).data();
@@ -1316,6 +1316,9 @@ function add_plot_datatable(table_id) {
         }
 
     });
+}
+function get_simpleOrAdvanced(){
+    return $('input[name="simpleadvanced"]:checked').val();
 }
 
 function simpleOrAdvanced(string) {
