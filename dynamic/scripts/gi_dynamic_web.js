@@ -244,6 +244,59 @@ function populateService(service_altname) {
     }
 }
 
+
+var MAX_BYTES = 409600; // 100 KB
+
+function dragEnter(event) {
+    console.log('dragEnter', event);
+    event.stopPropagation();
+    event.preventDefault();
+}
+
+function dragExit(event) {
+    console.log('dragExit', event);
+    event.stopPropagation();
+    event.preventDefault();
+}
+
+function dragOver(event) {
+    console.log('dragOver', event);
+    event.stopPropagation();
+    event.preventDefault();
+}
+
+function drop(event) {
+
+    console.log('drop', event);
+    event.stopPropagation();
+    event.preventDefault();
+
+    var data = event.dataTransfer;
+    var files = data.files;
+    var file;
+    var reader;
+
+    for (var i = 0; i < files.length; i++) {
+        file = files[i];
+        console.log(file, file.fileName);
+        //$('#filename').text('BINARY: ' + file.fileName);
+        //$('#result').name('FIELD: ' + file.fileName);
+        $('#' + String(event.target.id)).attr('name', file.fileName);
+        reader = new FileReader();
+        reader.onloadend = onFileLoaded;
+        reader.readAsBinaryString(file);
+        //reader.readAsDataURL(file);
+    }
+}
+
+function onFileLoaded(event) {
+    console.log('onFileLoaded', event);
+    var initialData = event.currentTarget.result.substr(0, MAX_BYTES);
+    $('#' + String(event.target.id)).text(initialData);
+    //$('#result').name(initialData);
+    //$("#result").name(result#result);
+}
+
 function populate_page_with_json(json) {
     response = json;
     console.info(JSON.stringify(json));
@@ -269,9 +322,13 @@ function populate_page_with_json(json) {
     produce_form('form', parameters, groups);
     simpleOrAdvanced(get_simpleOrAdvanced());
     for (var i = 0; i < textareas.length; i++) {
-        document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
+        // document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
         document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
-    }
+        document.getElementById(textareas[i]).addEventListener('dragenter', dragEnter, false);
+        document.getElementById(textareas[i]).addEventListener('dragexit', dragExit, false);
+        document.getElementById(textareas[i]).addEventListener('dragover', dragOver, false);
+        document.getElementById(textareas[i]).addEventListener('drop', drop, false);
+    };
     $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
     for (var idt = 0; idt < datatable_param_list.length; idt++) {
         var datatableId = datatable_param_list[idt]['table_id'];
