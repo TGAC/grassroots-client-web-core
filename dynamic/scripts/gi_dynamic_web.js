@@ -279,22 +279,22 @@ function drop(event) {
     for (var i = 0; i < files.length; i++) {
         file = files[i];
         console.log(file, file.fileName);
-        //$('#filename').text('BINARY: ' + file.fileName);
-        //$('#result').name('FIELD: ' + file.fileName);
-        $('#' + String(event.target.id)).attr('name', file.fileName);
+        // $('#' + String(event.target.id)).attr('name', file.fileName);
+        console.log((event.target.id));
         reader = new FileReader();
-        reader.onloadend = onFileLoaded;
+        // reader.onloadend = onFileLoaded;
+        reader.onloadend =  function(e) {
+            onFileLoaded(e, event.target.id);
+        };
         reader.readAsBinaryString(file);
         //reader.readAsDataURL(file);
     }
 }
 
-function onFileLoaded(event) {
+function onFileLoaded(event, tid) {
     console.log('onFileLoaded', event);
     var initialData = event.currentTarget.result.substr(0, MAX_BYTES);
-    $('#' + String(event.target.id)).text(initialData);
-    //$('#result').name(initialData);
-    //$("#result").name(result#result);
+    $('#' + tid).text(initialData);
 }
 
 function populate_page_with_json(json) {
@@ -323,12 +323,12 @@ function populate_page_with_json(json) {
     simpleOrAdvanced(get_simpleOrAdvanced());
     for (var i = 0; i < textareas.length; i++) {
         // document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
-        document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
+        // document.getElementById(textareas[i]).addEventListener('drop', handleFileSelect, false);
         document.getElementById(textareas[i]).addEventListener('dragenter', dragEnter, false);
         document.getElementById(textareas[i]).addEventListener('dragexit', dragExit, false);
         document.getElementById(textareas[i]).addEventListener('dragover', dragOver, false);
         document.getElementById(textareas[i]).addEventListener('drop', drop, false);
-    };
+    }
     $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
     for (var idt = 0; idt < datatable_param_list.length; idt++) {
         var datatableId = datatable_param_list[idt]['table_id'];
