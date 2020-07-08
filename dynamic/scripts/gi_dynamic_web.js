@@ -1227,7 +1227,8 @@ function table_add_rows_csv(table_id_drop, csv) {
             if (sheet_row_json[column_param] != undefined) {
                 sheet_value = sheet_row_json[column_param];
             }
-            row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/>');
+            // row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/>');
+            row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param  + '" value="' + sheet_value + '"/>');
         }
         t.row.add(row_array).draw(false);
         row_index++;
@@ -1257,7 +1258,8 @@ function table_add_new_row(table_id) {
 
         var column_param = cHeadings[r]['param'];
         var column_grassroots_type = cHeadings[r]['type'];
-        row_array.push('<input type="text"  name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="" ' + required + '/>');
+        // row_array.push('<input type="text"  name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="" ' + required + '/>');
+        row_array.push('<input type="text"  name="tabular^' + real_param + '^' + row_index + '^' + column_param + '" value="" ' + required + '/>');
     }
     t.row.add(row_array).draw(false);
 }
@@ -1544,11 +1546,11 @@ function construct_parameters(form) {
             }
             // parameter['grassroots_type'] = grassroots_type;
             if (group != 'none') {
-                if (name[4] == 0) {
+            //     if (name[4] == 0) {
                     parameter['group'] = repeatable_groups[group]['group'];
-                } else {
-                    parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
-                }
+            //     } else {
+            //         parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+            //     }
             }
             // if (value !== null) {
             if (type === 'boolean') {
@@ -1720,21 +1722,29 @@ function handle_errors(json) {
             if (key !== 'error') {
                 if (data['grassroots_type'] != undefined) {
                     var grassroots_type = data['grassroots_type'];
-                    var elementId = key.replace(/\s+/g, "_")
+                    // var elementId = key.replace(/\s+/g, "_")
                     if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
                         var tabular_error_array = [];
 
                         if (data['errors'] != undefined) {
                             tabular_error_array = data['errors'];
                             if (tabular_error_array.length > 0) {
-                                var error_table = $('#' + elementId + ' tbody');
+                                // var error_table = $('#' + elementId + ' tbody');
+                                // var error_datatable = $('#' + elementId).DataTable();
+
                                 for (var t = 0; t < tabular_error_array.length; t++) {
                                     var row = tabular_error_array[t]['row'];
                                     var column = tabular_error_array[t]['column'];
                                     var cell_error = tabular_error_array[t]['error'];
 
-                                    var cell = error_table.rows[row].cells[column];
+                                    // var cell = error_table.rows[row].cells[column];
+                                    // var cell = error_table.rows.eq(row).find(column);
+                                    var input_name = 'tabular^'+key+'^'+row+'^'+column;
+                                    console.log(input_name);
+                                    var cell = $("input[name='"+input_name+"']");
+                                    console.log(cell);
 
+                                    $(cell).css({'background-color': '#ff4d4d'});
                                     $(cell).popover({
                                         content: cell_error,
                                         placement: 'top',
