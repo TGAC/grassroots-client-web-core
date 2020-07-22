@@ -1722,7 +1722,7 @@ function handle_errors(json) {
             if (key !== 'error') {
                 if (data['grassroots_type'] != undefined) {
                     var grassroots_type = data['grassroots_type'];
-                    // var elementId = key.replace(/\s+/g, "_")
+                    var elementId = key.replace(/\s+/g, "_");
                     if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
                         var tabular_error_array = [];
 
