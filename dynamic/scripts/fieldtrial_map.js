@@ -795,7 +795,7 @@ function format_gru_json(gru_json) {
             // if (gru_json.length > 0) {
             if (gru_json[0]['idPlant'] != undefined) {
                 var idPlant = gru_json[i]['idPlant'];
-                htmlarray.push('<a target="_blank" class="newstyle_link" href="https://seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a> ');
+                htmlarray.push('<a target="_blank" class="newstyle_link" href="https://www.seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a> ');
             }
         }
     }
