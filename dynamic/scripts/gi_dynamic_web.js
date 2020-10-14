@@ -283,7 +283,7 @@ function drop(event) {
         console.log((event.target.id));
         reader = new FileReader();
         // reader.onloadend = onFileLoaded;
-        reader.onloadend =  function(e) {
+        reader.onloadend = function (e) {
             onFileLoaded(e, event.target.id);
         };
         reader.readAsBinaryString(file);
@@ -379,8 +379,8 @@ function populate_page_with_json(json) {
         //     table_add_new_row(datatableId);
         // }
 
-        document.getElementById(datatableId + '^drop').addEventListener('dragover', handleDragOver, false);
-        document.getElementById(datatableId + '^drop').addEventListener('drop', handleXlsxFileSelect, false);
+        document.getElementById(datatableId + ':drop').addEventListener('dragover', handleDragOver, false);
+        document.getElementById(datatableId + ':drop').addEventListener('drop', handleXlsxFileSelect, false);
     }
 
 }
@@ -708,7 +708,8 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             datatable_param_list.push(each_table_obj);
             form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
-            form_html.push('<div class="sheet-drop" id="' + table_id + '^drop">Drop a spreadsheet file here to populate the table below</div>');
+            form_html.push('<div class="sheet-drop" id="' + table_id + ':drop">Drop a spreadsheet file here to populate the table below</div>');
+            form_html.push('<label id="' + table_id + 'dropstatus"></label><br/>');
             // form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
             // if (param === 'PL Upload') {
             //     form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns_modal(\'' + table_id + '\')">Add treatment</button>');
@@ -1193,9 +1194,11 @@ function table_add_rows(table_id_drop, json) {
 }
 
 function table_add_rows_csv(table_id_drop, csv) {
+
+    $('#' + table_id + 'dropstatus').html('Processing...');
     var json = CSVJSON.csv2json(csv, {});
     console.log(JSON.stringify(json));
-    var name = table_id_drop.split('^');
+    var name = table_id_drop.split(':');
     var table_id = name[0];
 
     var t = $('#' + table_id).DataTable();
@@ -1214,25 +1217,35 @@ function table_add_rows_csv(table_id_drop, csv) {
     for (var i = 0; i < datatable_param_list.length; i++) {
         if (datatable_param_list[i]['table_id'] === table_id) {
             cHeadings = datatable_param_list[i]['cHeadings'];
+            console.log(datatable_param_list[i]['table_id']);
         }
     }
+
+    console.log(JSON.stringify(cHeadings));
     for (var rs = 0; rs < json.length; rs++) {
+        $('#' + table_id + 'dropstatus').html('Processing row: ' + row_index );
         var sheet_row_json = json[rs];
         var row_array = [];
         var real_param = table_id.replace(/_/g, " ");
         for (var r = 0; r < cHeadings.length; r++) {
             var column_param = cHeadings[r]['param'];
-            var column_grassroots_type = cHeadings[r]['type'];
+            // var column_grassroots_type = cHeadings[r]['type'];
             var sheet_value = "";
             if (sheet_row_json[column_param] != undefined) {
                 sheet_value = sheet_row_json[column_param];
             }
             // row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '^' + column_grassroots_type + '" value="' + sheet_value + '"/>');
-            row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param  + '" value="' + sheet_value + '"/>');
+            row_array.push('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '" value="' + sheet_value + '"/>');
+
+            console.log('<input type="text" name="tabular^' + real_param + '^' + row_index + '^' + column_param + '" value="' + sheet_value + '"/>');
         }
-        t.row.add(row_array).draw(false);
+        // t.row.add(row_array).draw(false);
+        t.row.add(row_array);
         row_index++;
     }
+    t.draw(false);
+    $('#' + table_id + 'dropstatus').html('Processing done.');
+
 }
 
 function table_add_new_row(table_id) {
@@ -1376,7 +1389,8 @@ function add_plot_datatable(table_id) {
 
     });
 }
-function get_simpleOrAdvanced(){
+
+function get_simpleOrAdvanced() {
     return $('input[name="simpleadvanced"]:checked').val();
 }
 
@@ -1546,11 +1560,11 @@ function construct_parameters(form) {
             }
             // parameter['grassroots_type'] = grassroots_type;
             if (group != 'none') {
-            //     if (name[4] == 0) {
-                    parameter['group'] = repeatable_groups[group]['group'];
-            //     } else {
-            //         parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
-            //     }
+                //     if (name[4] == 0) {
+                parameter['group'] = repeatable_groups[group]['group'];
+                //     } else {
+                //         parameter['group'] = repeatable_groups[group]['group'] + ' [' + name[4] + ']';
+                //     }
             }
             // if (value !== null) {
             if (type === 'boolean') {
@@ -1739,9 +1753,9 @@ function handle_errors(json) {
 
                                     // var cell = error_table.rows[row].cells[column];
                                     // var cell = error_table.rows.eq(row).find(column);
-                                    var input_name = 'tabular^'+key+'^'+row+'^'+column;
+                                    var input_name = 'tabular^' + key + '^' + row + '^' + column;
                                     console.log(input_name);
-                                    var cell = $("input[name='"+input_name+"']");
+                                    var cell = $("input[name='" + input_name + "']");
                                     console.log(cell);
 
                                     $(cell).css({'background-color': '#ff4d4d'});
@@ -1957,108 +1971,111 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
         //            var each_db_result = json['results'][i];
         var uuid = each_db_result['job_uuid'];
         if (each_db_result['status_text'] == 'Succeeded') {
+            if (each_db_result['results'] != undefined) {
 
-            var db_name = each_db_result['name'];
-            var dl_format_text = jQuery("#output_format option:selected").text();
-            result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat">' + dl_format_text + '</span> format <span id=\"' + uuid + 'status\"></span><br/>');
+                var db_name = each_db_result['name'];
+                var dl_format_text = jQuery("#output_format option:selected").text();
+                result_html.push('<a href="javascript:;" id=\"' + uuid + 'dl\" onclick=\"downloadJobFromServer(\'' + uuid + '\');\">Download Job</a> in <span class="dlformat">' + dl_format_text + '</span> format <span id=\"' + uuid + 'status\"></span><br/>');
 
-            for (var dbi = 0; dbi < each_db_result['results'][0]['data']['blast_search_results']['reports'].length; dbi++) {
+                for (var dbi = 0; dbi < each_db_result['results'][0]['data']['blast_search_results']['reports'].length; dbi++) {
 
-                var query_result = each_db_result['results'][0]['data']['blast_search_results']['reports'][dbi];
-                var query_title = '';
-                if (query_result['query_title'] != undefined) {
-                    query_title = query_result['query_title'];
-                }
-                var query_line = query_result['query_id'] + ': ' + query_title;
-                result_html.push('<p><b>' + query_line + '</b></p>');
+                    var query_result = each_db_result['results'][0]['data']['blast_search_results']['reports'][dbi];
+                    var query_title = '';
+                    if (query_result['query_title'] != undefined) {
+                        query_title = query_result['query_title'];
+                    }
+                    var query_line = query_result['query_id'] + ': ' + query_title;
+                    result_html.push('<p><b>' + query_line + '</b></p>');
 
-                if (query_result['hits'].length > 0) {
-                    for (var j = 0; j < query_result['hits'].length; j++) {
+                    if (query_result['hits'].length > 0) {
+                        for (var j = 0; j < query_result['hits'].length; j++) {
 
-                        var hit = query_result['hits'][j];
-                        var hit_num = hit['hit_num'];
-                        var scaffold_name = hit['scaffolds'][0]['scaffold'];
+                            var hit = query_result['hits'][j];
+                            var hit_num = hit['hit_num'];
+                            var scaffold_name = hit['scaffolds'][0]['scaffold'];
 
-                        result_html.push('<div class="blastResultBox ui-corner-all">')
+                            result_html.push('<div class="blastResultBox ui-corner-all">')
 
-                        result_html.push('<p>Hit ' + hit_num + ' : ' + scaffold_name + ' | <b>Hit Sequence Length: </b>' + hit['sequence_length']);
-                        result_html.push('</p>');
+                            result_html.push('<p>Hit ' + hit_num + ' : ' + scaffold_name + ' | <b>Hit Sequence Length: </b>' + hit['sequence_length']);
+                            result_html.push('</p>');
 
-                        if (hit['linked_services'] != null) {
-                            if (hit['linked_services']['services'].length > 0) {
-                                result_html.push('<p>Linked Services: ');
-                                for (var linki = 0; linki < hit['linked_services']['services'].length; linki++) {
-                                    var link_service_json = hit['linked_services']['services'][linki];
-                                    var link_service_id = generate_random_id();
-                                    linked_services_global[link_service_id] = link_service_json;
-                                    if (linki > 0) {
-                                        result_html.push(' | ');
+                            if (hit['linked_services'] != null) {
+                                if (hit['linked_services']['services'].length > 0) {
+                                    result_html.push('<p>Linked Services: ');
+                                    for (var linki = 0; linki < hit['linked_services']['services'].length; linki++) {
+                                        var link_service_json = hit['linked_services']['services'][linki];
+                                        var link_service_id = generate_random_id();
+                                        linked_services_global[link_service_id] = link_service_json;
+                                        if (linki > 0) {
+                                            result_html.push(' | ');
+                                        }
+
+                                        result_html.push(' <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['so:name'] + '</a><span id="' + link_service_id + 'status"></span> ');
+
                                     }
-
-                                    result_html.push(' <a href="javascript:;" id="' + link_service_id + '" onclick="run_linked_service(\'' + link_service_id + '\')">' + link_service_json['so:name'] + '</a><span id="' + link_service_id + 'status"></span> ');
-
+                                    result_html.push('</p>');
                                 }
-                                result_html.push('</p>');
                             }
-                        }
 
 
-                        for (var y = 0; y < hit['hsps'].length; y++) {
-                            var hsp = hit['hsps'][y];
-                            var hsp_num = hsp['hsp_num'];
-                            result_html.push('<p>Hsp: ' + hsp_num + '</p>');
-                            // result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
-                            result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + '</p>');
-                            result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
-                            //result_html.push('<p>'+  +'</p>');
-                            result_html.push('<hr/>');
-                            if (hsp['polymorphisms'] != undefined) {
-                                if (hsp['polymorphisms'].length > 0) {
-                                    result_html.push('<p>Polymorphisms (Polymarker):</p>');
-                                    result_html.push('<p>');
-                                    for (var ip = 0; ip < hsp['polymorphisms'].length; ip++) {
-                                        var polymorphism = hsp['polymorphisms'][ip];
-                                        console.log(JSON.stringify(polymorphism));
-                                        if (polymorphism['linked_services'] != undefined) {
-                                            if (polymorphism['linked_services']['services'] != undefined) {
-                                                for (var linkip = 0; linkip < polymorphism['linked_services']['services'].length; linkip++) {
-                                                    var polymorphism_link_service_json = polymorphism['linked_services']['services'][linkip];
-                                                    var polymorphism_link_service_id = generate_random_id();
-                                                    var sequence_difference = '[' + polymorphism['sequence_difference']['query'] + '/' + polymorphism['sequence_difference']['hit'] + ']';
-                                                    // save in memory for post request
-                                                    linked_services_global[polymorphism_link_service_id] = polymorphism_link_service_json;
-                                                    var polymorphism_position = polymorphism['locus']['faldo:begin']['faldo:position'];
-                                                    result_html.push(' <a href="javascript:;" id="' + polymorphism_link_service_id + '"'
-                                                        + ' onmouseover="mouseover_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
-                                                        + ' onmouseout="mouseout_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
-                                                        + ' onclick="run_linked_service_with_redirect(\''
-                                                        + polymorphism_link_service_id + '\')">Locus: ' + polymorphism_position + ' '
-                                                        + sequence_difference + ' </a><span id="' + polymorphism_link_service_id + 'status"></span> |');
+                            for (var y = 0; y < hit['hsps'].length; y++) {
+                                var hsp = hit['hsps'][y];
+                                var hsp_num = hsp['hsp_num'];
+                                result_html.push('<p>Hsp: ' + hsp_num + '</p>');
+                                // result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + ' | <b>Gaps: </b>' + hsp['gaps'] + '</p>');
+                                result_html.push('<p><b>Bit Score: </b>' + hsp['bit_score'] + '</p>');
+                                result_html.push('<p><b>Score: </b>' + hsp['score'] + ' | <b>Evalue: </b>' + hsp['evalue'] + '</p>');
+                                //result_html.push('<p>'+  +'</p>');
+                                result_html.push('<hr/>');
+                                if (hsp['polymorphisms'] != undefined) {
+                                    if (hsp['polymorphisms'].length > 0) {
+                                        result_html.push('<p>Polymorphisms (Polymarker):</p>');
+                                        result_html.push('<p>');
+                                        for (var ip = 0; ip < hsp['polymorphisms'].length; ip++) {
+                                            var polymorphism = hsp['polymorphisms'][ip];
+                                            console.log(JSON.stringify(polymorphism));
+                                            if (polymorphism['linked_services'] != undefined) {
+                                                if (polymorphism['linked_services']['services'] != undefined) {
+                                                    for (var linkip = 0; linkip < polymorphism['linked_services']['services'].length; linkip++) {
+                                                        var polymorphism_link_service_json = polymorphism['linked_services']['services'][linkip];
+                                                        var polymorphism_link_service_id = generate_random_id();
+                                                        var sequence_difference = '[' + polymorphism['sequence_difference']['query'] + '/' + polymorphism['sequence_difference']['hit'] + ']';
+                                                        // save in memory for post request
+                                                        linked_services_global[polymorphism_link_service_id] = polymorphism_link_service_json;
+                                                        var polymorphism_position = polymorphism['locus']['faldo:begin']['faldo:position'];
+                                                        result_html.push(' <a href="javascript:;" id="' + polymorphism_link_service_id + '"'
+                                                            + ' onmouseover="mouseover_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
+                                                            + ' onmouseout="mouseout_locus(\'' + hit_num + '\', \'' + hsp_num + '\', \'' + polymorphism_position + '\')"'
+                                                            + ' onclick="run_linked_service_with_redirect(\''
+                                                            + polymorphism_link_service_id + '\')">Locus: ' + polymorphism_position + ' '
+                                                            + sequence_difference + ' </a><span id="' + polymorphism_link_service_id + 'status"></span> |');
 
 
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                result_html.push('</p>');
+                                result_html.push('<hr/>');
+
+
+                                result_html.push('<div class="note">');
+                                result_html.push('<p class="blastPosition">Query from: ' + hsp['query_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['query_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['query_location']['faldo:begin']['@type']) + '</p>');
+                                result_html.push(alignment_formatter(hsp['query_sequence'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hit_sequence'].match(/.{1,100}/g), hit['hit_num'], hsp['hsp_num']));
+                                result_html.push('<p class="blastPosition">Hit from: ' + hsp['hit_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['hit_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['hit_location']['faldo:begin']['@type']) + '</p>');
+                                result_html.push('</div>');
                             }
-                            result_html.push('</p>');
-                            result_html.push('<hr/>');
-
-
-                            result_html.push('<div class="note">');
-                            result_html.push('<p class="blastPosition">Query from: ' + hsp['query_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['query_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['query_location']['faldo:begin']['@type']) + '</p>');
-                            result_html.push(alignment_formatter(hsp['query_sequence'].match(/.{1,100}/g), hsp['midline'].match(/.{1,100}/g), hsp['hit_sequence'].match(/.{1,100}/g), hit['hit_num'], hsp['hsp_num']));
-                            result_html.push('<p class="blastPosition">Hit from: ' + hsp['hit_location']['faldo:begin']['faldo:position'] + ' to: ' + hsp['hit_location']['faldo:end']['faldo:position'] + ' Strand: ' + get_faldo_strand(hsp['hit_location']['faldo:begin']['@type']) + '</p>');
                             result_html.push('</div>');
                         }
-                        result_html.push('</div>');
+                    } else {
+                        result_html.push('<p>No hits found</p>')
                     }
-                } else {
-                    result_html.push('<p>No hits found</p>')
                 }
+            } else {
+                result_html.push('<p>No hits found</p>')
             }
-
         } else {
             result_html.push('<p>Job id: ' + uuid + '</p>');
             result_html.push('<p>Status: ' + each_db_result['status_text'] + '</p>');
