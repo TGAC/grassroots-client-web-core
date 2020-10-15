@@ -1533,8 +1533,9 @@ function construct_parameters(form) {
 
             }
             current_value_array.push(row_object);
-            console.log(JSON.stringify(current_value_array));
+            // console.log(JSON.stringify(current_value_array));
         }
+        console.log(JSON.stringify(current_value_array));
         parameter['current_value'] = current_value_array;
         parameters.push(parameter);
 
