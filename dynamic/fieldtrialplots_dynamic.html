@@ -169,6 +169,9 @@
         <div id="result"></div>
         <div class="row" style="border-style: solid;border-width:1px;">
             <div class="col-10" style="border-style: solid;border-width: 0 1px 0 0;">
+                <div class="wrapper1" style="overflow: scroll;height: 20px; ">
+                    <div id="upperslider" style="width:100%;"></div>
+                </div>
                 <div id="plots" style="overflow: scroll;"></div>
             </div>
             <div class="col-2">
@@ -236,11 +239,23 @@
                         }).done(function (experimental_areas_json) {
                             // console.log("experimental_areas_json : "+experimental_areas_json);
                             LoadTable(experimental_areas_json);
+                            $("#upperslider").width($("#plot").width());
+                            $(".wrapper1").scroll(function(){
+                                $(".plots")
+                                    .scrollLeft($(".wrapper1").scrollLeft());
+                            });
+                            $(".plots").scroll(function(){
+                                $(".wrapper1")
+                                    .scrollLeft($(".plots").scrollLeft());
+                            });
                         }).fail(function (req, status, error) {
                             console.info("req " + "status " + status + " error " + error);
                         });
                     }
                 }
+
+
+
             });
 
 

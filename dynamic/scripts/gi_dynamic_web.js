@@ -20,6 +20,8 @@ const service_gru_seedbank_search = 'germplasm-search';
 
 const service_pathogenomics_geoservice = 'pathogenomics-geoservice';
 
+const field_trial_indexing = 'field_trial-indexing';
+
 function get_all_services_as_table() {
     var search_measured_variables_json = {
         "@type": "grassroots_service",
@@ -1183,8 +1185,9 @@ function table_add_rows(table_id_drop, json) {
     var row_index = t.rows().count();
 
     for (var rs = 1; rs < json.length; rs++) {
-        t.row.add(json[rs]).draw(false);
+        t.row.add(json[rs]);
     }
+    t.draw(false)
     console.log(row_index);
     if (row_index == 1) {
         console.log('deleting first row...');
@@ -1223,7 +1226,7 @@ function table_add_rows_csv(table_id_drop, csv) {
 
     console.log(JSON.stringify(cHeadings));
     for (var rs = 0; rs < json.length; rs++) {
-        $('#' + table_id + 'dropstatus').html('Processing row: ' + row_index );
+        $('#' + table_id + 'dropstatus').html('Processing row: ' + row_index);
         var sheet_row_json = json[rs];
         var row_array = [];
         var real_param = table_id.replace(/_/g, " ");
@@ -1693,6 +1696,13 @@ function display_result(json) {
             "aaSorting": []
         });
 
+
+    } else if (selected_service_name == field_trial_indexing) {
+        $('#status').html('');
+        var status_text_key = json['results'][0]['status_text'];
+        if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+            $('#status').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+        }
 
     } else {
         $('#status').html('');
