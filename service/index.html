@@ -285,7 +285,12 @@ content
         // var lastTwo = pathname.splice(-2, 2);
         if (lastSegment != 'services.html' && lastSegment != 'service' && lastSegment != '' && lastSegment != null) {
         // if (lastTwo.length === 1){
-            populateService(lastSegment.replace(/%20/g, " "));
+            if (getUrlParameter('payload') != null){
+                var payload = getUrlParameter('payload');
+                populateServiceWithPayload(payload);
+            } else {
+                populateService(lastSegment.replace(/%20/g, " "));
+            }
         }
         $(window).keydown(function (event) {
             if (event.keyCode == 13) {

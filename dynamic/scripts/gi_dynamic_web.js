@@ -22,6 +22,8 @@ const service_pathogenomics_geoservice = 'pathogenomics-geoservice';
 
 const field_trial_indexing = 'field_trial-indexing';
 
+const grassroots_search = 'Grassroots-search';
+
 function get_all_services_as_table() {
     var search_measured_variables_json = {
         "@type": "grassroots_service",
@@ -244,6 +246,29 @@ function populateService(service_altname) {
             }
         });
     }
+}
+
+function populateServiceWithPayload(payload) {
+    $('#back_link').css('visibility', 'visible');
+    // $('#title').html('Search Treatment');
+    // $('#description').html('Search field trial treatment');
+    $('#simpleAdvanceWrapper').show();
+
+    var data = decodeURIComponent(payload);
+    console.log('payload sent to server: '+data);
+    $.ajax({
+        url: server_url,
+        data: '' + data + '',
+        // data:'{"services": [{"so:name":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}',
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            var service_altname = json['services'][0]['so:alternateName'];
+            console.log('payload test: service altname' + service_altname);
+            selected_service_name = service_altname;
+            populate_page_with_json(json);
+        }
+    });
 }
 
 
@@ -1704,6 +1729,26 @@ function display_result(json) {
             $('#status').html(JSON.stringify(json['results'][0]['results'][0]['data']));
         }
 
+    } else if (selected_service_name == grassroots_search) {
+        $('#status').html('');
+        var grassroots_search_html = [];
+        var status_text_key = json['results'][0]['status_text'];
+        if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+            var gs_results = json['results'][0]['results'];
+            console.log(JSON.stringify(gs_results));
+            if (gs_results.length > 0) {
+                for (i = 0; i < gs_results.length; i++) {
+                    var this_result = gs_results[i];
+                    grassroots_search_html.push('<div style="margin: 20px 0; border: 1px solid; padding: 10px;"><legend>' + this_result['title'] + '</legend>');
+                    grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
+                    grassroots_search_html.push('</div>');
+                }
+            } else {
+                grassroots_search_html.push('No result found');
+            }
+            $('#status').html(grassroots_search_html.join(' '));
+
+        }
     } else {
         $('#status').html('');
         var status_text_key = json['results'][0]['status_text'];
@@ -1721,6 +1766,40 @@ function display_result(json) {
 
     }
 }
+
+function format_grassroots_search_result(json) {
+    var grassroots_search_html = [];
+
+    if (json['@type'] == 'Grassroots:Study') {
+        var study_id = json['id'];
+        var study_name = json['so:name'];
+        grassroots_search_html.push('Grassroots Study: <a href="/dev/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
+    }
+    if (json['@type'] == 'Grassroots:FieldTrial') {
+        var ft_id = json['id'];
+        var ft_name = json['so:name'];
+        grassroots_search_html.push('Grassroots Field Trial: <a href="/dev/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
+    } else if (json['@type'] == 'Grassroots:Service') {
+        var service = json['service'];
+        var description = json['so:description'];
+        var payload_uri = encodeURIComponent(JSON.stringify(json['payload']));
+        grassroots_search_html.push('<p><b>' + service + '</b></p>');
+        grassroots_search_html.push('<p><b>' + description + '</b></p>');
+        //when alt name available need to make it dynamic
+        grassroots_search_html.push('<p><a href="/dev/public/service/blast-blastn?payload=' + payload_uri + '" target="_blank">Link</a></p>');
+    } else if (json['@type'] == 'Grassroots:Project') {
+        var author = json['author'].replaceAll('\"', '').replaceAll('[', '').replaceAll(']', '');
+        var description = json['so:description'];
+        var url = json['so:url'];
+        grassroots_search_html.push('<p><i>' + author + '</i></p>');
+        grassroots_search_html.push('<p><i>' + description + '</i></p>');
+        grassroots_search_html.push('<p><a href="' + url + '" target="_blank">Link</a> </p>');
+    }
+
+    return grassroots_search_html.join(' ');
+
+}
+
 
 function get_general_errors(json) {
     var html = [];
