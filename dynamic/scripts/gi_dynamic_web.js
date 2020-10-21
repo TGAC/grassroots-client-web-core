@@ -255,7 +255,7 @@ function populateServiceWithPayload(payload) {
     $('#simpleAdvanceWrapper').show();
 
     var data = decodeURIComponent(payload);
-    console.log('payload sent to server: '+data);
+    console.log('payload sent to server: ' + data);
     $.ajax({
         url: server_url,
         data: '' + data + '',
@@ -1739,7 +1739,14 @@ function display_result(json) {
             if (gs_results.length > 0) {
                 for (i = 0; i < gs_results.length; i++) {
                     var this_result = gs_results[i];
-                    grassroots_search_html.push('<div style="margin: 20px 0; border: 1px solid; padding: 10px;"><legend>' + this_result['title'] + '</legend>');
+                    var img_html = '';
+                    if (this_result['data']['so:image'] != undefined) {
+                        img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
+                    }
+                    var type_description = this_result['data']['type_description'];
+                    grassroots_search_html.push('<div style="margin: 20px 0; border: 1px solid; padding: 10px;">');
+                    grassroots_search_html.push('<p>' + img_html + ' ' + type_description + ':<p>');
+                    grassroots_search_html.push('<legend>' + this_result['title'] + '</legend>');
                     grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
                     grassroots_search_html.push('</div>');
                 }

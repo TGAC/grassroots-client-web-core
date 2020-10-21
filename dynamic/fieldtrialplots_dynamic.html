@@ -237,7 +237,7 @@
                             dataType: "json",
                             contentType: "application/json; charset=utf-8"
                         }).done(function (experimental_areas_json) {
-                            // console.log("experimental_areas_json : "+experimental_areas_json);
+                            $('#description').append('<br/>Study: '+ SafePrint(experimental_areas_json['results'][0]['results'][0]['data']['so:name']));
                             LoadTable(experimental_areas_json);
                             $("#upperslider").width($("#plot").width());
                             $(".wrapper1").scroll(function(){
