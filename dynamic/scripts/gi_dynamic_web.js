@@ -2490,6 +2490,7 @@ function handleXlsxFileSelect(evt) {
 
             if (selected_service_name === 'field_trial-submit_plots') {
                 plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]],{raw: false});
+                $('#PL_Uploaddropstatus').html('Processing done.');
                 console.log(JSON.stringify(plots));
             } else {
                 var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
