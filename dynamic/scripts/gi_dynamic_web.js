@@ -1184,10 +1184,8 @@ function table_body_formatter(cHeadings, tbody_values, real_param) {
 
             var required = '';
             if (cHeadings[j]['required'] != undefined) {
-                console.log('found required1');
                 if (cHeadings[j]['required']) {
                     required = 'required';
-                    console.log('found required2');
                 }
             }
             //row_json[column_param];
@@ -1255,8 +1253,14 @@ function table_add_rows_csv(table_id_drop, csv) {
         var sheet_row_json = json[rs];
         var row_array = [];
         var real_param = table_id.replace(/_/g, " ");
+        var required = '';
         for (var r = 0; r < cHeadings.length; r++) {
-            var column_param = cHeadings[r]['param'];
+            if (cHeadings[r]['required'] != undefined) {
+                if (cHeadings[r]['required']) {
+                    required = '*';
+                }
+            }
+            var column_param = cHeadings[r]['param'] + required;
             // var column_grassroots_type = cHeadings[r]['type'];
             var sheet_value = "";
             if (sheet_row_json[column_param] != undefined) {
