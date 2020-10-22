@@ -8,6 +8,8 @@ var level_simpleoradvanced = "simple";
 var wizard_bool = false;
 var wizard_count = 0;
 
+var plots = [];
+
 const service_blastn = 'blast-blastn';
 const service_blastp = 'blast-blastp';
 const service_blastx = 'blast-blastx';
@@ -1545,34 +1547,41 @@ function submit_form() {
 function construct_parameters(form) {
     var parameters = [];
 
-    for (var idt = 0; idt < datatable_param_list.length; idt++) {
-
+    if (selected_service_name === 'field_trial-submit_plots') {
         var parameter = {};
-        var datatableId = datatable_param_list[idt]['table_id'];
-        var this_table_array = [];
-        var current_value_array = [];
-        var real_param = datatableId.replace(/_/g, " ");
-        parameter['param'] = real_param;
-        var this_table = $('#' + datatableId).DataTable();
-        this_table_array = this_table.$('input, select').serializeArray();
-        var row_length = this_table.rows().count();
-        for (var rowsi = 0; rowsi < row_length; rowsi++) {
-            var row_object = {};
-            for (var ttai = 0; ttai < this_table_array.length; ttai++) {
-                var name = this_table_array[ttai]['name'].split('^');
-                var column_name = name[3];
-                if (name[2] == rowsi) {
-                    row_object[column_name] = this_table_array[ttai]['value'];
-                }
-
-            }
-            current_value_array.push(row_object);
-            // console.log(JSON.stringify(current_value_array));
-        }
-        console.log(JSON.stringify(current_value_array));
-        parameter['current_value'] = current_value_array;
+        parameter['param'] = 'PL Upload';
+        parameter['current_value'] = plots;
         parameters.push(parameter);
+    } else {
+        for (var idt = 0; idt < datatable_param_list.length; idt++) {
 
+            var parameter = {};
+            var datatableId = datatable_param_list[idt]['table_id'];
+            var this_table_array = [];
+            var current_value_array = [];
+            var real_param = datatableId.replace(/_/g, " ");
+            parameter['param'] = real_param;
+            var this_table = $('#' + datatableId).DataTable();
+            this_table_array = this_table.$('input, select').serializeArray();
+            var row_length = this_table.rows().count();
+            for (var rowsi = 0; rowsi < row_length; rowsi++) {
+                var row_object = {};
+                for (var ttai = 0; ttai < this_table_array.length; ttai++) {
+                    var name = this_table_array[ttai]['name'].split('^');
+                    var column_name = name[3];
+                    if (name[2] == rowsi) {
+                        row_object[column_name] = this_table_array[ttai]['value'];
+                    }
+
+                }
+                current_value_array.push(row_object);
+                // console.log(JSON.stringify(current_value_array));
+            }
+            console.log(JSON.stringify(current_value_array));
+            parameter['current_value'] = current_value_array;
+            parameters.push(parameter);
+
+        }
     }
 
     for (var i = 0; i < form.length; i++) {
@@ -2459,7 +2468,7 @@ function handleDragOver(evt) {
 }
 
 function handleXlsxFileSelect(evt) {
-
+    Utils.ui.disableButton('submit_button');
     evt.stopPropagation();
     evt.preventDefault();
 
@@ -2478,18 +2487,26 @@ function handleXlsxFileSelect(evt) {
             // console.log(XLSX.utils.sheet_to_csv((XLSX.read(data, {type: 'array'}))));
             //  console.log(((XLSX.read(data, {type: 'array'}))));
             var workbook = XLSX.read(data, {type: 'array'});
-            var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
-            // var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
-            console.log('tableid: ' + table_id);
-            // table_add_rows(table_id,json);
-            console.log('csv: ' + csv.trim());
-            table_add_rows_csv(table_id, csv.trim());
+
+            if (selected_service_name === 'field_trial-submit_plots') {
+                plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]],{raw: false});
+                console.log(JSON.stringify(plots));
+            } else {
+                var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+                // var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
+                console.log('tableid: ' + table_id);
+                // table_add_rows(table_id,json);
+                console.log('csv: ' + csv.trim());
+                table_add_rows_csv(table_id, csv.trim());
+            }
 
         };
         reader.readAsArrayBuffer(f);
+
     } else {
         alert("Failed to load file");
     }
+    Utils.ui.reenableButton('submit_button', 'Submit');
 }
 
 // deprecated
