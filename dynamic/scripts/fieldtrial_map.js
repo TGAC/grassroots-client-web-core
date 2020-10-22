@@ -808,7 +808,7 @@ function format_gru_json(gru_json) {
  * @param obj The object to check.
  */
 function SafePrint(obj) {
-    if (obj === undefined) {
+    if (obj === undefined || obj === null) {
         return "";
     } else {
         return obj;
