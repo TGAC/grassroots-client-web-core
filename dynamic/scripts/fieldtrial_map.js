@@ -12,7 +12,8 @@ var colorJSON = {
     5: "#F012BE",
     6: "#FF4136",
     7: "#3D9970",
-    8: "#2ECC40"
+    8: "#ABEBC6",
+    9: "#2ECC40",
 };
 var plotsModalInfo = {};
 
@@ -666,7 +667,7 @@ function formatPlot(plot) {
     //    colorJSON[replicate_index] = color;
     // } else {
     // color = colorJSON[replicate_index];
-    color = colorJSON[8];
+    color = '#ABEBC6';
     // }
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
@@ -945,7 +946,7 @@ function LoadTable(experimental_area_json) {
     default_sowing_date = SafePrint(jsonArray[0]['data']['sowing_date']);
     default_harvest_date = SafePrint(jsonArray[0]['data']['harvest_date']);
 
-    console.log(">>>>>>>>>>>>"+default_sowing_date);
+    // console.log(">>>>>>>>>>>>"+default_sowing_date);
     var filtered_data = [];
     jQuery('#status').html('');
     var fieldTrialName = '';
@@ -1014,11 +1015,7 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
 }
 
 function filter_plot() {
-    // $('#5e0f3088de68e726d027cb9f').css('background-color', '#FF4136');
-    // $('#5e0f3088de68e726d027caf3').css('background-color', '#FF4136');
-    // $('#5e0f3088de68e726d027ca3b').css('background-color', '#FF4136');
-    // $('#5e0f3088de68e726d027ca49').css('background-color', '#FF4136');
-    $('.plot').css('background-color', '#2ECC40');
+    $('.plot').css('background-color', '#ABEBC6');
     $('#filter_result').html('');
     var result = 0;
     var searchStr = $('#searchPlotsInput').val().toLowerCase();
@@ -1032,7 +1029,7 @@ function filter_plot() {
                 if (accession != undefined) {
                     if (searchStr === accession || accession.includes(searchStr)) {
                         // bool = true;
-                        $('#' + plotId).css('background-color', '#FF4136');
+                        $('#' + plotId).css('background-color', '#2ECC40');
                         result++;
                         break;
                     }
