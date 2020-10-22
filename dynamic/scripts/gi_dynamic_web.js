@@ -1253,14 +1253,16 @@ function table_add_rows_csv(table_id_drop, csv) {
         var sheet_row_json = json[rs];
         var row_array = [];
         var real_param = table_id.replace(/_/g, " ");
-        var required = '';
+        // var required = '';
         for (var r = 0; r < cHeadings.length; r++) {
-            if (cHeadings[r]['required'] != undefined) {
-                if (cHeadings[r]['required']) {
-                    required = '*';
-                }
-            }
-            var column_param = cHeadings[r]['param'] + required;
+            // fix for * required columns
+            // if (cHeadings[r]['required'] != undefined) {
+            //     if (cHeadings[r]['required']) {
+            //         required = '*';
+            //     }
+            // }
+            var column_param = cHeadings[r]['param'];
+            // + required;
             // var column_grassroots_type = cHeadings[r]['type'];
             var sheet_value = "";
             if (sheet_row_json[column_param] != undefined) {
