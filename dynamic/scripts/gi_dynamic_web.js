@@ -1741,7 +1741,13 @@ function display_result(json) {
         $('#status').html('');
         var status_text_key = json['results'][0]['status_text'];
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
-            $('#status').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+            var results = 'Done';
+            if (json['results'][0]['results'] != undefined){
+                results = JSON.stringify(SafePrint_with_value(json['results'][0]['results'][0]['data'], 'Done'));
+            }
+            $('#status').html(results);
+        } else {
+            $('#status').html(status_text_key);
         }
 
     } else if (selected_service_name == grassroots_search) {
