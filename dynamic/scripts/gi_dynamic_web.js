@@ -1749,20 +1749,31 @@ function display_result(json) {
         var grassroots_search_html = [];
         var status_text_key = json['results'][0]['status_text'];
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+            var facets = json['results'][0]['metadata']['facets'];
             var gs_results = json['results'][0]['results'];
             console.log(JSON.stringify(gs_results));
-            if (gs_results.length > 0) {
-                for (i = 0; i < gs_results.length; i++) {
-                    var this_result = gs_results[i];
-                    var img_html = '';
-                    if (this_result['data']['so:image'] != undefined) {
-                        img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
-                    }
-                    var type_description = this_result['data']['type_description'];
+            if (facets.length > 0) {
+                for (i = 0; i < facets.length; i++) {
+                    var this_facet = facets[i];
+                    var this_facet_count = this_facet['count'];
+                    var this_facet_name = this_facet['so:name'];
+
                     grassroots_search_html.push('<div style="margin: 20px 0; border: 1px solid; padding: 10px;">');
-                    grassroots_search_html.push('<p>' + img_html + ' ' + type_description + ':<p>');
-                    grassroots_search_html.push('<legend>' + this_result['title'] + '</legend>');
-                    grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
+                    grassroots_search_html.push('<p>' + this_facet_name + ': ' + this_facet_count + ' result(s)<p>');
+
+                    for (j = 0; j < gs_results.length; j++) {
+                        var this_result = gs_results[j];
+                        var type_description = this_result['data']['type_description'];
+                        if (this_facet_name === type_description) {
+                            var img_html = '';
+                            if (this_result['data']['so:image'] != undefined) {
+                                img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
+                            }
+                            grassroots_search_html.push('<legend>' + img_html + ' ' + this_result['title'] + '</legend>');
+                            grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
+                            grassroots_search_html.push('<hr/>');
+                        }
+                    }
                     grassroots_search_html.push('</div>');
                 }
             } else {
@@ -2489,7 +2500,7 @@ function handleXlsxFileSelect(evt) {
             var workbook = XLSX.read(data, {type: 'array'});
 
             if (selected_service_name === 'field_trial-submit_plots') {
-                plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]],{raw: false});
+                plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {raw: false});
                 $('#PL_Uploaddropstatus').html('Processing done.');
                 console.log(JSON.stringify(plots));
             } else {
