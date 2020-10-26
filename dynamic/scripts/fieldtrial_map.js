@@ -759,6 +759,10 @@ function formatPlotModal(plot) {
     htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
     htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
+    if (plot['so:url'] != undefined) {
+        var link = plot['so:url'];
+        htmlarray.push('Link: <a herf="' + link + '" target="_blank">' + link + '</a><br/>');
+    }
     htmlarray.push('<hr/>');
     htmlarray.push(rowsInfoarray.join(""));
     htmlarray.push('<hr/>');
