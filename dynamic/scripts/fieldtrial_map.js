@@ -761,7 +761,7 @@ function formatPlotModal(plot) {
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
     if (plot['so:url'] != undefined) {
         var link = plot['so:url'];
-        htmlarray.push('Link: <a herf="' + link + '" target="_blank">' + link + '</a><br/>');
+        htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
     }
     htmlarray.push('<hr/>');
     htmlarray.push(rowsInfoarray.join(""));
