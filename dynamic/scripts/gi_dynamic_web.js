@@ -754,7 +754,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 
             if (parameter['current_value'] != undefined) {
                 current_table_value = parameter['current_value'];
-                if (parameter['current_value'].length > 0) {
+                if (parameter['current_value'].length > 0 && table_id !== 'PL_Upload') {
                     form_html.push(table_body_formatter(cHeading, current_table_value, param));
                 }
             }
