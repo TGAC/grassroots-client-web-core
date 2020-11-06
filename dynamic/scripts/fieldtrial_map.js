@@ -789,7 +789,7 @@ function formatPlotModal(plot) {
     htmlarray.push('<hr/>');
     htmlarray.push(rowsInfoarray.join(""));
     htmlarray.push('<hr/>');
-    htmlarray.push('<h5>Phenotype</h5>');
+    htmlarray.push('<h5>Phenotypes</h5>');
     htmlarray.push(phenotypearray.join(""));
 
     return htmlarray.join("");
