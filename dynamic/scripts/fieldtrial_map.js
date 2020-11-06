@@ -678,8 +678,8 @@ function formatPlot(plot) {
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
-    for (i=0;i<plot_json.length;i++){
-        if (plot_json[i]['_id']['$oid']===plotId){
+    for (i = 0; i < plot_json.length; i++) {
+        if (plot_json[i]['_id']['$oid'] === plotId) {
             var plot = plot_json[i];
             for (r = 0; r < plot['rows'].length; r++) {
                 var accession = SafePrint(plot['rows'][r]['material']['accession']);
@@ -760,6 +760,8 @@ function formatPlotModal(plot) {
     }
     rowsInfoarray.push('</tbody></table>');
     phenotypearray.push('</tbody></table>');
+    htmlarray.push('<div class="row justify-content-between">');
+    htmlarray.push('<div class="col-4">');
     htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
     htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
     htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
@@ -769,10 +771,21 @@ function formatPlotModal(plot) {
     htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
     htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
-    if (plot['so:url'] != undefined) {
-        var link = plot['so:url'];
-        htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
+    // if (plot['so:url'] != undefined) {
+    //     var link = plot['so:url'];
+    //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
+    // }
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-4">');
+    if (plot['so:image'] != undefined) {
+        if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
+            let contentUrl =  plot['so:image']['contentUrl'];
+            let thumbnail = plot['so:image']['thumbnail'];
+            htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
+        }
     }
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
     htmlarray.push('<hr/>');
     htmlarray.push(rowsInfoarray.join(""));
     htmlarray.push('<hr/>');
@@ -793,7 +806,7 @@ function get_GRU_by_accession(accession, plotId, r) {
         contentType: "application/json; charset=utf-8",
         success: function (gru_json) {
             var links = format_gru_json(gru_json);
-            $('#'+plotId+'_'+r).html(links);
+            $('#' + plotId + '_' + r).html(links);
             // var linksjson = {};
             // linksjson['plotId'] = plotId;
             // linksjson['id'] = id;
