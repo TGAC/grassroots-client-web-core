@@ -678,22 +678,37 @@ function formatPlot(plot) {
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
+
+    let searchStr = '';
     for (i = 0; i < plot_json.length; i++) {
         if (plot_json[i]['_id']['$oid'] === plotId) {
             var plot = plot_json[i];
             for (r = 0; r < plot['rows'].length; r++) {
-                var accession = SafePrint(plot['rows'][r]['material']['accession']);
-                get_GRU_by_accession(accession, plotId, r);
+                let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
+                get_GRU_by_accession(this_accession, plotId, r);
+                searchStr = this_accession;
             }
         }
     }
-    // for (r = 0; r < plotsGRUArray.length; r++) {
-    //
-    //     var linksJson = plotsGRUArray[r];
-    //     if (linksJson['plotId'] === plotId) {
-    //         $('#' + linksJson['id']).html(linksJson['links'] + ' ');
-    //     }
-    // }
+
+    for (j = 0; j < plot_json.length; j++) {
+        const loop_plotId = plot_json[j]['_id']['$oid'];
+        if (loop_plotId !== plotId) {
+            var rows = plot_json[j]['rows'];
+            for (jr = 0; jr < rows.length; jr++) {
+                var accession = rows[jr]['material']['accession'];
+                if (accession != undefined) {
+                    if (searchStr === accession && searchStr !== '') {
+                        let formatted_plot = format_plot_rows(plot_json[j], true);
+                        $('#rowsInfo').append(formatted_plot['rowsInfo'].join(""));
+                        $('#phenotypes').append(formatted_plot['phenotypes'].join(""));
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
 
 }
 
@@ -706,7 +721,7 @@ function formatPlotModal(plot) {
     rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody id="rowsInfo">');
     phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody id="phenotypes">');
 
-    let formatted_plot = format_plot_rows(plot);
+    let formatted_plot = format_plot_rows(plot, false);
 
     rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
     phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']);
@@ -732,7 +747,7 @@ function formatPlotModal(plot) {
     htmlarray.push('<div class="col-4">');
     if (plot['so:image'] != undefined) {
         if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
-            let contentUrl =  plot['so:image']['contentUrl'];
+            let contentUrl = plot['so:image']['contentUrl'];
             let thumbnail = plot['so:image']['thumbnail'];
             htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
         }
@@ -750,13 +765,17 @@ function formatPlotModal(plot) {
 
 }
 
-function format_plot_rows(plot){
+function format_plot_rows(plot, replicate_bool) {
     let plotId = plot['_id']['$oid'];
     let formatted_plot = {};
     let phenotypearray = [];
     let rowsInfoarray = [];
     // rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
     // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    let replicate = '';
+    if (replicate_bool) {
+        replicate = ' (Plot Row:'+ plot['row_index'] + ' - Col:' + plot['column_index'] +')';
+    }
 
     for (r = 0; r < plot['rows'].length; r++) {
         // var random_id = generate_random_id();
@@ -765,7 +784,7 @@ function format_plot_rows(plot){
         var accession = SafePrint(plot['rows'][r]['material']['accession']);
         var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
         rowsInfoarray.push('<tr>');
-        rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
+        rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
         rowsInfoarray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
         rowsInfoarray.push('<td>' + accession + '</td>');
         rowsInfoarray.push('<td>' + pedigree + '</td>');
@@ -780,7 +799,7 @@ function format_plot_rows(plot){
                 var observation = plot['rows'][r]['observations'][o];
 
                 phenotypearray.push('<tr>');
-                phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
+                phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
                 phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['date']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
