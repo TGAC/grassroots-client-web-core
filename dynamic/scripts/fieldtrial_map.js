@@ -699,13 +699,64 @@ function plotModal(plotId) {
 
 function formatPlotModal(plot) {
 
-    var plotId = plot['_id']['$oid'];
-    var htmlarray = [];
-    var phenotypearray = [];
-    var rowsInfoarray = [];
+    let htmlarray = [];
+    let phenotypearray = [];
+    let rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
-    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody id="rowsInfo">');
+    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody id="phenotypes">');
+
+    let formatted_plot = format_plot_rows(plot);
+
+    rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
+    phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']);
+
+    rowsInfoarray.push('</tbody></table>');
+    phenotypearray.push('</tbody></table>');
+    htmlarray.push('<div class="row justify-content-between">');
+    htmlarray.push('<div class="col-4">');
+    htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
+    htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
+    htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
+    htmlarray.push('Width: ' + SafePrint_with_value(plot['width'], default_width) + 'm<br/>');
+    htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
+    htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
+    htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
+    htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
+    htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
+    // if (plot['so:url'] != undefined) {
+    //     var link = plot['so:url'];
+    //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
+    // }
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-4">');
+    if (plot['so:image'] != undefined) {
+        if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
+            let contentUrl =  plot['so:image']['contentUrl'];
+            let thumbnail = plot['so:image']['thumbnail'];
+            htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
+        }
+    }
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+    htmlarray.push('<hr/>');
+    htmlarray.push(rowsInfoarray.join(""));
+    htmlarray.push('<hr/>');
+    htmlarray.push('<h5>Phenotypes</h5>');
+    htmlarray.push(phenotypearray.join(""));
+
+    return htmlarray.join("");
+
+
+}
+
+function format_plot_rows(plot){
+    let plotId = plot['_id']['$oid'];
+    let formatted_plot = {};
+    let phenotypearray = [];
+    let rowsInfoarray = [];
+    // rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
+    // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
 
     for (r = 0; r < plot['rows'].length; r++) {
         // var random_id = generate_random_id();
@@ -758,43 +809,13 @@ function formatPlotModal(plot) {
 
         // plotsGRUArray[plotId] = plotGRULinkArray;
     }
-    rowsInfoarray.push('</tbody></table>');
-    phenotypearray.push('</tbody></table>');
-    htmlarray.push('<div class="row justify-content-between">');
-    htmlarray.push('<div class="col-4">');
-    htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
-    htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
-    htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
-    htmlarray.push('Width: ' + SafePrint_with_value(plot['width'], default_width) + 'm<br/>');
-    htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
-    htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
-    htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
-    htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
-    htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
-    // if (plot['so:url'] != undefined) {
-    //     var link = plot['so:url'];
-    //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
-    // }
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-4">');
-    if (plot['so:image'] != undefined) {
-        if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
-            let contentUrl =  plot['so:image']['contentUrl'];
-            let thumbnail = plot['so:image']['thumbnail'];
-            htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
-        }
-    }
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
-    htmlarray.push('<hr/>');
-    htmlarray.push(rowsInfoarray.join(""));
-    htmlarray.push('<hr/>');
-    htmlarray.push('<h5>Phenotypes</h5>');
-    htmlarray.push(phenotypearray.join(""));
+    // rowsInfoarray.push('</tbody></table>');
+    // phenotypearray.push('</tbody></table>');
 
-    return htmlarray.join("");
+    formatted_plot['rowsInfo'] = rowsInfoarray;
+    formatted_plot['phenotypes'] = phenotypearray;
 
-
+    return formatted_plot;
 }
 
 // function get_GRU_by_accession(accession) {
