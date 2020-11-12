@@ -26,7 +26,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
     var team = '';
     var fieldTrialId = '';
     for (i = 0; i < jsonArray.length; i++) {
-        if (type_param === 'Grassroots:FieldTrial' || type_param === 'AllFieldTrials') {
+        if (type_param === 'Grassroots:FieldTrial') {
             fieldTrialName = jsonArray[i]['data']['so:name'];
             team = jsonArray[i]['data']['team'];
             fieldTrialId = jsonArray[i]['data']['_id']['$oid'];
@@ -49,7 +49,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
             } else {
                 filtered_data_without_location.push(jsonArray[i]['data']);
             }
-        } else if (type_param === 'Grassroots:Study') {
+        } else if (type_param === 'Grassroots:Study' || type_param === 'AllFieldTrials') {
             // var ft_id = jsonArray[i]['data']['parent_field_trial_id']['$oid'];
             // var req_json = CreatePlotsRequestForFieldTrial(ft_id);
 
@@ -619,42 +619,44 @@ function addFTPointer(la, lo, note) {
 // }
 
 
-function createPlotsHTML(array) {
-    for (i = 0; i < array.length; i++) {
-        var expAreaId = array[i]['_id']['$oid'];
-        var plots = array[i]['plots'];
-        var htmlarray = [];
+// function createPlotsHTML(array) {
+//     for (i = 0; i < array.length; i++) {
+//         var expAreaId = array[i]['_id']['$oid'];
+//         var plots = array[i]['plots'];
+//         var htmlarray = [];
+//
+//         var row = 1;
+//         var column = 1;
+//
+//         for (j = 0; j < plots.length; j++) {
+//
+//             if (plots[j]['row_index'] === row) {
+//                 if (plots[j]['column_index'] === column) {
+//                     htmlarray.push(formatPlot(plots[j]));
+//                     column++;
+//                 }
+//             } else if (plots[j]['row_index'] > row) {
+//
+//                 row++;
+//                 column = 2;
+//                 htmlarray.push('</tr><tr>');
+//                 htmlarray.push('<td>' + row + '</td>');
+//                 htmlarray.push(formatPlot(plots[j]));
+//             }
+//         }
+//         var tableString = '<td>1</td>' + htmlarray.join("");
+//         var tableArray = tableString.split("</tr><tr>");
+//         var reversedString = tableArray.reverse().join("</tr><tr>");
+//         plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
+//     }
+//
+// }
 
-        var row = 1;
-        var column = 1;
-
-        for (j = 0; j < plots.length; j++) {
-
-            if (plots[j]['row_index'] === row) {
-                if (plots[j]['column_index'] === column) {
-                    htmlarray.push(formatPlot(plots[j]));
-                    column++;
-                }
-            } else if (plots[j]['row_index'] > row) {
-
-                row++;
-                column = 2;
-                htmlarray.push('</tr><tr>');
-                htmlarray.push('<td>' + row + '</td>');
-                htmlarray.push(formatPlot(plots[j]));
-            }
-        }
-        var tableString = '<td>1</td>' + htmlarray.join("");
-        var tableArray = tableString.split("</tr><tr>");
-        var reversedString = tableArray.reverse().join("</tr><tr>");
-        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
-    }
-
-}
-
-function formatPlot(plot) {
-    var plotId = plot['_id']['$oid'];
-    var accession = "";
+function formatPlot(plot, plot_block_rows, plot_block_columns) {
+    let plotId = plot['_id']['$oid'];
+    let current_row = parseInt(plot['row_index']);
+    let current_column = parseInt(plot['column_index']);
+    let accession = "";
     for (r = 0; r < plot['rows'].length; r++) {
         accession += " " + plot['rows'][r]['material']['accession'];
     }
@@ -672,7 +674,25 @@ function formatPlot(plot) {
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
     // return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
-    return '<td class="plot" id="' + plotId + '" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
+    // return '<td class="plot" id="' + plotId + '" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
+
+    let padding = plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows);
+    return '<td style="' + padding + '"><div class="plot" id="' + plotId + '" style="padding:5px; cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + current_row + ' Column:' + current_column + '</div></td>';
+}
+
+function plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows) {
+    let padding = 'padding:5px;';
+    if (current_column % plot_block_columns === 0 && current_row % plot_block_rows === 0) {
+        console.log('both');
+        padding = 'padding:30px 30px 5px 5px;';
+    } else if (current_column % plot_block_columns === 0) {
+        console.log('ver');
+        padding = 'padding:5px 30px 5px 5px;';
+    } else if (current_row % plot_block_rows === 0) {
+        console.log('hori');
+        padding = 'padding:30px 5px 5px 5px;';
+    }
+    return padding;
 }
 
 function plotModal(plotId) {
@@ -774,7 +794,7 @@ function format_plot_rows(plot, replicate_bool) {
     // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
     let replicate = ' (Current Plot)';
     if (replicate_bool) {
-        replicate = ' <u style="cursor:pointer;" onclick="plotModal(\''+plotId+'\')">(Plot Row:'+ plot['row_index'] + ' - Col:' + plot['column_index'] +')</u>';
+        replicate = ' <u style="cursor:pointer;" onclick="plotModal(\'' + plotId + '\')">(Plot Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')</u>';
     }
 
     for (r = 0; r < plot['rows'].length; r++) {
@@ -960,7 +980,10 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
 }
 
 function CreatePlotsRequestForAllFieldTrials(keyword) {
-
+    // let facet = 'Study';
+    // if (keyword === '') {
+    //     facet = 'Field Trial';
+    // }
     var request = {
         "services": [
             {
@@ -975,7 +998,7 @@ function CreatePlotsRequestForAllFieldTrials(keyword) {
                         },
                         {
                             "param": "FT Facet",
-                            "current_value": "Field Trial"
+                            "current_value": "Study"
                         },
                         {
                             "param": "FT Results Page Number",
@@ -1049,8 +1072,13 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
     console.log(JSON.stringify(experimental_area_json));
 
     plot_json = experimental_area_json['plots'];
-    var expAreaId = experimental_area_json['_id']['$oid'];
-    var plots = experimental_area_json['plots'];
+    let expAreaId = experimental_area_json['_id']['$oid'];
+    let plots = experimental_area_json['plots'];
+
+    let plot_block_rows = parseInt(experimental_area_json['plot_block_rows']);
+    let plot_block_columns = parseInt(experimental_area_json['plot_block_columns']);
+
+
 
     if (plots.length > 0) {
         var htmlarray = [];
@@ -1062,23 +1090,27 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
 
             if (plots[j]['row_index'] === row) {
                 if (plots[j]['column_index'] === column) {
-                    htmlarray.push(formatPlot(plots[j]));
+                    htmlarray.push(formatPlot(plots[j], plot_block_rows, plot_block_columns));
                     column++;
                 }
             } else if (plots[j]['row_index'] > row) {
 
+                let current_row = parseInt(plots[j]['row_index']);
+                let current_column = parseInt(plots[j]['column_index']);
                 row++;
                 column = 2;
                 htmlarray.push('</tr><tr>');
-                htmlarray.push('<td>' + row + '</td>');
-                htmlarray.push(formatPlot(plots[j]));
+                let padding = plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows);
+                htmlarray.push('<td  style="' + padding + '">' + row + '</td>');
+                htmlarray.push(formatPlot(plots[j], plot_block_rows, plot_block_columns));
             }
         }
         var tableString = '<td>1</td>' + htmlarray.join("");
         var tableArray = tableString.split("</tr><tr>");
         var reversedString = tableArray.reverse().join("</tr><tr>");
 
-        return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
+        // return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
+        return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; "><tr>' + reversedString + '</tr></table></div>';
     } else {
         return '<div id="plot"><p>No plot data available.</p></div>'
     }
