@@ -96,6 +96,18 @@ function produceFieldtrialTable(data, type_param) {
         "ordering": false,
         "columns": [
             {
+                title: "Programme",
+                "render": function (data, type, full, meta) {
+                    return SafePrint(full['parent_field_trial']['programme']);
+                }
+            },
+            {
+                title: "Field Trial",
+                "render": function (data, type, full, meta) {
+                    return SafePrint(full['parent_field_trial']['so:name']);
+                }
+            },
+            {
                 title: "Name",
                 "render": function (data, type, full, meta) {
                     return full['so:name'];
@@ -957,8 +969,8 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
                         "current_value": fieldtrial_id
                     },
                     {
-                        "param": "FT Facet",
-                        "current_value": "Field Trial"
+                        "param": "FT Trial Facet",
+                        "current_value": true
                     },
                     {
                         "param": "FT Results Page Number",
@@ -997,8 +1009,8 @@ function CreatePlotsRequestForAllFieldTrials(keyword) {
                             "current_value": keyword
                         },
                         {
-                            "param": "FT Facet",
-                            "current_value": "Study"
+                            "param": "FT Study Facet",
+                            "current_value": true
                         },
                         {
                             "param": "FT Results Page Number",
