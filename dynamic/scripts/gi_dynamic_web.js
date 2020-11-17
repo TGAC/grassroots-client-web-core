@@ -1970,6 +1970,14 @@ function format_fieldtrial_result(array) {
         var doi = '';
 
         var typeText = '';
+        if (type === 'Grassroots:Program') {
+            typeText = 'Programme';
+            info = 'Principal Investigator: ' + SafePrint(array[i]['data']['principal_investigator']) + '</br>' + SafePrint(array[i]['data']['so:description']);
+            if (array[i]['data']['so:url'] !== undefined && array[i]['data']['so:url'] !== null) {
+                let program_link = array[i]['data']['so:url'];
+                doi = '<a target="_blank" href="' + program_link + '">Link</a>';
+            }
+        }
         if (type === 'Grassroots:FieldTrial') {
             typeText = 'Field Trial';
             info = array[i]['data']['team'];
@@ -1991,7 +1999,7 @@ function format_fieldtrial_result(array) {
             info = array[i]['data']['trait']['so:name'];
         }
         if (type === 'Grassroots:FieldTrial' || type === 'Grassroots:Study') {
-            doi = '<a target="_blank" href="../dynamic/fieldtrial_dynamic.html?id=' + id + '&type=' + type + '">View ' + typeText + '</a>'
+            doi = '<a target="_blank" href="../dynamic/fieldtrial_dynamic.html?id=' + id + '&type=' + type + '">View ' + typeText + '</a>';
         }
         html.push('<tr>');
         html.push('<td>');
