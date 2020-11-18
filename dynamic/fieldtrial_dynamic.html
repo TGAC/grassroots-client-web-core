@@ -163,7 +163,7 @@
         </div>
         <div style="clear:both;"></div>
 
-        <div id="result"></div>
+        <div id="result"><img src="images/ajax-loader.gif"/></div>
 
         <div id="map"></div>
 
@@ -225,6 +225,7 @@
                             dataType: "json",
                             contentType: "application/json; charset=utf-8"
                         }).done(function (ft_json) {
+                            $('#result').html('');
                             console.log(JSON.stringify(ft_json));
                             start_map(ft_json, type_param);
                         }).fail(function (req, status, error) {

@@ -35,15 +35,15 @@ function startFieldTrialGIS(jsonArray, type_param) {
                     if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
                         if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
                             var study_json = jsonArray[i]['data']['studies'][j];
-                            study_json["team"] = team;
-                            study_json["parent_field_trial_name"] = fieldTrialName;
-                            study_json["parent_field_trial_id"] = fieldTrialId;
+                            // study_json["team"] = team;
+                            // study_json["parent_field_trial_name"] = fieldTrialName;
+                            // study_json["parent_field_trial_id"] = fieldTrialId;
                             filtered_data_with_location.push(study_json);
                         }
                     } else {
                         var study_json = jsonArray[i]['data']['studies'][j];
-                        study_json["team"] = team;
-                        study_json["so:name"] = fieldTrialName;
+                        // study_json["team"] = team;
+                        // study_json["so:name"] = fieldTrialName;
                         filtered_data_without_location.push(study_json);
                     }
             } else {
@@ -98,7 +98,7 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Programme",
                 "render": function (data, type, full, meta) {
-                    return SafePrint(full['parent_field_trial']['programme']);
+                    return SafePrint(full['parent_program']['so:name']);
                 }
             },
             {
@@ -108,7 +108,7 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
-                title: "Name",
+                title: "Study",
                 "render": function (data, type, full, meta) {
                     return full['so:name'];
                 }
@@ -116,7 +116,7 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Team",
                 "render": function (data, type, full, meta) {
-                    return full['team'];
+                    return SafePrint(full['parent_field_trial']['team']);
                 }
             },
             // {
