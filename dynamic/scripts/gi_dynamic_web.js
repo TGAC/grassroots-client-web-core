@@ -1812,12 +1812,12 @@ function format_grassroots_search_result(json) {
     if (json['@type'] == 'Grassroots:Study') {
         var study_id = json['id'];
         var study_name = json['so:name'];
-        grassroots_search_html.push('Grassroots Study: <a href="/dev/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
+        grassroots_search_html.push('Grassroots Study: <a href="/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
     }
     if (json['@type'] == 'Grassroots:FieldTrial') {
         var ft_id = json['id'];
         var ft_name = json['so:name'];
-        grassroots_search_html.push('Grassroots Field Trial: <a href="/dev/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
+        grassroots_search_html.push('Grassroots Field Trial: <a href="/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
     } else if (json['@type'] == 'Grassroots:Service') {
         var service = json['service'];
         var description = json['so:description'];
@@ -1825,7 +1825,7 @@ function format_grassroots_search_result(json) {
         grassroots_search_html.push('<p><b>' + service + '</b></p>');
         grassroots_search_html.push('<p><b>' + description + '</b></p>');
         //when alt name available need to make it dynamic
-        grassroots_search_html.push('<p><a href="/dev/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
+        grassroots_search_html.push('<p><a href="/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
     } else if (json['@type'] == 'Grassroots:Project') {
         var author = json['author'].replaceAll('\"', '').replaceAll('[', '').replaceAll(']', '');
         var description = json['so:description'];
