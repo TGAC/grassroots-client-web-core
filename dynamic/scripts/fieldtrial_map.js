@@ -170,6 +170,16 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
+                title: "Shape Data",
+                "render": function (data, type, full, meta) {
+                    if (full['shape_data'] !== null && full['shape_data'] !== undefined && full['shape_data'] !== '') {
+                        return '<u class="newstyle_link">View</u>';
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {
                 title: "Popup Info",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
@@ -197,7 +207,7 @@ function produceFieldtrialTable(data, type_param) {
         console.log(cellIdx);
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        if (json['address'] !== undefined && cellIdx['column'] === 6) {
+        if (json['address'] !== undefined && (cellIdx['column'] === 8 || cellIdx['column'] === 9)) {
             if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
@@ -522,6 +532,10 @@ function displayFTLocations(array) {
         // ;
         var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
+        if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
+            let geo_json = JSON.parse(array[i]['shape_data']);
+            L.geoJson(geo_json).addTo(map);
+        }
     }
     map.addLayer(markersGroup2);
 
@@ -1089,7 +1103,6 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
 
     let plot_block_rows = parseInt(experimental_area_json['plot_block_rows']);
     let plot_block_columns = parseInt(experimental_area_json['plot_block_columns']);
-
 
 
     if (plots.length > 0) {
