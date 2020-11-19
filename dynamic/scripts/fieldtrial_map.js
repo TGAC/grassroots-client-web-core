@@ -211,7 +211,7 @@ function produceFieldtrialTable(data, type_param) {
             if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
-                map.setView([la, lo], 16, {animate: true});
+                map.setView([la, lo], 18, {animate: true});
                 $(window).scrollTop($('#map').offset().top - 90);
 
             }
