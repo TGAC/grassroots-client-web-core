@@ -207,7 +207,7 @@ function produceFieldtrialTable(data, type_param) {
         console.log(cellIdx);
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        if (json['address'] !== undefined && (cellIdx['column'] === 8 || cellIdx['column'] === 9)) {
+        if (json['address'] !== undefined && cellIdx['column'] === 8 ) {
             if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
@@ -215,6 +215,14 @@ function produceFieldtrialTable(data, type_param) {
                 $(window).scrollTop($('#map').offset().top - 90);
 
             }
+        }
+        else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' &&  cellIdx['column'] === 9) {
+            let shape_data = JSON.parse(json['shape_data']);
+            let coord = shape_data.features[0].geometry.coordinates;
+            lalo = coord[0][0][0];
+
+            map.setView(lalo.reverse(), 22);
+
         }
     });
 
