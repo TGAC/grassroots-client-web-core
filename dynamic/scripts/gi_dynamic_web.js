@@ -37,7 +37,7 @@ function get_all_services_as_table() {
             "so:name": "EI Grassroots server",
             "so:description": "The Earlham Institute Grassroots server",
             "so:url": "https://grassroots.tools/",
-            "so:logo": "https://grassroots.tools/images/ei_logo.png"
+            "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
         },
         "category": {
             "application_category": {
