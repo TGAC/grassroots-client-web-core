@@ -219,27 +219,30 @@ function produceFieldtrialTable(data, type_param) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
                 map.setView([la, lo], 18, {animate: true});
-                lalo = [la, lo];
                 $(window).scrollTop($('#map').offset().top - 90);
 
             }
         } else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
-            // let shape_data = JSON.parse(json['shape_data']);
-            // let coord = shape_data.features[0].geometry.coordinates;
-            let zoom = 18;
-            // if(coord[0][0].length() === 2){
-            //     lalo = coord[0][0][0].reverse();
-            //     zoom = 22;
-            // }else if (coord[0][0][0].length()===2){
-            //     lalo = coord[0][0][0].reverse();
-            //     zoom = 22;
-            // }
+
             if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
-                map.setView([la, lo], zoom, {animate: true});
-                $(window).scrollTop($('#map').offset().top - 90);
+                lalo = [la,lo];
             }
+
+            let shape_data = JSON.parse(json['shape_data']);
+            let coord = shape_data.features[0].geometry.coordinates;
+            let zoom = 18;
+            if(coord[0][0].length === 2){
+                lalo = coord[0][0][0].reverse();
+                zoom = 22;
+            }else if (coord[0][0][0].length===2){
+                lalo = coord[0][0][0].reverse();
+                zoom = 22;
+            }
+
+            map.setView(lalo, zoom, {animate: true});
+            $(window).scrollTop($('#map').offset().top - 90);
         }
     });
 
