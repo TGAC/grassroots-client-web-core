@@ -1780,8 +1780,10 @@ function display_result(json) {
                             if (this_result['data']['so:image'] != undefined) {
                                 img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
                             }
-                            grassroots_search_html.push('<legend>' + img_html + ' ' + this_result['title'] + '</legend>');
+                            grassroots_search_html.push('<b>' + img_html + ' ' + this_result['title'] + '</b>');
                             grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
+                            grassroots_search_html.push('<hr/>');
+                            grassroots_search_html.push('<br/>');
                         }
                     }
                     grassroots_search_html.push('</div>');
