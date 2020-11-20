@@ -1742,7 +1742,7 @@ function display_result(json) {
         var status_text_key = json['results'][0]['status_text'];
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             var results = 'Done';
-            if (json['results'][0]['results'] != undefined){
+            if (json['results'][0]['results'] != undefined) {
                 results = JSON.stringify(SafePrint_with_value(json['results'][0]['results'][0]['data'], 'Done'));
             }
             $('#status').html(results);
@@ -1753,19 +1753,25 @@ function display_result(json) {
     } else if (selected_service_name == grassroots_search) {
         $('#status').html('');
         var grassroots_search_html = [];
+        var grassroots_search_tabs_ul = [];
         var status_text_key = json['results'][0]['status_text'];
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             var facets = json['results'][0]['metadata']['facets'];
             var gs_results = json['results'][0]['results'];
             if (facets.length > 0) {
+                grassroots_search_html.push('<div id="search_result_tabs" style="margin: 20px 0; border: 1px solid; padding: 10px;">');
+                grassroots_search_html.push('<ul>');
+                grassroots_search_html.push(format_grassroots_search_results_ul(facets));
+                grassroots_search_html.push('</ul>');
+
                 for (i = 0; i < facets.length; i++) {
                     var this_facet = facets[i];
                     var this_facet_count = this_facet['count'];
                     var this_facet_name = this_facet['so:name'];
 
-                    grassroots_search_html.push('<div style="margin: 20px 0; border: 1px solid; padding: 10px;">');
-                    grassroots_search_html.push('<p>' + this_facet_name + ': ' + this_facet_count + ' result(s)<p>');
+                    // grassroots_search_html.push('<p>' + this_facet_name + ': ' + this_facet_count + ' result(s)<p>');
 
+                    grassroots_search_html.push('<div id="' + this_facet_name.replace(/\s+/g, "_") + '">');
                     for (j = 0; j < gs_results.length; j++) {
                         var this_result = gs_results[j];
                         var type_description = this_result['data']['type_description'];
@@ -1776,15 +1782,18 @@ function display_result(json) {
                             }
                             grassroots_search_html.push('<legend>' + img_html + ' ' + this_result['title'] + '</legend>');
                             grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
-                            grassroots_search_html.push('<hr/>');
                         }
                     }
                     grassroots_search_html.push('</div>');
                 }
+
+                grassroots_search_html.push('</div>');
             } else {
                 grassroots_search_html.push('No result found');
             }
             $('#status').html(grassroots_search_html.join(' '));
+
+            $("#search_result_tabs").tabs();
 
         }
     } else {
@@ -1803,6 +1812,22 @@ function display_result(json) {
         }
 
     }
+}
+
+function format_grassroots_search_results_ul(facets) {
+    var grassroots_search_html = [];
+    for (i = 0; i < facets.length; i++) {
+        var this_facet = facets[i];
+        var this_facet_count = this_facet['count'];
+        var this_facet_name = this_facet['so:name'];
+        var result_name = 'result';
+        if (this_facet_count > 1) {
+            result_name = 'results';
+        }
+        grassroots_search_html.push('<li><a href="#' + this_facet_name.replace(/\s+/g, "_") + '">' + this_facet_name + ': ' + this_facet_count + ' ' + result_name + '</a></li>');
+    }
+    return grassroots_search_html.join(' ');
+
 }
 
 function format_grassroots_search_result(json) {
@@ -1826,7 +1851,6 @@ function format_grassroots_search_result(json) {
         //when alt name available need to make it dynamic
         grassroots_search_html.push('<p><a href="/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
     } else if (json['@type'] == 'Grassroots:Project') {
-        console.log(json['author']);
         var author_list = JSON.parse(json['project-author']);
         var author = '';
         for (var i = 0; i < author_list.length; i++) {
