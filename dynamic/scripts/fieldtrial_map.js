@@ -562,7 +562,8 @@ function displayFTLocations(array) {
         addFTPointer(la, lo, popup_note);
         if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
             let geo_json = JSON.parse(array[i]['shape_data']);
-            L.geoJson(geo_json).addTo(map);
+            var shape_layer = L.geoJson(geo_json);
+            markersGroup2.addLayer(shape_layer);
         }
     }
     map.addLayer(markersGroup2);
