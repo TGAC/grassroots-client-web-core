@@ -1826,7 +1826,8 @@ function format_grassroots_search_result(json) {
         //when alt name available need to make it dynamic
         grassroots_search_html.push('<p><a href="/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
     } else if (json['@type'] == 'Grassroots:Project') {
-        var author_list = JSON.parse(json['author']);
+        console.log(json['author']);
+        var author_list = JSON.parse(json['project-author']);
         var author = '';
         for (var i = 0; i < author_list.length; i++) {
             author = author + ' ' + author_list[i];
