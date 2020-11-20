@@ -98,7 +98,13 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Programme",
                 "render": function (data, type, full, meta) {
-                    return SafePrint(full['parent_program']['so:name']);
+                    let result = '';
+                    if (full['parent_program'] !== undefined) {
+                        if (SafePrint(full['parent_program']['so:name']) != undefined) {
+                            result = SafePrint(full['parent_program']['so:name']);
+                        }
+                    }
+                    return result;
                 }
             },
             {
@@ -207,22 +213,33 @@ function produceFieldtrialTable(data, type_param) {
         console.log(cellIdx);
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        if (json['address'] !== undefined && cellIdx['column'] === 8 ) {
+        let lalo = [];
+        if (json['address'] !== undefined && cellIdx['column'] === 8) {
             if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
                 map.setView([la, lo], 18, {animate: true});
+                lalo = [la, lo];
                 $(window).scrollTop($('#map').offset().top - 90);
 
             }
-        }
-        else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' &&  cellIdx['column'] === 9) {
-            let shape_data = JSON.parse(json['shape_data']);
-            let coord = shape_data.features[0].geometry.coordinates;
-            lalo = coord[0][0][0];
-
-            map.setView(lalo.reverse(), 22);
-
+        } else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
+            // let shape_data = JSON.parse(json['shape_data']);
+            // let coord = shape_data.features[0].geometry.coordinates;
+            let zoom = 18;
+            // if(coord[0][0].length() === 2){
+            //     lalo = coord[0][0][0].reverse();
+            //     zoom = 22;
+            // }else if (coord[0][0][0].length()===2){
+            //     lalo = coord[0][0][0].reverse();
+            //     zoom = 22;
+            // }
+            if (json['address']['address']['location']['centre'] !== undefined) {
+                var la = json['address']['address']['location']['centre']['latitude'];
+                var lo = json['address']['address']['location']['centre']['longitude'];
+                map.setView([la, lo], zoom, {animate: true});
+                $(window).scrollTop($('#map').offset().top - 90);
+            }
         }
     });
 
