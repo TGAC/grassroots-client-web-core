@@ -24,7 +24,7 @@ const service_pathogenomics_geoservice = 'pathogenomics-geoservice';
 
 const field_trial_indexing = 'field_trial-indexing';
 
-const grassroots_search = 'Grassroots-search';
+const grassroots_search = 'search';
 
 function get_all_services_as_table() {
     var search_measured_variables_json = {
@@ -1757,7 +1757,6 @@ function display_result(json) {
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             var facets = json['results'][0]['metadata']['facets'];
             var gs_results = json['results'][0]['results'];
-            console.log(JSON.stringify(gs_results));
             if (facets.length > 0) {
                 for (i = 0; i < facets.length; i++) {
                     var this_facet = facets[i];
@@ -1827,7 +1826,11 @@ function format_grassroots_search_result(json) {
         //when alt name available need to make it dynamic
         grassroots_search_html.push('<p><a href="/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
     } else if (json['@type'] == 'Grassroots:Project') {
-        var author = json['author'].replaceAll('\"', '').replaceAll('[', '').replaceAll(']', '');
+        var author_list = JSON.parse(json['author']);
+        var author = '';
+        for (var i = 0; i < author_list.length; i++) {
+            author = author + ' ' + author_list[i];
+        }
         var description = json['so:description'];
         var url = json['so:url'];
         grassroots_search_html.push('<p><i>' + author + '</i></p>');
