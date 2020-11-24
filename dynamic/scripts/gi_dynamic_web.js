@@ -1942,8 +1942,8 @@ function format_grassroots_search_result(this_result) {
     } else if (json['@type'] === 'Grassroots:Programme') {
         grassroots_search_html.push('Principal Investigator: ' + SafePrint(json['principal_investigator']) + '</br>' + SafePrint(json['so:description']));
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
-            let program_link = array[i]['data']['so:url'];
-            grassroots_search_html.push('<br/><a target="_blank" href="' + program_link + '">Link</a>');
+            let program_link = json['so:url'];
+            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + program_link + '">Link</a>');
         }
     }
 
