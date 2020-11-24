@@ -1781,7 +1781,11 @@ function display_result(json) {
                                 if (this_result['data']['so:image'] != undefined) {
                                     img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
                                 }
-                                grassroots_search_html.push('<i>' + img_html + ' ' + this_result['title'] + '</i>');
+                                var title = this_result['title'];
+                                if (this_result['data']['@type'] == 'Grassroots:Service'){
+                                    title = this_result['data']['service'];
+                                }
+                                grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i>');
                                 grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
                                 grassroots_search_html.push('<hr/>');
                                 grassroots_search_html.push('<br/>');
@@ -1799,6 +1803,8 @@ function display_result(json) {
 
             $("#search_result_tabs").tabs();
 
+        }else {
+            $('#status').html(status_text_key);
         }
     } else {
         $('#status').html('');
@@ -1851,7 +1857,7 @@ function format_grassroots_search_result(json) {
         var ft_name = json['so:name'];
         grassroots_search_html.push('Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
     } else if (json['@type'] == 'Grassroots:Service') {
-        var service = json['service'] + ': ' + json['so:name'];
+        var service = json['so:name'];
         var description = json['so:description'];
         var payload_uri = encodeURIComponent(JSON.stringify(json['payload']));
         grassroots_search_html.push('<p><b>' + service + '</b></p>');
