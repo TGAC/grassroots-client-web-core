@@ -1901,7 +1901,7 @@ function format_grassroots_search_result(this_result) {
     }
     grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i>');
 
-    var json = this_resultp['data'];
+    var json = this_result['data'];
     grassroots_search_html.push('<div>');
 
     if (json['@type'] == 'Grassroots:Study') {
@@ -1922,7 +1922,7 @@ function format_grassroots_search_result(this_result) {
         //when alt name available need to make it dynamic
         grassroots_search_html.push('<p><a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
     } else if (json['@type'] == 'Grassroots:Project') {
-        var author_list = JSON.parse(json['authors']);
+        var author_list = json['authors'];
         var author = '';
         for (var i = 0; i < author_list.length; i++) {
             if (author === '') {
