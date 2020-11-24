@@ -1079,6 +1079,7 @@ function copyToClipboard(text) {
 
 
 function format_treatment_ajax_result(array) {
+
     var html = [];
 
     html.push('<table class="display" id="treatment_result" width="100%">');
@@ -1102,48 +1103,50 @@ function format_treatment_ajax_result(array) {
 
     html.push('<tbody>');
     for (var i = 0; i < array.length; i++) {
-        var trait = array[i]['data']['trait'];
-        var measurement = array[i]['data']['measurement'];
-        var unit = array[i]['data']['unit'];
-        var variable = array[i]['data']['variable'];
-        html.push('<tr>');
-        html.push('<td>');
-        html.push(trait['so:name']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(trait['so:sameAs']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(trait['so:description']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(trait['abbreviation']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(measurement['so:name']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(measurement['so:sameAs']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(unit['so:name']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(unit['so:sameAs']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(variable['so:name']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(variable['so:sameAs']);
-        html.push('</td>');
-        html.push('<td>');
-        html.push(variable['so:name'] + ' date');
-        html.push('</td>');
-        html.push('<td>');
-        html.push(variable['so:name'] + ' corrected');
-        html.push('</td>');
-        html.push('</tr>');
+        if (array[i]['data']['@type'] === 'Grassroots:MeasuredVariable') {
+            var trait = array[i]['data']['trait'];
+            var measurement = array[i]['data']['measurement'];
+            var unit = array[i]['data']['unit'];
+            var variable = array[i]['data']['variable'];
+            html.push('<tr>');
+            html.push('<td>');
+            html.push(trait['so:name']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(trait['so:sameAs']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(trait['so:description']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(trait['abbreviation']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(measurement['so:name']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(measurement['so:sameAs']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(unit['so:name']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(unit['so:sameAs']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(variable['so:name']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(variable['so:sameAs']);
+            html.push('</td>');
+            html.push('<td>');
+            html.push(variable['so:name'] + ' date');
+            html.push('</td>');
+            html.push('<td>');
+            html.push(variable['so:name'] + ' corrected');
+            html.push('</td>');
+            html.push('</tr>');
+        }
     }
     html.push('</tbody>');
     html.push('</table>');
@@ -1755,11 +1758,14 @@ function display_result(json) {
         var grassroots_search_html = [];
         var grassroots_search_tabs_ul = [];
         var status_text_key = json['results'][0]['status_text'];
+        var tabs = false;
+        var measured_variable_found = false;
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             if (json['results'][0]['metadata']['total_hits'] > 0) {
                 var facets = json['results'][0]['metadata']['facets'];
                 var gs_results = json['results'][0]['results'];
                 if (facets.length > 0) {
+                    tabs = true;
                     grassroots_search_html.push('<div id="search_result_tabs" style="margin: 20px 0; border: 1px solid; padding: 10px;">');
                     grassroots_search_html.push('<ul>');
                     grassroots_search_html.push(format_grassroots_search_results_ul(facets));
@@ -1773,22 +1779,18 @@ function display_result(json) {
                         // grassroots_search_html.push('<p>' + this_facet_name + ': ' + this_facet_count + ' result(s)<p>');
 
                         grassroots_search_html.push('<div id="' + this_facet_name.replace(/\s+/g, "_") + '">');
-                        for (j = 0; j < gs_results.length; j++) {
-                            var this_result = gs_results[j];
-                            var type_description = this_result['data']['type_description'];
-                            if (this_facet_name === type_description) {
-                                var img_html = '';
-                                if (this_result['data']['so:image'] != undefined) {
-                                    img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
+                        if (this_facet_name === 'Measured Variable') {
+                            measured_variable_found = true;
+                            grassroots_search_html.push('<i>Measured Variables</i><br/>');
+                            grassroots_search_html.push(format_treatment_ajax_result(gs_results));
+                        } else {
+                            for (j = 0; j < gs_results.length; j++) {
+                                var this_result = gs_results[j];
+                                var type_description = this_result['data']['type_description'];
+                                if (this_facet_name === type_description) {
+                                    grassroots_search_html.push(format_grassroots_search_result(this_result));
+
                                 }
-                                var title = this_result['title'];
-                                if (this_result['data']['@type'] == 'Grassroots:Service'){
-                                    title = this_result['data']['service'];
-                                }
-                                grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i>');
-                                grassroots_search_html.push('<div>' + format_grassroots_search_result(this_result['data']) + '</div>');
-                                grassroots_search_html.push('<hr/>');
-                                grassroots_search_html.push('<br/>');
                             }
                         }
                         grassroots_search_html.push('</div>');
@@ -1800,10 +1802,51 @@ function display_result(json) {
                 grassroots_search_html.push('No result found');
             }
             $('#status').html(grassroots_search_html.join(' '));
+            if (tabs) {
+                $("#search_result_tabs").tabs();
+            }
+            if (measured_variable_found) {
+                $('#treatment_result').DataTable({
+                    "searching": false,
+                    "aaSorting": [],
+                    dom: 'lBfrtip',
+                    buttons: [
+                        {
+                            extend: 'copyHtml5',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null,
+                            header: false,
+                            exportOptions: {
+                                columns: [8, 10, 11]
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null,
+                            header: false,
+                            exportOptions: {
+                                columns: [8, 10, 11]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null,
+                            header: false,
+                            exportOptions: {
+                                columns: [8, 10, 11]
+                            }
+                        }
+                    ],
+                    select: true
+                });
+            }
 
-            $("#search_result_tabs").tabs();
-
-        }else {
+        } else {
             $('#status').html(status_text_key);
         }
     } else {
@@ -1840,12 +1883,26 @@ function format_grassroots_search_results_ul(facets) {
 
 }
 
-function format_grassroots_search_result(json) {
+function format_grassroots_search_result(this_result) {
     var dev = '';
     if (server_url === '/dev/public_backend') {
         dev = '/dev'
     }
+
     var grassroots_search_html = [];
+
+    var img_html = '';
+    if (this_result['data']['so:image'] != undefined) {
+        img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
+    }
+    var title = this_result['title'];
+    if (this_result['data']['@type'] == 'Grassroots:Service') {
+        title = this_result['data']['service'];
+    }
+    grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i>');
+
+    var json = this_resultp['data'];
+    grassroots_search_html.push('<div>');
 
     if (json['@type'] == 'Grassroots:Study') {
         var study_id = json['id'];
@@ -1879,8 +1936,13 @@ function format_grassroots_search_result(json) {
         grassroots_search_html.push('<p><i>' + author + '</i></p>');
         grassroots_search_html.push('<p><i>' + description + '</i></p>');
         grassroots_search_html.push('<p><a style="color:#18bc9c ! important;" class="newstyle_link" href="' + url + '" target="_blank">Link</a> </p>');
+    } else if (json['@type'] === 'Grassroots:Location') {
+        grassroots_search_html.push(json['id']);
     }
 
+    grassroots_search_html.push('</div>');
+    grassroots_search_html.push('<hr/>');
+    grassroots_search_html.push('<br/>');
     return grassroots_search_html.join(' ');
 
 }
