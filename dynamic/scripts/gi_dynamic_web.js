@@ -1847,7 +1847,7 @@ function format_grassroots_search_result(json) {
         var ft_name = json['so:name'];
         grassroots_search_html.push('Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
     } else if (json['@type'] == 'Grassroots:Service') {
-        var service = json['service'];
+        var service = json['so:name'];
         var description = json['so:description'];
         var payload_uri = encodeURIComponent(JSON.stringify(json['payload']));
         grassroots_search_html.push('<p><b>' + service + '</b></p>');
@@ -1855,7 +1855,7 @@ function format_grassroots_search_result(json) {
         //when alt name available need to make it dynamic
         grassroots_search_html.push('<p><a style="color:#18bc9c ! important;" class="newstyle_link" href="/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
     } else if (json['@type'] == 'Grassroots:Project') {
-        var author_list = JSON.parse(json['project-author']);
+        var author_list = JSON.parse(json['authors']);
         var author = '';
         for (var i = 0; i < author_list.length; i++) {
             author = author + ' ' + author_list[i];
