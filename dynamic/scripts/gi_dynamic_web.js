@@ -1764,7 +1764,7 @@ function display_result(json) {
         var measured_variable_found = false;
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             if (json['results'][0]['metadata']['total_hits'] > 0) {
-                 facets = json['results'][0]['metadata']['facets'];
+                facets = json['results'][0]['metadata']['facets'];
                 var gs_results = json['results'][0]['results'];
                 if (facets.length > 0) {
                     tabs = true;
@@ -1863,12 +1863,13 @@ function display_result(json) {
                     var this_facet = facets[i];
                     var this_facet_name = this_facet['so:name'];
                     // do pagination
-                    $(function() {
-                        $('#'+this_facet_name.replace(/\s+/g, "_") + '_list').DataTable({
+                    $(function () {
+                        $('#' + this_facet_name.replace(/\s+/g, "_") + '_list').DataTable({
                             "searching": false,
                             "ordering": false,
                             "lengthChange": false,
-                            "aaSorting": []})
+                            "aaSorting": []
+                        })
                     });
 
                 }
@@ -1925,10 +1926,19 @@ function format_grassroots_search_result(this_result) {
         img_html = ' <img src="' + this_result['data']['so:image'] + '"/> ';
     }
     var title = this_result['title'];
-    if (this_result['data']['@type'] == 'Grassroots:Service') {
-        title = this_result['data']['service'];
-    }
-    grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i>');
+
+    // if (this_result['data']['so:url'] != undefined) {
+    //     var result_link = this_result['data']['so:url'];
+    //     if (this_result['data']['@type'] == 'Grassroots:Service'){
+    //         title = this_result['data']['service'];
+    //         grassroots_search_html.push('<a style="color:#18bc9c ! important;" target="_blank" href="' + result_link + '"><i>' + img_html + ' ' + title + '</i></a>');
+    //     }else{
+    //         grassroots_search_html.push('<a style="color:#18bc9c ! important;" target="_blank" href="' + result_link + '"><i>' + img_html + ' ' + title + '</i></a>');
+    //     }
+    // } else {
+    //     grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i>');
+    // }
+
 
     var json = this_result['data'];
     grassroots_search_html.push('<div>');
@@ -1936,20 +1946,20 @@ function format_grassroots_search_result(this_result) {
     if (json['@type'] == 'Grassroots:Study') {
         var study_id = json['id'];
         var study_name = json['so:name'];
-        grassroots_search_html.push('Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
-    }
-    if (json['@type'] == 'Grassroots:FieldTrial') {
+        grassroots_search_html.push(img_html+'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
+    } else if (json['@type'] == 'Grassroots:FieldTrial') {
         var ft_id = json['id'];
         var ft_name = json['so:name'];
-        grassroots_search_html.push('Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
+        grassroots_search_html.push(img_html+'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
     } else if (json['@type'] == 'Grassroots:Service') {
+        title = this_result['data']['service'];
         var service = json['so:name'];
         var description = json['so:description'];
         var payload_uri = encodeURIComponent(JSON.stringify(json['payload']));
-        grassroots_search_html.push('<p><b>' + service + '</b></p>');
-        grassroots_search_html.push('<p>' + description + '</p>');
+        grassroots_search_html.push('<a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/service/link?payload=' + payload_uri + '" target="_blank">' + img_html + ' ' + title + '</a><br/>');
+        grassroots_search_html.push('<b>' + service + '</b><br/>');
+        grassroots_search_html.push('' + description + '<br/>');
         //when alt name available need to make it dynamic
-        grassroots_search_html.push('<p><a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/service/link?payload=' + payload_uri + '" target="_blank">Link</a></p>');
     } else if (json['@type'] == 'Grassroots:Project') {
         var author_list = json['authors'];
         var author = '';
@@ -1962,28 +1972,33 @@ function format_grassroots_search_result(this_result) {
         }
         var description = json['so:description'];
         var url = json['so:url'];
+        grassroots_search_html.push('<a style="color:#18bc9c ! important;" class="newstyle_link" href="' + url + '" target="_blank">' + img_html + ' ' + title + '</a><br/>');
         grassroots_search_html.push('<i>' + author + '</i><br/>');
         grassroots_search_html.push('' + description + '<br/>');
-        grassroots_search_html.push('<p><a style="color:#18bc9c ! important;" class="newstyle_link" href="' + url + '" target="_blank">Link</a> </p>');
     } else if (json['@type'] === 'Grassroots:Location') {
+        grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
         grassroots_search_html.push(json['id']);
     } else if (json['@type'] === 'Grassroots:Programme') {
-        grassroots_search_html.push('Principal Investigator: ' + SafePrint(json['principal_investigator']) + '</br>' + SafePrint(json['so:description']));
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
             let program_link = json['so:url'];
-            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + program_link + '">Link</a>');
+            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + program_link + '">' + img_html + ' ' + title + '</a><br/>');
+        } else {
+            grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
         }
+        grassroots_search_html.push('Principal Investigator: ' + SafePrint(json['principal_investigator']) + '</br>' + SafePrint(json['so:description']));
     } else if (json['@type'] === 'Grassroots:Publication') {
-        grassroots_search_html.push('<i>' + json['author'] + '</i><br/>');
-        grassroots_search_html.push(''+SafePrint(json['so:description']) + '</br>');
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
             let publication_link = json['so:url'];
-            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + publication_link + '">Link</a>');
+            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + publication_link + '">' + img_html + ' ' + title + '</a><br/>');
+        } else {
+            grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
         }
+        grassroots_search_html.push('<i>' + json['author'] + '</i><br/>');
+        grassroots_search_html.push('' + SafePrint(json['so:description']) + '</br>');
     }
 
     grassroots_search_html.push('</div>');
-    // grassroots_search_html.push('<hr/>');
+    grassroots_search_html.push('<hr/>');
     grassroots_search_html.push('<br/>');
     return grassroots_search_html.join(' ');
 
