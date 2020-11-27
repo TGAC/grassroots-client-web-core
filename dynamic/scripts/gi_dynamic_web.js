@@ -1945,6 +1945,12 @@ function format_grassroots_search_result(this_result) {
             let program_link = json['so:url'];
             grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + program_link + '">Link</a>');
         }
+    } else if (json['@type'] === 'Grassroots:Publication') {
+        grassroots_search_html.push(SafePrint(json['so:description']) + '</br>');
+        if (json['so:url'] !== undefined && json['so:url'] !== null) {
+            let publication_link = json['so:url'];
+            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + publication_link + '">Link</a>');
+        }
     }
 
     grassroots_search_html.push('</div>');
