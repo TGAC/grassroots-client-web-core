@@ -117,7 +117,8 @@
                     <a class="nav-link js-scroll-trigger" href="https://grassroots.tools/index.html#contact">Contact</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="https://grassroots.tools/public/service/search">Search</a>
+                    <a class="nav-link js-scroll-trigger"
+                       href="https://grassroots.tools/public/service/search">Search</a>
                 </li>
             </ul>
             <img class="navbar-nav navbar-right" style="height:50px;margin-left:50px;"
@@ -169,11 +170,11 @@
         <div id="result"><img src="images/ajax-loader.gif"/></div>
 
         <div id="map"></div>
-        <div id="map_buttons" style="position: absolute; top: 170px;">
+        <div id="map_buttons" style="position: absolute; top: 170px;display:none;">
             <div class="input-group">
                <span class="input-group-btn">
-        <button type="button" class="btn btn-default" onclick="map.locate({setView: true});">My Location
-        </button>
+                    <button type="button" class="btn btn-default" onclick="map.locate({setView: true, maxZoom: 16});">My Location
+                    </button>
                </span>
             </div>
         </div>
@@ -182,11 +183,11 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal " tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;" >
+        <div class="modal " tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
             <div class="modal-dialog  modal-dialog-centered" role="document">
                 <div class="modal-content" style="z-index: 9999999;">
                     <div class="modal-header">
-                        <h5 class="modal-title"> </h5>
+                        <h5 class="modal-title"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -263,6 +264,7 @@
                 L.control.scale().addTo(map);
 
                 startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
+                $('#map_buttons').show();
 
                 function onLocationFound(e) {
                     var radius = e.accuracy;
@@ -272,6 +274,7 @@
 
                     L.circle(e.latlng, radius).addTo(map);
                 }
+
                 map.on('locationfound', onLocationFound);
 
                 function onLocationError(e) {
