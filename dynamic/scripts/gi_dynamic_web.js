@@ -1995,6 +1995,8 @@ function format_grassroots_search_result(this_result) {
         }
         grassroots_search_html.push('<i>' + json['author'] + '</i><br/>');
         grassroots_search_html.push('' + SafePrint(json['so:description']) + '</br>');
+    } else {
+        grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
     }
 
     grassroots_search_html.push('</div>');
