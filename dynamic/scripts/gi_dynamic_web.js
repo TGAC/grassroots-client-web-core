@@ -1934,8 +1934,8 @@ function format_grassroots_search_result(this_result) {
         }
         var description = json['so:description'];
         var url = json['so:url'];
-        grassroots_search_html.push('<p><i>' + author + '</i></p>');
-        grassroots_search_html.push('<p><i>' + description + '</i></p>');
+        grassroots_search_html.push('<i>' + author + '</i><br/>');
+        grassroots_search_html.push('' + description + '<br/>');
         grassroots_search_html.push('<p><a style="color:#18bc9c ! important;" class="newstyle_link" href="' + url + '" target="_blank">Link</a> </p>');
     } else if (json['@type'] === 'Grassroots:Location') {
         grassroots_search_html.push(json['id']);
@@ -1946,7 +1946,8 @@ function format_grassroots_search_result(this_result) {
             grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + program_link + '">Link</a>');
         }
     } else if (json['@type'] === 'Grassroots:Publication') {
-        grassroots_search_html.push(SafePrint(json['so:description']) + '</br>');
+        grassroots_search_html.push('<i>' + json['author'] + '</i><br/>');
+        grassroots_search_html.push(''+SafePrint(json['so:description']) + '</br>');
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
             let publication_link = json['so:url'];
             grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + publication_link + '">Link</a>');
