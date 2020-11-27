@@ -1866,6 +1866,8 @@ function display_result(json) {
                     $(function() {
                         $('#'+this_facet_name.replace(/\s+/g, "_") + '_list').DataTable({
                             "searching": false,
+                            "ordering": false,
+                            "lengthChange": false,
                             "aaSorting": []})
                     });
 
