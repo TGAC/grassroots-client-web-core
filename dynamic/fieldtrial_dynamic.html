@@ -169,7 +169,14 @@
         <div id="result"><img src="images/ajax-loader.gif"/></div>
 
         <div id="map"></div>
-
+        <div id="map_buttons" style="position: absolute; top: 170px;">
+            <div class="input-group">
+               <span class="input-group-btn">
+        <button type="button" class="btn btn-default" onclick="map.locate({setView: true});">My Location
+        </button>
+               </span>
+            </div>
+        </div>
         <div id="tableWrapper">
             <table id="resultTable"></table>
         </div>
@@ -256,6 +263,22 @@
                 L.control.scale().addTo(map);
 
                 startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
+
+                function onLocationFound(e) {
+                    var radius = e.accuracy;
+
+                    L.marker(e.latlng).addTo(map)
+                        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+                    L.circle(e.latlng, radius).addTo(map);
+                }
+                map.on('locationfound', onLocationFound);
+
+                function onLocationError(e) {
+                    alert(e.message);
+                }
+
+                map.on('locationerror', onLocationError);
             }
 
         </script>
