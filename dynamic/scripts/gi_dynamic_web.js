@@ -1758,12 +1758,13 @@ function display_result(json) {
         $('#status').html('');
         var grassroots_search_html = [];
         var grassroots_search_tabs_ul = [];
+        var facets = [];
         var status_text_key = json['results'][0]['status_text'];
         var tabs = false;
         var measured_variable_found = false;
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             if (json['results'][0]['metadata']['total_hits'] > 0) {
-                var facets = json['results'][0]['metadata']['facets'];
+                 facets = json['results'][0]['metadata']['facets'];
                 var gs_results = json['results'][0]['results'];
                 if (facets.length > 0) {
                     tabs = true;
@@ -1785,14 +1786,23 @@ function display_result(json) {
                             grassroots_search_html.push('<i>Measured Variables</i><br/>');
                             grassroots_search_html.push(format_treatment_ajax_result(gs_results));
                         } else {
+                            grassroots_search_html.push('<table id="' + this_facet_name.replace(/\s+/g, "_") + '_list">');
+                            grassroots_search_html.push('<thead><tr><th></th></tr>');
+                            grassroots_search_html.push('</thead>');
+                            grassroots_search_html.push('<tbody>');
                             for (j = 0; j < gs_results.length; j++) {
                                 var this_result = gs_results[j];
                                 var type_description = this_result['data']['type_description'];
                                 if (this_facet_name === type_description) {
+                                    grassroots_search_html.push('<tr><td>');
                                     grassroots_search_html.push(format_grassroots_search_result(this_result));
+                                    grassroots_search_html.push('</td></tr>');
 
                                 }
                             }
+                            grassroots_search_html.push('</tbody>');
+                            grassroots_search_html.push('</table>');
+
                         }
                         grassroots_search_html.push('</div>');
                     }
@@ -1845,6 +1855,22 @@ function display_result(json) {
                     ],
                     select: true
                 });
+            }
+
+
+            if (facets.length > 0) {
+                for (i = 0; i < facets.length; i++) {
+                    var this_facet = facets[i];
+                    var this_facet_name = this_facet['so:name'];
+                    // do pagination
+                    $(function() {
+                        $('#'+this_facet_name.replace(/\s+/g, "_") + '_list').DataTable({
+                            "searching": false,
+                            "aaSorting": []})
+                    });
+
+                }
+
             }
 
         } else {
@@ -1955,7 +1981,7 @@ function format_grassroots_search_result(this_result) {
     }
 
     grassroots_search_html.push('</div>');
-    grassroots_search_html.push('<hr/>');
+    // grassroots_search_html.push('<hr/>');
     grassroots_search_html.push('<br/>');
     return grassroots_search_html.join(' ');
 
