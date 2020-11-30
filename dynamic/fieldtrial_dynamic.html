@@ -253,6 +253,9 @@
                 $('#tableWrapper').html('<table id="resultTable"></table>');
                 // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
                 markersGroup2 = new L.MarkerClusterGroup({});
+                var location_layer_marker = new L.MarkerClusterGroup({});
+                var location_layer_circle = new L.MarkerClusterGroup({});
+                // markersGroup_current_location = new L.MarkerClusterGroup({});
                 map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -267,12 +270,24 @@
                 $('#map_buttons').show();
 
                 function onLocationFound(e) {
+
+                    map.removeLayer(location_layer_marker);
+                    map.removeLayer(location_layer_circle);
+
+                    location_layer_marker = new L.MarkerClusterGroup({});
+                    location_layer_circle = new L.MarkerClusterGroup({});
+
                     var radius = e.accuracy;
 
-                    L.marker(e.latlng).addTo(map)
-                        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+                    L.marker(e.latlng)
+                        .bindPopup("You are within " + radius + " meters from this point").openPopup().addTo(location_layer_marker);
 
-                    L.circle(e.latlng, radius).addTo(map);
+                    L.circle(e.latlng, radius).addTo(location_layer_circle);;
+
+                    // markersGroup_current_location.addLayer(L.marker(e.latlng).bindPopup("You are within " + radius + " meters from this point").openPopup());
+                    // markersGroup_current_location.addLayer(L.circle(e.latlng, radius));
+                    map.addLayer(location_layer_marker);
+                    map.addLayer(location_layer_circle);
                 }
 
                 map.on('locationfound', onLocationFound);
