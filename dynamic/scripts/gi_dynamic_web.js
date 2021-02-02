@@ -69,6 +69,48 @@ function get_all_services_as_table() {
             "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
         }
     };
+    var search_treatments_json = {
+        "@type": "grassroots_service",
+        "so:name": "Search Treatments",
+        "so:description": "Search field trial treatments",
+        "so:alternateName": "field_trial-search_treatments",
+        "provider": {
+            "@type": "so:Organization",
+            "so:name": "EI Grassroots server",
+            "so:description": "The Earlham Institute Grassroots server",
+            "so:url": "https://grassroots.tools/",
+            "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
+        },
+        "category": {
+            "application_category": {
+                "so:sameAs": "eo:topic_3810",
+                "so:name": "Agricultural science",
+                "so:description": "Multidisciplinary study, research and development within the field of agriculture."
+            },
+            "application_subcategory": {
+                "so:sameAs": "eo:operation_3431",
+                "so:name": "Deposition",
+                "so:description": "Deposit some data in a database or some other type of repository or software system."
+            },
+            "input": [
+                {
+                    "so:sameAs": "eo:data_0968",
+                    "so:name": "Keyword",
+                    "so:description": "Boolean operators (AND, OR and NOT) and wildcard characters may be allowed. Keyword(s) or phrase(s) used (typically) for text-searching purposes."
+                }
+            ],
+            "output": [
+                {
+                    "so:sameAs": "so:measurementTechnique",
+                    "so:name": "measurementTechnique",
+                    "so:description": "Measurement technique."
+                }
+            ]
+        },
+        "operation": {
+            "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
+        }
+    };
 
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
 
@@ -93,6 +135,7 @@ function get_all_services_as_table() {
             service_list_json = json['services'];
             if (server_url !== "/private_backend") {
                 service_list_json.push(search_measured_variables_json);
+                service_list_json.push(search_treatments_json);
             }
             var context_json = json['@context'];
             var listTable = jQuery('#listTable').DataTable({
@@ -226,12 +269,29 @@ function populateService(service_altname) {
         var form_html = [];
 
         // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
+        form_html.push('<label title="Search the field trial data">Search measured variables in the box below <i class="fas fa-arrow-right"></i>' +
+            ' Click (Ctrl click to select multi-rows) result rows to copy it to clipboard <i class="fas fa-arrow-right"></i>' +
+            ' Paste into your field trial spread sheet or export as excel.</label>');
+
+        // ajax stuff here
+        form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="search_treatment_ajax" value="" onkeyup="do_ajax_search(\'Measured Variable\');"/>');
+        form_html.push('<div id="ajax_result"></div>');
+        form_html.push('</div>');
+        $('#form').html(form_html.join(' '));
+
+    } else if (selected_service_name === 'field_trial-search_treatments') {
+        $('#title').html('Search Treatments');
+        $('#description').html('Search field trial treatments');
+        $('#moreinfo').html('For more information and help, go to the <a href="https://grassroots.tools/docs/user/services/field_trial/search_treatments.md" target="_blank">user documentation</a>');
+        var form_html = [];
+
+        // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
         form_html.push('<label title="Search the field trial data">Search treatment in the box below <i class="fas fa-arrow-right"></i>' +
             ' Click (Ctrl click to select multi-rows) result rows to copy it to clipboard <i class="fas fa-arrow-right"></i>' +
             ' Paste into your field trial spread sheet or export as excel.</label>');
 
         // ajax stuff here
-        form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="search_treatment_ajax" value="" onkeyup="do_ajax_search();"/>');
+        form_html.push('<input id="ft_ajax_search" type="text" class="form-control"  name="search_treatment_ajax" value="" onkeyup="do_ajax_search(\'Treatment\');"/>');
         form_html.push('<div id="ajax_result"></div>');
         form_html.push('</div>');
         $('#form').html(form_html.join(' '));
@@ -935,7 +995,7 @@ function isOdd(n) {
     return Math.abs(n % 2) == 1;
 }
 
-function do_ajax_search() {
+function do_ajax_search(type) {
     var input = $('#ft_ajax_search').val();
 
     var input_tail = "";
@@ -969,7 +1029,7 @@ function do_ajax_search() {
                             },
                             {
                                 "param": "FT Facet",
-                                "current_value": "Measured Variable"
+                                "current_value": type
                             },
                             {
                                 "param": "FT Results Page Number",
@@ -984,7 +1044,7 @@ function do_ajax_search() {
                 }
             ]
         };
-        console.log(submit_json);
+        console.log(JSON.stringify(submit_json));
 
         clearTimeout(timer);
 
@@ -999,45 +1059,52 @@ function do_ajax_search() {
                     if (result_array == undefined) {
                         $('#ajax_result').html("No result found");
                     } else {
-                        $('#ajax_result').html(format_treatment_ajax_result(result_array));
-                        var datatable = $('#treatment_result').DataTable({
-                            "searching": false,
-                            "aaSorting": [],
-                            dom: 'lBfrtip',
-                            buttons: [
-                                {
-                                    extend: 'copyHtml5',
-                                    title: null,
-                                    messageTop: null,
-                                    messageBottom: null,
-                                    header: false,
-                                    exportOptions: {
-                                        columns: [8, 10, 11]
+                        $('#ajax_result').html(format_treatment_ajax_result(result_array, type));
+                        if (type === 'Measured Variable') {
+                            var datatable = $('#treatment_result').DataTable({
+                                "searching": false,
+                                "aaSorting": [],
+                                dom: 'lBfrtip',
+                                buttons: [
+                                    {
+                                        extend: 'copyHtml5',
+                                        title: null,
+                                        messageTop: null,
+                                        messageBottom: null,
+                                        header: false,
+                                        exportOptions: {
+                                            columns: [8, 10, 11]
+                                        }
+                                    },
+                                    {
+                                        extend: 'csvHtml5',
+                                        title: null,
+                                        messageTop: null,
+                                        messageBottom: null,
+                                        header: false,
+                                        exportOptions: {
+                                            columns: [8, 10, 11]
+                                        }
+                                    },
+                                    {
+                                        extend: 'excelHtml5',
+                                        title: null,
+                                        messageTop: null,
+                                        messageBottom: null,
+                                        header: false,
+                                        exportOptions: {
+                                            columns: [8, 10, 11]
+                                        }
                                     }
-                                },
-                                {
-                                    extend: 'csvHtml5',
-                                    title: null,
-                                    messageTop: null,
-                                    messageBottom: null,
-                                    header: false,
-                                    exportOptions: {
-                                        columns: [8, 10, 11]
-                                    }
-                                },
-                                {
-                                    extend: 'excelHtml5',
-                                    title: null,
-                                    messageTop: null,
-                                    messageBottom: null,
-                                    header: false,
-                                    exportOptions: {
-                                        columns: [8, 10, 11]
-                                    }
-                                }
-                            ],
-                            select: true
-                        });
+                                ],
+                                select: true
+                            });
+                        } else if (type === 'Treatment'){
+                            var datatable = $('#treatments_result').DataTable({
+                                "searching": false,
+                                "aaSorting": []
+                            });
+                        }
                         simpleOrAdvanced(get_simpleOrAdvanced());
                         //
                         // $('#treatment_result tbody').on('click', 'tr', function () {
@@ -1078,81 +1145,110 @@ function copyToClipboard(text) {
 }
 
 
-function format_treatment_ajax_result(array) {
-    console.log(array);
-
+function format_treatment_ajax_result(array, type) {
     var html = [];
+    console.log(JSON.stringify(array));
+    if (type === 'Measured Variable') {
 
-    html.push('<table class="display" id="treatment_result" width="100%">');
-    html.push('<thead>');
-    html.push('<tr>');
-    html.push('<th>Trait name</th>');
-    html.push('<th>Trait Ontology</th>');
-    html.push('<th>Trait Description</th>');
-    html.push('<th>Trait Abbreviation</th>');
-    html.push('<th>Measurement Name</th>');
-    html.push('<th>Measurement Ontology</th>');
-    html.push('<th>Unit Name</th>');
-    html.push('<th>Unit Ontology</th>');
-    html.push('<th>Variable Name</th>');
-    html.push('<th>Variable Ontology</th>');
-    html.push('<th>Variable Date</th>');
-    html.push('<th>Variable Corrected</th>');
-    html.push('</tr>');
-    html.push('</thead>');
+        html.push('<table class="display" id="treatment_result" width="100%">');
+        html.push('<thead>');
+        html.push('<tr>');
+        html.push('<th>Trait name</th>');
+        html.push('<th>Trait Ontology</th>');
+        html.push('<th>Trait Description</th>');
+        html.push('<th>Trait Abbreviation</th>');
+        html.push('<th>Measurement Name</th>');
+        html.push('<th>Measurement Ontology</th>');
+        html.push('<th>Unit Name</th>');
+        html.push('<th>Unit Ontology</th>');
+        html.push('<th>Variable Name</th>');
+        html.push('<th>Variable Ontology</th>');
+        html.push('<th>Variable Date</th>');
+        html.push('<th>Variable Corrected</th>');
+        html.push('</tr>');
+        html.push('</thead>');
 
 
-    html.push('<tbody>');
-    for (var i = 0; i < array.length; i++) {
-        if (array[i]['data']['@type'] === 'Grassroots:MeasuredVariable') {
-            var trait = array[i]['data']['trait'];
-            var measurement = array[i]['data']['measurement'];
-            var unit = array[i]['data']['unit'];
-            var variable = array[i]['data']['variable'];
-            html.push('<tr>');
-            html.push('<td>');
-            html.push(trait['so:name']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(trait['so:sameAs']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(trait['so:description']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(trait['abbreviation']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(measurement['so:name']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(measurement['so:sameAs']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(unit['so:name']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(unit['so:sameAs']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(variable['so:name']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(variable['so:sameAs']);
-            html.push('</td>');
-            html.push('<td>');
-            html.push(variable['so:name'] + ' date');
-            html.push('</td>');
-            html.push('<td>');
-            html.push(variable['so:name'] + ' corrected');
-            html.push('</td>');
-            html.push('</tr>');
+        html.push('<tbody>');
+        for (var i = 0; i < array.length; i++) {
+            if (array[i]['data']['@type'] === 'Grassroots:MeasuredVariable') {
+                var trait = array[i]['data']['trait'];
+                var measurement = array[i]['data']['measurement'];
+                var unit = array[i]['data']['unit'];
+                var variable = array[i]['data']['variable'];
+                html.push('<tr>');
+                html.push('<td>');
+                html.push(trait['so:name']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(trait['so:sameAs']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(trait['so:description']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(trait['abbreviation']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(measurement['so:name']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(measurement['so:sameAs']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(unit['so:name']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(unit['so:sameAs']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(variable['so:name']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(variable['so:sameAs']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(variable['so:name'] + ' date');
+                html.push('</td>');
+                html.push('<td>');
+                html.push(variable['so:name'] + ' corrected');
+                html.push('</td>');
+                html.push('</tr>');
+            }
         }
+        html.push('</tbody>');
+        html.push('</table>');
+
+    } else if (type === 'Treatment') {
+        html.push('<table class="display" id="treatments_result" width="100%">');
+        html.push('<thead>');
+        html.push('<tr>');
+        html.push('<th>Treatment name</th>');
+        html.push('<th>Treatment Ontology</th>');
+        html.push('<th>Treatment Description</th>');
+        html.push('</tr>');
+        html.push('</thead>');
+
+
+        html.push('<tbody>');
+        for (var i = 0; i < array.length; i++) {
+            if (array[i]['data']['@type'] === 'Grassroots:Treatment') {
+                html.push('<tr>');
+                html.push('<td>');
+                html.push(array[i]['data']['so:name']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(array[i]['data']['so:sameAs']);
+                html.push('</td>');
+                html.push('<td>');
+                html.push(array[i]['data']['so:description']);
+                html.push('</td>');
+                html.push('</tr>');
+            }
+        }
+        html.push('</tbody>');
+        html.push('</table>');
     }
-    html.push('</tbody>');
-    html.push('</table>');
-
-
     return html.join(' ');
 }
 
@@ -1452,6 +1548,10 @@ function simpleOrAdvanced(string) {
             treatment_table.column(9).visible(true);
             level_simpleoradvanced = "advanced";
         }
+
+    } else if (selected_service_name === 'field_trial-search_treatments') {
+        var treatments_table = $('#treatments_result').DataTable();
+        level_simpleoradvanced = "simple";
 
     } else {
         if (string === 'show_simple') {
@@ -1762,6 +1862,7 @@ function display_result(json) {
         var status_text_key = json['results'][0]['status_text'];
         var tabs = false;
         var measured_variable_found = false;
+        var treatment_found = false;
         if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
             if (json['results'][0]['metadata']['total_hits'] > 0) {
                 facets = json['results'][0]['metadata']['facets'];
@@ -1784,7 +1885,11 @@ function display_result(json) {
                         if (this_facet_name === 'Measured Variable') {
                             measured_variable_found = true;
                             grassroots_search_html.push('<i>Measured Variables</i><br/>');
-                            grassroots_search_html.push(format_treatment_ajax_result(gs_results));
+                            grassroots_search_html.push(format_treatment_ajax_result(gs_results, 'Measured Variable'));
+                        } else if (this_facet_name === 'Treatment') {
+                            treatment_found = true;
+                            grassroots_search_html.push('<i>Treatment</i><br/>');
+                            grassroots_search_html.push(format_treatment_ajax_result(gs_results, 'Treatment'));
                         } else {
                             grassroots_search_html.push('<table id="' + this_facet_name.replace(/\s+/g, "_") + '_list">');
                             grassroots_search_html.push('<thead><tr><th></th></tr>');
@@ -1854,6 +1959,11 @@ function display_result(json) {
                         }
                     ],
                     select: true
+                });
+            }if (treatment_found) {
+                $('#treatments_result').DataTable({
+                    "searching": false,
+                    "aaSorting": []
                 });
             }
 
@@ -1946,11 +2056,11 @@ function format_grassroots_search_result(this_result) {
     if (json['@type'] == 'Grassroots:Study') {
         var study_id = json['id'];
         var study_name = json['so:name'];
-        grassroots_search_html.push(img_html+'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
+        grassroots_search_html.push(img_html + 'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
     } else if (json['@type'] == 'Grassroots:FieldTrial') {
         var ft_id = json['id'];
         var ft_name = json['so:name'];
-        grassroots_search_html.push(img_html+'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
+        grassroots_search_html.push(img_html + 'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
     } else if (json['@type'] == 'Grassroots:Service') {
         title = this_result['data']['service'];
         var service = json['so:name'];
