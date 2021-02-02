@@ -16,6 +16,7 @@ var colorJSON = {
     9: "#2ECC40",
 };
 var plotsModalInfo = {};
+var formatted_treatments = [];
 
 function startFieldTrialGIS(jsonArray, type_param) {
     console.log(JSON.stringify(jsonArray));
@@ -227,16 +228,16 @@ function produceFieldtrialTable(data, type_param) {
             if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
-                lalo = [la,lo];
+                lalo = [la, lo];
             }
 
             let shape_data = JSON.parse(json['shape_data']);
             let coord = shape_data.features[0].geometry.coordinates;
             let zoom = 18;
-            if(coord[0][0].length === 2){
+            if (coord[0][0].length === 2) {
                 lalo = coord[0][0][0].reverse();
                 zoom = 22;
-            }else if (coord[0][0][0].length===2){
+            } else if (coord[0][0][0].length === 2) {
                 lalo = coord[0][0][0].reverse();
                 zoom = 22;
             }
@@ -812,8 +813,9 @@ function formatPlotModal(plot) {
     htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
     htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
     htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
-    htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
+    // htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
+
     // if (plot['so:url'] != undefined) {
     //     var link = plot['so:url'];
     //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
@@ -829,6 +831,7 @@ function formatPlotModal(plot) {
     }
     htmlarray.push('</div>');
     htmlarray.push('</div>');
+    htmlarray.push(formatted_treatments);
     htmlarray.push('<hr/>');
     htmlarray.push(rowsInfoarray.join(""));
     htmlarray.push('<hr/>');
@@ -1133,6 +1136,7 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
     let plot_block_rows = parseInt(experimental_area_json['plot_block_rows']);
     let plot_block_columns = parseInt(experimental_area_json['plot_block_columns']);
 
+    formatted_treatments = generate_treatments_html(experimental_area_json);
 
     if (plots.length > 0) {
         var htmlarray = [];
@@ -1168,6 +1172,34 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
     } else {
         return '<div id="plot"><p>No plot data available.</p></div>'
     }
+}
+
+function generate_treatments_html(experimental_area_json) {
+    var htmlarray = [];
+    var treatment_factors = [];
+    treatment_factors = experimental_area_json['treatment_factors'];
+
+    htmlarray.push('<table class="table"><thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>');
+    for (j = 0; j < treatment_factors.length; j++) {
+        var treatment = treatment_factors[j];
+        var ontology = treatment['treatment']['so:sameAs'];
+
+        htmlarray.push('<tr>');
+        htmlarray.push('<td>' + treatment['treatment']['so:name'] + '</td>');
+        htmlarray.push('<td><a class="newstyle_link" target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">' + ontology + '</a></td>');
+        htmlarray.push('<td>' + treatment['treatment']['so:description'] + '</td>');
+
+        htmlarray.push('<td>');
+        for (i = 0; i < treatment['values'].length; i++) {
+            var this_value = treatment['values'][i];
+            htmlarray.push(this_value['so:name'] + ': ' + this_value['value'] + '<br/>');
+        }
+        htmlarray.push('</td>');
+        htmlarray.push('</tr>');
+    }
+    htmlarray.push('</tbody></table>');
+    return htmlarray.join(' ');
+
 }
 
 function filter_plot() {
