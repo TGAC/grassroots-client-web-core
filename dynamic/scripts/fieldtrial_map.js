@@ -794,7 +794,7 @@ function formatPlotModal(plot) {
     let phenotypearray = [];
     let rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody id="rowsInfo">');
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
     phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody id="phenotypes">');
 
     let formatted_plot = format_plot_rows(plot, false);
@@ -861,6 +861,7 @@ function format_plot_rows(plot, replicate_bool) {
         var color = colorJSON[replicate_index];
         var accession = SafePrint(plot['rows'][r]['material']['accession']);
         var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
+        var treatments = plot['rows'][r]['treatments'];
         rowsInfoarray.push('<tr>');
         rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
         rowsInfoarray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
@@ -869,6 +870,7 @@ function format_plot_rows(plot, replicate_bool) {
         rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
         //rowsInfoarray.push('<td id="' + random_id + '"></td>');
         rowsInfoarray.push('<td id="' + plotId + '_' + r + '"></td>');
+        rowsInfoarray.push('<td>'+format_plot_treatment(treatments)+'</td>');
         rowsInfoarray.push('<tr>');
         // get_GRU_by_accession(accession, plotId, random_id);
 
@@ -913,6 +915,15 @@ function format_plot_rows(plot, replicate_bool) {
     formatted_plot['phenotypes'] = phenotypearray;
 
     return formatted_plot;
+}
+
+function format_plot_treatment(treatments){
+    let htmlarray = [];
+    for (i = 0; i < treatments.length; i++) {
+        htmlarray.push(treatments[i]['so:sameAs'] + ' - ' + treatments[i]['label']);
+        htmlarray.push('<br/>');
+    }
+    return htmlarray.join(' ');
 }
 
 // function get_GRU_by_accession(accession) {
