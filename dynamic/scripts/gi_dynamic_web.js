@@ -1102,7 +1102,41 @@ function do_ajax_search(type) {
                         } else if (type === 'Treatment'){
                             var datatable = $('#treatments_result').DataTable({
                                 "searching": false,
-                                "aaSorting": []
+                                "aaSorting": [],
+                                dom: 'lBfrtip',
+                                buttons: [
+                                    {
+                                        extend: 'copyHtml5',
+                                        title: null,
+                                        messageTop: null,
+                                        messageBottom: null,
+                                        header: false,
+                                        exportOptions: {
+                                            columns: [0, 1, 2]
+                                        }
+                                    },
+                                    {
+                                        extend: 'csvHtml5',
+                                        title: null,
+                                        messageTop: null,
+                                        messageBottom: null,
+                                        header: false,
+                                        exportOptions: {
+                                            columns: [0, 1, 2]
+                                        }
+                                    },
+                                    {
+                                        extend: 'excelHtml5',
+                                        title: null,
+                                        messageTop: null,
+                                        messageBottom: null,
+                                        header: false,
+                                        exportOptions: {
+                                            columns: [0, 1, 2]
+                                        }
+                                    }
+                                ],
+                                select: true
                             });
                         }
                         simpleOrAdvanced(get_simpleOrAdvanced());
@@ -1225,6 +1259,7 @@ function format_treatment_ajax_result(array, type) {
         html.push('<tr>');
         html.push('<th>Treatment name</th>');
         html.push('<th>Treatment Ontology</th>');
+        html.push('<th>Ontology Link</th>');
         html.push('<th>Treatment Description</th>');
         html.push('</tr>');
         html.push('</thead>');
@@ -1233,12 +1268,16 @@ function format_treatment_ajax_result(array, type) {
         html.push('<tbody>');
         for (var i = 0; i < array.length; i++) {
             if (array[i]['data']['@type'] === 'Grassroots:Treatment') {
+                let ontology = array[i]['data']['so:sameAs'];
                 html.push('<tr>');
                 html.push('<td>');
                 html.push(array[i]['data']['so:name']);
                 html.push('</td>');
                 html.push('<td>');
-                html.push(array[i]['data']['so:sameAs']);
+                html.push(ontology);
+                html.push('</td>');
+                html.push('<td>');
+                html.push('<a class="newstyle_link" target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">https://browser.planteome.org/amigo/term/' + ontology + '</a>');
                 html.push('</td>');
                 html.push('<td>');
                 html.push(array[i]['data']['so:description']);
@@ -1963,7 +2002,41 @@ function display_result(json) {
             }if (treatment_found) {
                 $('#treatments_result').DataTable({
                     "searching": false,
-                    "aaSorting": []
+                    "aaSorting": [],
+                    dom: 'lBfrtip',
+                    buttons: [
+                        {
+                            extend: 'copyHtml5',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null,
+                            header: false,
+                            exportOptions: {
+                                columns: [0, 1, 2]
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null,
+                            header: false,
+                            exportOptions: {
+                                columns: [0, 1, 2]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: null,
+                            messageTop: null,
+                            messageBottom: null,
+                            header: false,
+                            exportOptions: {
+                                columns: [0, 1, 2]
+                            }
+                        }
+                    ],
+                    select: true
                 });
             }
 
