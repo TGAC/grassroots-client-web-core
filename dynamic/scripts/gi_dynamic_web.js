@@ -519,7 +519,7 @@ function produce_form(div, parameters, groups) {
                 var group_random_id = generate_random_id();
                 // repeatable stuff here
                 form_html.push('<fieldset class="' + group_level + '">');
-                form_html.push('<legend class="' + group_level + '">' + groups[j]['so:name'] + ' <span class="glyphicon glyphicon-plus pull-right" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
+                form_html.push('<legend class="' + group_level + '">' + groups[j]['so:name'] + ' <span class="fas fa-plus" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
                 form_html.push('<div id="' + group_random_id + '">');
 
                 var this_group = {};
