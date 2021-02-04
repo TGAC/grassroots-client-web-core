@@ -1803,8 +1803,8 @@ function construct_parameters(form) {
 }
 
 function process_repeatable_parameters(input_parameters) {
-    // let output_parameters = [];
-    $.each(repeatable_groups, function (i, group) {
+    let remove_indices = [];
+    $.each(repeatable_groups, function (index, group) {
         for (var i = 0; i < group['parameters'].length; i++) {
             var repeat_paramater = group['parameters'][i];
             var repeat_param = repeat_paramater['param'];
@@ -1815,13 +1815,16 @@ function process_repeatable_parameters(input_parameters) {
             for (var pt = 0; pt < input_parameters.length; pt++) {
                 let input_parameter = input_parameters[pt];
                 let input_param_name = input_parameter['param'];
-                if (input_parameter['grassroots_type'] === 'params:json_array' || input_parameter['grassroots_type'] === 'params:tabular') {
+                if (repeat_paramater['grassroots_type'] === 'params:json_array' || repeat_paramater['grassroots_type'] === 'params:tabular') {
                     let input_param_name_table = input_parameter['param'].split('-');
                     input_param_name = input_param_name_table[0];
                 }
+
+                console.log(input_param_name);
                 if (input_param_name === repeat_param) {
                     current_value.push(input_parameter['current_value']);
-                    input_parameters.splice(pt, 1);
+                    remove_indices.push(pt);
+                    // input_parameters.splice(pt, 1);
                 }
             }
             new_parameter['current_value'] = current_value;
@@ -1829,6 +1832,12 @@ function process_repeatable_parameters(input_parameters) {
         }
 
     });
+    remove_indices.sort();
+    remove_indices.reverse();
+    console.log(remove_indices);
+    for (var j = 0; j < remove_indices.length; j++) {
+        input_parameters.splice(remove_indices[j], 1);
+    }
     return input_parameters;
 }
 
