@@ -619,7 +619,30 @@ function add_group_parameter(group_id) {
         var grassroots_type = group_parameters[i]['grassroots_type'];
         if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
             var table_id = group_parameters[i]['param'].replace(/ /g, "_") + '-' + repeatable_groups[group_id]['counter'];
-            $('#' + table_id).DataTable();
+            $('#' + table_id).DataTable({
+                scrollX: true,
+                "paging": false,
+                "aaSorting": [],
+                dom: 'lBfrtip',
+                buttons: [
+                    {
+                        text: 'Add Row',
+                        className: 'btn btn-success new_row_button',
+                        action: function (e, dt, node, config) {
+                            table_add_new_row(dt.table().node().id);
+                        }
+                    },
+                    $.extend(true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        className: 'btn btn-success new_row_button',
+                        titleAttr: 'Export to Excel',
+                        // text:'New Export',
+                        title: null,
+                        messageTop: null,
+                        messageBottom: null
+                    })
+                ]
+            });
         }
     }
 
