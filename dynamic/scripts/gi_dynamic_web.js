@@ -1722,7 +1722,7 @@ function submit_form() {
 
 function construct_parameters(form) {
     var parameters = [];
-
+    // not getting the sheet of plots from the form but from memory
     if (selected_service_name === 'field_trial-submit_plots') {
         var parameter = {};
         parameter['param'] = 'PL Upload';
@@ -1763,7 +1763,7 @@ function construct_parameters(form) {
     for (var i = 0; i < form.length; i++) {
         var name = form[i]['name'].split('^');
         if (name[0] === 'tabular') {
-            //do nothing? DataTable().serializeArray() takes over
+            //do nothing above takes over
         } else {
             var param = name[0];
             var grassroots_type = name[1];
@@ -1799,7 +1799,37 @@ function construct_parameters(form) {
             parameters.push(parameter);
         }
     }
-    return parameters;
+    return process_repeatable_parameters(parameters);
+}
+
+function process_repeatable_parameters(input_parameters) {
+    // let output_parameters = [];
+    $.each(repeatable_groups, function (i, group) {
+        for (var i = 0; i < group['parameters'].length; i++) {
+            var repeat_paramater = group['parameters'][i];
+            var repeat_param = repeat_paramater['param'];
+
+            let new_parameter = {};
+            new_parameter['param'] = repeat_param;
+            let current_value = [];
+            for (var pt = 0; pt < input_parameters.length; pt++) {
+                let input_parameter = input_parameters[pt];
+                let input_param_name = input_parameter['param'];
+                if (input_parameter['grassroots_type'] === 'params:json_array' || input_parameter['grassroots_type'] === 'params:tabular') {
+                    let input_param_name_table = input_parameter['param'].split('-');
+                    input_param_name = input_param_name_table[0];
+                }
+                if (input_param_name === repeat_param) {
+                    current_value.push(input_parameter['current_value']);
+                    input_parameters.splice(pt, 1);
+                }
+            }
+            new_parameter['current_value'] = current_value;
+            input_parameters.push(new_parameter);
+        }
+
+    });
+    return input_parameters;
 }
 
 function get_api_result(service, previousID) {
