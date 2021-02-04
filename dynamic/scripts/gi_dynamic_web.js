@@ -517,7 +517,7 @@ function produce_form(div, parameters, groups) {
             }
             if (groups[j]['repeatable']) {
                 var group_random_id = generate_random_id();
-                if (groups[j]['so:name'] === 'Treatment Factors'){
+                if (groups[j]['so:name'] === 'Treatment Factors') {
                     group_random_id = "treatmentfactors";
                 }
                 // repeatable stuff here
@@ -617,9 +617,9 @@ function add_group_parameter(group_id) {
         $('#' + group_id).append(produce_one_parameter_form(group_parameters[i], true, group_id));
         // if(group_id === 'treatmentfactors' && group_parameters[i]['param'] == 'TF Levels'){
         var grassroots_type = group_parameters[i]['grassroots_type'];
-        if(grassroots_type === "params:tabular" || grassroots_type === "params:json_array"){
+        if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
             var table_id = group_parameters[i]['param'].replace(/ /g, "_") + '-' + repeatable_groups[group_id]['counter'];
-            $('#'+table_id).DataTable();
+            $('#' + table_id).DataTable();
         }
     }
 
@@ -798,9 +798,10 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             var cHeading = parameter['store']['Column Headings'];
             var each_table_obj = {};
             var table_id = param.replace(/ /g, "_");
-
-            if (repeatable){
-                table_id = param.replace(/ /g, "_") +'-' + counter;
+            var display_style = '';
+            if (repeatable) {
+                table_id = param.replace(/ /g, "_") + '-' + counter;
+                display_style = ' style="display:none;"';
             }
             var current_table_value = [];
 
@@ -809,21 +810,12 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             datatable_param_list.push(each_table_obj);
             form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
-            // TF Levels specially here if ()
-            // if (param === 'TF Levels') {
-            //     form_html.push('<table id="' + table_id  + '^' + counter + '" class="display datatable_param">');
-            //     form_html.push('<thead id="' + table_id + 'thead' + '^' + counter + '" >');
-            // } else {
-            // if (!repeatable){
-                form_html.push('<div class="sheet-drop" id="' + table_id + ':drop">Drop a spreadsheet file here to populate the table below</div>');
-                form_html.push('<label id="' + table_id + 'dropstatus"></label><br/>');
-            // }
-                // form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_new_row(\'' + table_id + '\')">Add row</button>');
-                // if (param === 'PL Upload') {
-                //     form_html.push('<button class="btn btn-success new_row_button" type="button" style="" onclick="table_add_teatment_columns_modal(\'' + table_id + '\')">Add treatment</button>');
-                // }
-                form_html.push('<table id="' + table_id + '" class="display datatable_param">');
-                form_html.push('<thead id="' + table_id + 'thead" >');
+
+            form_html.push('<div class="sheet-drop" id="' + table_id + ':drop" ' + display_style + '>Drop a spreadsheet file here to populate the table below</div>');
+            form_html.push('<label id="' + table_id + 'dropstatus" ' + display_style + '></label><br/>');
+
+            form_html.push('<table id="' + table_id + '" class="display datatable_param">');
+            form_html.push('<thead id="' + table_id + 'thead" >');
             // }
             form_html.push(table_thead_formatter(cHeading));
             form_html.push('</thead>');
