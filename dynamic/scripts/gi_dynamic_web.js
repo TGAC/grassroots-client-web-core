@@ -1145,7 +1145,7 @@ function do_ajax_search(type) {
                                         messageBottom: null,
                                         header: false,
                                         exportOptions: {
-                                            columns: [0, 1, 2]
+                                            columns: [1]
                                         }
                                     },
                                     {
@@ -1155,7 +1155,7 @@ function do_ajax_search(type) {
                                         messageBottom: null,
                                         header: false,
                                         exportOptions: {
-                                            columns: [0, 1, 2]
+                                            columns: [1]
                                         }
                                     },
                                     {
@@ -1165,7 +1165,7 @@ function do_ajax_search(type) {
                                         messageBottom: null,
                                         header: false,
                                         exportOptions: {
-                                            columns: [0, 1, 2]
+                                            columns: [1]
                                         }
                                     }
                                 ],
@@ -2085,7 +2085,7 @@ function display_result(json) {
                             messageBottom: null,
                             header: false,
                             exportOptions: {
-                                columns: [0, 1, 2]
+                                columns: [1]
                             }
                         },
                         {
@@ -2095,7 +2095,7 @@ function display_result(json) {
                             messageBottom: null,
                             header: false,
                             exportOptions: {
-                                columns: [0, 1, 2]
+                                columns: [1]
                             }
                         },
                         {
@@ -2105,7 +2105,7 @@ function display_result(json) {
                             messageBottom: null,
                             header: false,
                             exportOptions: {
-                                columns: [0, 1, 2]
+                                columns: [1]
                             }
                         }
                     ],
