@@ -190,7 +190,11 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Popup Info",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
-                    return '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
+                    var treatment = '';
+                    if (full['treatment_factors'] !== undefined){
+                        treatment = '<li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span></li>'
+                    }
+                    return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment+'</ul>';
                 }
             },
             {
@@ -379,6 +383,10 @@ function create_study_modal_html(array) {
         var studyId = studyJson['_id']['$oid'];
 
         plotsModalInfo[studyId] = create_study_info_html(studyJson);
+
+        if (studyJson['treatment_factors'] !== undefined){
+            plotsModalInfo[studyId+'treatment'] = generate_treatments_html(studyJson);
+        }
     }
 
 }
@@ -482,7 +490,7 @@ function create_study_info_html(studyJson) {
 
     // htmlarray.push('</div>');
     htmlarray.push('<hr/>');
-
+ // console.log(generate_treatments_html(studyJson));
     return htmlarray.join("");
 
 }
@@ -1187,28 +1195,30 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
 
 function generate_treatments_html(experimental_area_json) {
     var htmlarray = [];
-    var treatment_factors = [];
-    treatment_factors = experimental_area_json['treatment_factors'];
+    if (experimental_area_json['treatment_factors'] !== undefined) {
+        var treatment_factors = [];
+        treatment_factors = experimental_area_json['treatment_factors'];
 
-    htmlarray.push('<table class="table"><thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>');
-    for (j = 0; j < treatment_factors.length; j++) {
-        var treatment = treatment_factors[j];
-        var ontology = treatment['treatment']['so:sameAs'];
+        htmlarray.push('<table class="table"><thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>');
+        for (j = 0; j < treatment_factors.length; j++) {
+            var treatment = treatment_factors[j];
+            var ontology = treatment['treatment']['so:sameAs'];
 
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>' + treatment['treatment']['so:name'] + '</td>');
-        htmlarray.push('<td><a class="newstyle_link" target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">' + ontology + '</a></td>');
-        htmlarray.push('<td>' + treatment['treatment']['so:description'] + '</td>');
+            htmlarray.push('<tr>');
+            htmlarray.push('<td>' + treatment['treatment']['so:name'] + '</td>');
+            htmlarray.push('<td><a class="newstyle_link" target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">' + ontology + '</a></td>');
+            htmlarray.push('<td>' + treatment['treatment']['so:description'] + '</td>');
 
-        htmlarray.push('<td>');
-        for (i = 0; i < treatment['values'].length; i++) {
-            var this_value = treatment['values'][i];
-            htmlarray.push(this_value['so:name'] + ': ' + this_value['value'] + '<br/>');
+            htmlarray.push('<td>');
+            for (i = 0; i < treatment['values'].length; i++) {
+                var this_value = treatment['values'][i];
+                htmlarray.push(this_value['so:name'] + ': ' + this_value['value'] + '<br/>');
+            }
+            htmlarray.push('</td>');
+            htmlarray.push('</tr>');
         }
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+        htmlarray.push('</tbody></table>');
     }
-    htmlarray.push('</tbody></table>');
     return htmlarray.join(' ');
 
 }
