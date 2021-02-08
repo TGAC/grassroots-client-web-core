@@ -7,6 +7,7 @@ var fieldTrailSearchType = '';
 var level_simpleoradvanced = "simple";
 var wizard_bool = false;
 var wizard_count = 0;
+var refreshed = false;
 
 var plots = [];
 
@@ -533,11 +534,38 @@ function produce_form(div, parameters, groups) {
                 // console.log(JSON.stringify(this_group));
                 repeatable_groups[group_random_id] = this_group;
                 var this_group_parameters = [];
-                for (var i = 0; i < parameters.length; i++) {
-                    if (groups[j]['so:name'] == parameters[i]['group']) {
-                        form_html.push(produce_one_parameter_form(parameters[i], true, group_random_id));
-                        parameters_added.push(parameters[i]['param']);
-                        this_group_parameters.push(parameters[i]);
+
+                var this_group_repeat_no = 0;
+                if (refreshed) {
+                    for (var i = 0; i < parameters.length; i++) {
+                        if (groups[j]['so:name'] == parameters[i]['group']) {
+                            this_group_repeat_no = parameters[i]['current_value'].length;
+                            console.log('repeated: ' + this_group_repeat_no);
+                        }
+                    }
+                    if (this_group_repeat_no > 0) {
+                        for (var j = 0; j < this_group_repeat_no.length; j++) {
+                            for (var i = 0; i < parameters.length; i++) {
+                                if (groups[j]['so:name'] == parameters[i]['group']) {
+                                    var this_parameter = parameters[i];
+                                    this_parameter['current_value'] = parameters[i]['current_value'][j];
+                                    if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
+                                        this_parameter['param'] = parameters[i]['param'] + '-' + j;
+                                    }
+                                    form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id));
+                                    parameters_added.push(parameters[i]['param']);
+                                    this_group_parameters.push(parameters[i]);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < parameters.length; i++) {
+                        if (groups[j]['so:name'] == parameters[i]['group']) {
+                            form_html.push(produce_one_parameter_form(parameters[i], true, group_random_id));
+                            parameters_added.push(parameters[i]['param']);
+                            this_group_parameters.push(parameters[i]);
+                        }
                     }
                 }
                 repeatable_groups[group_random_id]['parameters'] = this_group_parameters;
@@ -646,6 +674,9 @@ function add_group_parameter(group_id) {
         }
     }
     alert('Added one set.');
+    // $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
+    //     $("#success-alert").slideUp(500);
+    // });
 
 }
 
@@ -1020,6 +1051,7 @@ function refresh_service(input) {
 function refresh_form_with_result(json) {
     parameters = json['services'][0]['operation']['parameter_set']['parameters'];
     groups = json['services'][0]['operation']['parameter_set']['groups'];
+    refreshed = true;
     produce_form('form', parameters, groups);
 
 }

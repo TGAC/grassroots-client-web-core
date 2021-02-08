@@ -224,6 +224,12 @@ content
     </div>
 </div>
 
+ <!-- Modal -->
+ <div class="alert alert-success" id="success-alert" >
+     <button type="button" class="close" data-dismiss="alert">x</button>
+     <strong>Success! </strong> Added one set.
+ </div>
+
 <!--footer-->
 <footer class="text-center">
     <div class="footer-above">
@@ -283,6 +289,8 @@ content
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $("#success-alert").hide();
         $(this).scrollTop(0);
         if (getUrlParameter('service') != null) {
             var modalid = getUrlParameter('service');
