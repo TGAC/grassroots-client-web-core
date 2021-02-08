@@ -7,7 +7,7 @@ var fieldTrailSearchType = '';
 var level_simpleoradvanced = "simple";
 var wizard_bool = false;
 var wizard_count = 0;
-var refreshed = false;
+// var refreshed = false;
 
 var plots = [];
 
@@ -409,7 +409,7 @@ function populate_page_with_json(json) {
     groups = response['services'][0]['operation']['parameter_set']['groups'];
     synchronous = response['services'][0]['operation']['synchronous'];
     console.info('synchronous' + synchronous);
-    produce_form('form', parameters, groups);
+    produce_form('form', parameters, groups, false);
     simpleOrAdvanced(get_simpleOrAdvanced());
     for (var i = 0; i < textareas.length; i++) {
         // document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
@@ -507,7 +507,7 @@ function check_GRU_by_accession(accession, name) {
     return bool;
 }
 
-function produce_form(div, parameters, groups) {
+function produce_form(div, parameters, groups, refreshed) {
     var form_html = [];
     if (groups.length > 0) {
         var parameters_added = [];
@@ -537,6 +537,7 @@ function produce_form(div, parameters, groups) {
 
                 var this_group_repeat_no = 0;
                 if (refreshed) {
+                    console.log('refreshed');
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
                             this_group_repeat_no = parameters[i]['current_value'].length;
@@ -544,13 +545,15 @@ function produce_form(div, parameters, groups) {
                         }
                     }
                     if (this_group_repeat_no > 0) {
-                        for (var j = 0; j < this_group_repeat_no.length; j++) {
+                        for (var r = 0; r < this_group_repeat_no.length; r++) {
                             for (var i = 0; i < parameters.length; i++) {
                                 if (groups[j]['so:name'] == parameters[i]['group']) {
                                     var this_parameter = parameters[i];
-                                    this_parameter['current_value'] = parameters[i]['current_value'][j];
+                                    this_parameter['current_value'] = parameters[i]['current_value'][r];
+                                    console.log('repeated current_value: ' + this_parameter['current_value']);
                                     if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
-                                        this_parameter['param'] = parameters[i]['param'] + '-' + j;
+                                        this_parameter['param'] = parameters[i]['param'] + '-' + r;
+                                        console.log('repeated param: ' + this_parameter['param']);
                                     }
                                     form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id));
                                     parameters_added.push(parameters[i]['param']);
@@ -919,7 +922,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
 }
 
 function refresh_service(input) {
-    console.log(input);
+    // console.log(input);
 
     $('#status').html('<img src="../dynamic/images/ajax-loader.gif"/>');
     Utils.ui.disableButton('submit_button');
@@ -1051,8 +1054,8 @@ function refresh_service(input) {
 function refresh_form_with_result(json) {
     parameters = json['services'][0]['operation']['parameter_set']['parameters'];
     groups = json['services'][0]['operation']['parameter_set']['groups'];
-    refreshed = true;
-    produce_form('form', parameters, groups);
+    // refreshed = true;
+    produce_form('form', parameters, groups, true);
 
 }
 
@@ -1786,7 +1789,7 @@ function construct_parameters(form) {
                 current_value_array.push(row_object);
                 // console.log(JSON.stringify(current_value_array));
             }
-            console.log(JSON.stringify(current_value_array));
+            // console.log(JSON.stringify(current_value_array));
             parameter['current_value'] = current_value_array;
             parameters.push(parameter);
 
@@ -1853,7 +1856,7 @@ function process_repeatable_parameters(input_parameters) {
                     input_param_name = input_param_name_table[0];
                 }
 
-                console.log(input_param_name);
+                // console.log(input_param_name);
                 if (input_param_name === repeat_param) {
                     current_value.push(input_parameter['current_value']);
                     remove_indices.push(pt);
@@ -1867,7 +1870,7 @@ function process_repeatable_parameters(input_parameters) {
     });
     remove_indices.sort();
     remove_indices.reverse();
-    console.log(remove_indices);
+    // console.log(remove_indices);
     for (var j = 0; j < remove_indices.length; j++) {
         input_parameters.splice(remove_indices[j], 1);
     }
