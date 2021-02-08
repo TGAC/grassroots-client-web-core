@@ -645,6 +645,7 @@ function add_group_parameter(group_id) {
             });
         }
     }
+    alert('Added one set.');
 
 }
 
