@@ -518,9 +518,9 @@ function produce_form(div, parameters, groups, refreshed) {
             }
             if (groups[j]['repeatable']) {
                 var group_random_id = generate_random_id();
-                if (groups[j]['so:name'] === 'Treatment Factors') {
-                    group_random_id = "treatmentfactors";
-                }
+                // if (groups[j]['so:name'] === 'Treatment Factors') {
+                //     group_random_id = "treatmentfactors";
+                // }
                 // repeatable stuff here
                 form_html.push('<fieldset class="' + group_level + '">');
                 form_html.push('<legend class="' + group_level + '">' + groups[j]['so:name'] + ' <span class="fas fa-plus" onclick="add_group_parameter(\'' + group_random_id + '\')"></span></legend>');
