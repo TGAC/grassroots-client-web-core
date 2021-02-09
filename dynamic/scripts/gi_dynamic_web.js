@@ -305,7 +305,7 @@ function populateService(service_altname) {
             type: "POST",
             dataType: "json",
             success: function (json) {
-                populate_page_with_json(json);
+                populate_page_with_json(json, false);
             }
         });
     }
@@ -329,7 +329,7 @@ function populateServiceWithPayload(payload) {
             var service_altname = json['services'][0]['so:alternateName'];
             console.log('payload test: service altname' + service_altname);
             selected_service_name = service_altname;
-            populate_page_with_json(json);
+            populate_page_with_json(json, false);
         }
     });
 }
@@ -387,7 +387,7 @@ function onFileLoaded(event, tid) {
     $('#' + tid).text(initialData);
 }
 
-function populate_page_with_json(json) {
+function populate_page_with_json(json, refreshed) {
     response = json;
     console.info(JSON.stringify(json));
     if (response['services'] !== undefined) {
@@ -409,7 +409,7 @@ function populate_page_with_json(json) {
     groups = response['services'][0]['operation']['parameter_set']['groups'];
     synchronous = response['services'][0]['operation']['synchronous'];
     console.info('synchronous' + synchronous);
-    produce_form('form', parameters, groups, false);
+    produce_form('form', parameters, groups, refreshed);
     simpleOrAdvanced(get_simpleOrAdvanced());
     for (var i = 0; i < textareas.length; i++) {
         // document.getElementById(textareas[i]).addEventListener('dragover', handleDragOver, false);
@@ -537,11 +537,11 @@ function produce_form(div, parameters, groups, refreshed) {
 
                 var this_group_repeat_no = 0;
                 if (refreshed) {
-                    console.log('refreshed');
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
                             this_group_repeat_no = parameters[i]['current_value'].length;
                             console.log('repeated: ' + this_group_repeat_no);
+                            break;
                         }
                     }
                     if (this_group_repeat_no > 0) {
@@ -1038,7 +1038,7 @@ function refresh_service(input) {
             // }
             if (json['services'] !== undefined) {
                 if (json['services'].length > 0) {
-                    populate_page_with_json(json);
+                    populate_page_with_json(json, true);
                 }
             }
 
