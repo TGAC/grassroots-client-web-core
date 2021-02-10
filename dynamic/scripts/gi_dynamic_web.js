@@ -539,37 +539,39 @@ function produce_form(div, parameters, groups, refreshed) {
                 if (refreshed) {
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
-                            this_group_repeat_no = parameters[i]['current_value'].length;
-                            console.log('repeated: ' + this_group_repeat_no);
+                            if (parameters[i]['current_value'] !== null) {
+                                this_group_repeat_no = parameters[i]['current_value'].length;
+                                console.log('repeated: ' + this_group_repeat_no);
+                            }
                             break;
                         }
                     }
-                    if (this_group_repeat_no > 0) {
-                        for (var r = 0; r < this_group_repeat_no; r++) {
-                            for (var i = 0; i < parameters.length; i++) {
-                                if (groups[j]['so:name'] == parameters[i]['group']) {
-                                    var this_parameter = {};
-                                    this_parameter['group'] = parameters[i]['group'];
-                                    this_parameter['grassroots_type'] = parameters[i]['grassroots_type'];
-                                    this_parameter['level'] = parameters[i]['level'];
-                                    this_parameter['so:description'] = parameters[i]['so:description'];
-                                    this_parameter['so:name'] = parameters[i]['so:name'];
-                                    this_parameter['current_value'] = parameters[i]['current_value'][r];
-                                    this_parameter['default_value'] = parameters[i]['default_value'][r];
-                                    console.log('repeated current_value: ' + this_parameter['current_value']);
-                                    if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
-                                        this_parameter['store'] = parameters[i]['store'];
-                                    }
-                                    //     console.log('repeated param before: '+parameters[i]['param']);
-                                    //     this_parameter['param'] = parameters[i]['param'] + '-' + r;
-                                    //     console.log('repeated param after: ' + this_parameter['param']);
-                                    // } else {
-                                        this_parameter['param'] = parameters[i]['param'];
-                                    // }
-                                    form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
-                                    parameters_added.push(parameters[i]['param']);
-                                    this_group_parameters.push(this_parameter);
+                }
+                if (this_group_repeat_no > 0) {
+                    for (var r = 0; r < this_group_repeat_no; r++) {
+                        for (var i = 0; i < parameters.length; i++) {
+                            if (groups[j]['so:name'] == parameters[i]['group']) {
+                                var this_parameter = {};
+                                this_parameter['group'] = parameters[i]['group'];
+                                this_parameter['grassroots_type'] = parameters[i]['grassroots_type'];
+                                this_parameter['level'] = parameters[i]['level'];
+                                this_parameter['so:description'] = parameters[i]['so:description'];
+                                this_parameter['so:name'] = parameters[i]['so:name'];
+                                this_parameter['current_value'] = parameters[i]['current_value'][r];
+                                this_parameter['default_value'] = parameters[i]['default_value'][r];
+                                console.log('repeated current_value: ' + this_parameter['current_value']);
+                                if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
+                                    this_parameter['store'] = parameters[i]['store'];
                                 }
+                                //     console.log('repeated param before: '+parameters[i]['param']);
+                                //     this_parameter['param'] = parameters[i]['param'] + '-' + r;
+                                //     console.log('repeated param after: ' + this_parameter['param']);
+                                // } else {
+                                this_parameter['param'] = parameters[i]['param'];
+                                // }
+                                form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
+                                parameters_added.push(parameters[i]['param']);
+                                this_group_parameters.push(this_parameter);
                             }
                         }
                     }
@@ -582,6 +584,7 @@ function produce_form(div, parameters, groups, refreshed) {
                         }
                     }
                 }
+
                 repeatable_groups[group_random_id]['parameters'] = this_group_parameters;
                 // console.log(JSON.stringify(repeatable_groups));
                 form_html.push('</div>');
@@ -871,7 +874,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             if (repeatable) {
                 display_style = ' style="display:none;"';
                 // if (!refreshed) {
-                    table_id = param.replace(/ /g, "_") + '-' + counter;
+                table_id = param.replace(/ /g, "_") + '-' + counter;
                 // }
             }
             var current_table_value = [];
@@ -896,7 +899,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             if (parameter['current_value'] != undefined) {
                 current_table_value = parameter['current_value'];
                 if (parameter['current_value'].length > 0 && table_id !== 'PL_Upload') {
-                    form_html.push(table_body_formatter(cHeading, current_table_value, param));
+                    form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter));
                 }
             }
             form_html.push('</table>');
@@ -1062,6 +1065,7 @@ function refresh_service(input) {
 
 
 }
+
 //
 //
 // function refresh_form_with_result(json) {
@@ -1392,9 +1396,12 @@ function table_thead_formatter(cHeadings) {
     return thead_html.join(' ');
 }
 
-function table_body_formatter(cHeadings, tbody_values, real_param) {
+function table_body_formatter(cHeadings, tbody_values, real_param, repeatable, counter) {
     var tbody_html = [];
     tbody_html.push('<tbody>');
+    if (repeatable) {
+        real_param = real_param + '-' + counter;
+    }
     for (var i = 0; i < tbody_values.length; i++) {
 
         tbody_html.push('<tr>');
