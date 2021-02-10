@@ -555,7 +555,7 @@ function produce_form(div, parameters, groups, refreshed) {
                                         this_parameter['param'] = parameters[i]['param'] + '-' + r;
                                         console.log('repeated param: ' + this_parameter['param']);
                                     }
-                                    form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id));
+                                    form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
                                     parameters_added.push(parameters[i]['param']);
                                     this_group_parameters.push(parameters[i]);
                                 }
@@ -565,7 +565,7 @@ function produce_form(div, parameters, groups, refreshed) {
                 } else {
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
-                            form_html.push(produce_one_parameter_form(parameters[i], true, group_random_id));
+                            form_html.push(produce_one_parameter_form(parameters[i], true, group_random_id, false));
                             parameters_added.push(parameters[i]['param']);
                             this_group_parameters.push(parameters[i]);
                         }
@@ -581,7 +581,7 @@ function produce_form(div, parameters, groups, refreshed) {
                     form_html.push('<legend>' + groups[j]['so:name'] + '</legend>');
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
-                            form_html.push(produce_one_parameter_form(parameters[i], false, null));
+                            form_html.push(produce_one_parameter_form(parameters[i], false, null, false));
                             parameters_added.push(parameters[i]['param']);
                         }
                     }
@@ -594,7 +594,7 @@ function produce_form(div, parameters, groups, refreshed) {
                     form_html.push('<div id="' + random_id + '"  class="collapse">');
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
-                            form_html.push(produce_one_parameter_form(parameters[i], false, null));
+                            form_html.push(produce_one_parameter_form(parameters[i], false, null, false));
                             parameters_added.push(parameters[i]['param']);
                         }
                     }
@@ -608,12 +608,12 @@ function produce_form(div, parameters, groups, refreshed) {
         for (var ip = 0; ip < parameters.length; ip++) {
             if (!isInArray(parameters[ip]['param'], parameters_added)) {
                 // console.log(parameters[ip]['param']);
-                form_html.push(produce_one_parameter_form(parameters[ip]));
+                form_html.push(produce_one_parameter_form(parameters[ip], false, null, false));
             }
         }
     } else {
         for (var i = 0; i < parameters.length; i++) {
-            form_html.push(produce_one_parameter_form(parameters[i]));
+            form_html.push(produce_one_parameter_form(parameters[i], false, null, false));
         }
     }
 
@@ -645,7 +645,7 @@ function add_group_parameter(group_id) {
     // console.log(JSON.stringify(repeatable_groups));
     var group_parameters = repeatable_groups[group_id]['parameters'];
     for (var i = 0; i < group_parameters.length; i++) {
-        $('#' + group_id).append(produce_one_parameter_form(group_parameters[i], true, group_id));
+        $('#' + group_id).append(produce_one_parameter_form(group_parameters[i], true, group_id, false));
         // if(group_id === 'treatmentfactors' && group_parameters[i]['param'] == 'TF Levels'){
         var grassroots_type = group_parameters[i]['grassroots_type'];
         if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
@@ -695,7 +695,7 @@ function selected_option(default_value, current_value, select_bool) {
     }
 }
 
-function produce_one_parameter_form(parameter, repeatable, group_id) {
+function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) {
     var form_html = [];
     var param = parameter['param'];
     var param_name = parameter['so:name'];
@@ -858,8 +858,10 @@ function produce_one_parameter_form(parameter, repeatable, group_id) {
             var table_id = param.replace(/ /g, "_");
             var display_style = '';
             if (repeatable) {
-                table_id = param.replace(/ /g, "_") + '-' + counter;
                 display_style = ' style="display:none;"';
+                if (!refreshed) {
+                    table_id = param.replace(/ /g, "_") + '-' + counter;
+                }
             }
             var current_table_value = [];
 
@@ -1049,15 +1051,15 @@ function refresh_service(input) {
 
 
 }
-
-
-function refresh_form_with_result(json) {
-    parameters = json['services'][0]['operation']['parameter_set']['parameters'];
-    groups = json['services'][0]['operation']['parameter_set']['groups'];
-    // refreshed = true;
-    produce_form('form', parameters, groups, true);
-
-}
+//
+//
+// function refresh_form_with_result(json) {
+//     parameters = json['services'][0]['operation']['parameter_set']['parameters'];
+//     groups = json['services'][0]['operation']['parameter_set']['groups'];
+//     // refreshed = true;
+//     produce_form('form', parameters, groups, true);
+//
+// }
 
 
 function isOdd(n) {
