@@ -880,6 +880,8 @@ function format_plot_rows(plot, replicate_bool) {
         rowsInfoarray.push('<td id="' + plotId + '_' + r + '"></td>');
         if (treatments !== null && treatments !== [] && treatments !== undefined) {
             rowsInfoarray.push('<td>' + format_plot_treatment(treatments) + '</td>');
+        }else{
+            rowsInfoarray.push('<td></td>');
         }
         rowsInfoarray.push('<tr>');
         // get_GRU_by_accession(accession, plotId, random_id);
