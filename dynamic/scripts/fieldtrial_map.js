@@ -191,10 +191,10 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
                     var treatment = '';
-                    if (full['treatment_factors'] !== undefined){
+                    if (full['treatment_factors'] !== undefined) {
                         treatment = '<li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span></li>'
                     }
-                    return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment+'</ul>';
+                    return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
                 }
             },
             {
@@ -384,8 +384,8 @@ function create_study_modal_html(array) {
 
         plotsModalInfo[studyId] = create_study_info_html(studyJson);
 
-        if (studyJson['treatment_factors'] !== undefined){
-            plotsModalInfo[studyId+'treatment'] = generate_treatments_html(studyJson);
+        if (studyJson['treatment_factors'] !== undefined) {
+            plotsModalInfo[studyId + 'treatment'] = generate_treatments_html(studyJson);
         }
     }
 
@@ -490,7 +490,7 @@ function create_study_info_html(studyJson) {
 
     // htmlarray.push('</div>');
     htmlarray.push('<hr/>');
- // console.log(generate_treatments_html(studyJson));
+    // console.log(generate_treatments_html(studyJson));
     return htmlarray.join("");
 
 }
@@ -878,7 +878,9 @@ function format_plot_rows(plot, replicate_bool) {
         rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
         //rowsInfoarray.push('<td id="' + random_id + '"></td>');
         rowsInfoarray.push('<td id="' + plotId + '_' + r + '"></td>');
-        rowsInfoarray.push('<td>'+format_plot_treatment(treatments)+'</td>');
+        if (treatments !== null && treatments !== [] && treatments !== undefined) {
+            rowsInfoarray.push('<td>' + format_plot_treatment(treatments) + '</td>');
+        }
         rowsInfoarray.push('<tr>');
         // get_GRU_by_accession(accession, plotId, random_id);
 
@@ -925,7 +927,7 @@ function format_plot_rows(plot, replicate_bool) {
     return formatted_plot;
 }
 
-function format_plot_treatment(treatments){
+function format_plot_treatment(treatments) {
     let htmlarray = [];
     for (i = 0; i < treatments.length; i++) {
         htmlarray.push(treatments[i]['so:sameAs'] + ' - ' + treatments[i]['label']);
