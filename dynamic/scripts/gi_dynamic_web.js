@@ -350,6 +350,7 @@ function populateSearchWithQ(q) {
         success: function (json) {
             selected_service_name = grassroots_search;
             populate_page_with_json(json, false);
+            $('#SS_Keyword_Search').val(q);
         }
     });
     $.ajax({
@@ -358,7 +359,6 @@ function populateSearchWithQ(q) {
         type: "POST",
         dataType: "json",
         success: function (json) {
-            $('#SS_Keyword_Search').val(q);
             display_result(json);
         }
     });
