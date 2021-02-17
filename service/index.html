@@ -304,6 +304,9 @@ content
             if (getUrlParameter('payload') != null){
                 var payload = getUrlParameter('payload');
                 populateServiceWithPayload(payload);
+            } if (getUrlParameter('q') != null){
+                var q = getUrlParameter('q');
+                populateSearchWithQ(q);
             } else {
                 populateService(lastSegment.replace(/%20/g, " "));
             }

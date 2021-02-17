@@ -335,6 +335,36 @@ function populateServiceWithPayload(payload) {
 }
 
 
+function populateSearchWithQ(q) {
+    $('#back_link').css('visibility', 'visible');
+    // $('#title').html('Search Treatment');
+    // $('#description').html('Search field trial treatment');
+    $('#simpleAdvanceWrapper').show();
+
+    // var data = decodeURIComponent(payload);
+    $.ajax({
+        url: server_url,
+        data:'{"services": [{"so:alternateName":"search"}], "operations": {"operation": "get_named_service"}}',
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            selected_service_name = grassroots_search;
+            populate_page_with_json(json, false);
+        }
+    });
+    $.ajax({
+        url: server_url,
+        data: '{"services":[{"start_service":true,"so:alternateName":"search","parameter_set":{"level":"simple","parameters":[{"param":"SS Keyword Search","current_value":"'+q+'"},{"param":"SS Facet","current_value":"<ANY>"},{"param":"SS Results Page Number","current_value":0},{"param":"SS Results Page Size","current_value":500}]}}]}',
+        type: "POST",
+        dataType: "json",
+        success: function (json) {
+            $('#SS_Keyword_Search').val(q);
+            display_result(json);
+        }
+    });
+}
+
+
 var MAX_BYTES = 409600; // 100 KB
 
 function dragEnter(event) {
