@@ -1216,7 +1216,7 @@ function generate_treatments_html(experimental_area_json) {
             htmlarray.push('<td>');
             for (i = 0; i < treatment['values'].length; i++) {
                 var this_value = treatment['values'][i];
-                htmlarray.push(this_value['so:name'] + ': ' + this_value['value'] + '<br/>');
+                htmlarray.push(this_value['Label'] + ': ' + this_value['Value'] + '<br/>');
             }
             htmlarray.push('</td>');
             htmlarray.push('</tr>');
