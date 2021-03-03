@@ -579,6 +579,7 @@ function produce_form(div, parameters, groups, refreshed) {
                 }
                 if (this_group_repeat_no > 0) {
                     for (var r = 0; r < this_group_repeat_no; r++) {
+                        repeatable_groups[group_random_id]['counter'] = r;
                         for (var i = 0; i < parameters.length; i++) {
                             if (groups[j]['so:name'] == parameters[i]['group']) {
                                 var this_parameter = {};
@@ -616,10 +617,8 @@ function produce_form(div, parameters, groups, refreshed) {
                         }
                     }
                 }
-                repeatable_groups[group_random_id]['counter'] = this_group_repeat_no - 1;
 
                 repeatable_groups[group_random_id]['parameters'] = this_group_parameters;
-                // console.log(JSON.stringify(repeatable_groups));
                 form_html.push('</div>');
                 form_html.push('</fieldset>');
             } else {
