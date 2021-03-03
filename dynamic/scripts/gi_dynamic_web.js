@@ -539,6 +539,7 @@ function check_GRU_by_accession(accession, name) {
 
 function produce_form(div, parameters, groups, refreshed) {
     repeatable_groups = {};
+    datatable_param_list = [];
     var form_html = [];
     if (groups.length > 0) {
         var parameters_added = [];
