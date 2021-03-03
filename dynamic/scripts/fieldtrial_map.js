@@ -821,6 +821,8 @@ function formatPlotModal(plot) {
     htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
     htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
     htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
+    htmlarray.push('Sowing Order: ' + SafePrint(plot['sowing_order']) + '<br/>');
+    htmlarray.push('Walking Order: ' + SafePrint(plot['walking_order']) + '<br/>');
     // htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
 
