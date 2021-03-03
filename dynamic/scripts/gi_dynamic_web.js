@@ -538,6 +538,7 @@ function check_GRU_by_accession(accession, name) {
 }
 
 function produce_form(div, parameters, groups, refreshed) {
+    repeatable_groups = {};
     var form_html = [];
     if (groups.length > 0) {
         var parameters_added = [];
@@ -600,7 +601,9 @@ function produce_form(div, parameters, groups, refreshed) {
 
                                 form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
                                 parameters_added.push(parameters[i]['param']);
-                                this_group_parameters.push(this_parameter);
+                                if (r === 0) {
+                                    this_group_parameters.push(parameters[i]);
+                                }
                             }
                         }
                     }
@@ -613,6 +616,7 @@ function produce_form(div, parameters, groups, refreshed) {
                         }
                     }
                 }
+                repeatable_groups[group_random_id]['counter'] = this_group_repeat_no - 1;
 
                 repeatable_groups[group_random_id]['parameters'] = this_group_parameters;
                 // console.log(JSON.stringify(repeatable_groups));
