@@ -344,7 +344,7 @@ function populateSearchWithQ(q) {
     // var data = decodeURIComponent(payload);
     $.ajax({
         url: server_url,
-        data:'{"services": [{"so:alternateName":"search"}], "operations": {"operation": "get_named_service"}}',
+        data: '{"services": [{"so:alternateName":"search"}], "operations": {"operation": "get_named_service"}}',
         type: "POST",
         dataType: "json",
         success: function (json) {
@@ -355,7 +355,7 @@ function populateSearchWithQ(q) {
     });
     $.ajax({
         url: server_url,
-        data: '{"services":[{"start_service":true,"so:alternateName":"search","parameter_set":{"level":"simple","parameters":[{"param":"SS Keyword Search","current_value":"'+q+'"},{"param":"SS Facet","current_value":"<ANY>"},{"param":"SS Results Page Number","current_value":0},{"param":"SS Results Page Size","current_value":500}]}}]}',
+        data: '{"services":[{"start_service":true,"so:alternateName":"search","parameter_set":{"level":"simple","parameters":[{"param":"SS Keyword Search","current_value":"' + q + '"},{"param":"SS Facet","current_value":"<ANY>"},{"param":"SS Results Page Number","current_value":0},{"param":"SS Results Page Size","current_value":500}]}}]}',
         type: "POST",
         dataType: "json",
         success: function (json) {
@@ -592,12 +592,18 @@ function produce_form(div, parameters, groups, refreshed) {
                                 console.log('repeated current_value: ' + this_parameter['current_value']);
                                 if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
                                     this_parameter['store'] = parameters[i]['store'];
+                                    this_parameter['param'] = parameters[i]['param'] + '-' + r;
+                                    // this_parameter['param'] = parameters[i]['param'];
+                                        console.log('repeated param after: ' + this_parameter['param']);
+                                }else {
+                                    this_parameter['param'] = parameters[i]['param'];
+                                    console.log('repeated param no change: ' + this_parameter['param']);
                                 }
                                 //     console.log('repeated param before: '+parameters[i]['param']);
                                 //     this_parameter['param'] = parameters[i]['param'] + '-' + r;
                                 //     console.log('repeated param after: ' + this_parameter['param']);
                                 // } else {
-                                this_parameter['param'] = parameters[i]['param'];
+                                // this_parameter['param'] = parameters[i]['param'];
                                 // }
                                 form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
                                 parameters_added.push(parameters[i]['param']);
@@ -623,10 +629,10 @@ function produce_form(div, parameters, groups, refreshed) {
                 if (groups[j]['visible'] || groups[j]['visible'] == undefined) {
                     form_html.push('<fieldset class="' + group_level + '">');
                     form_html.push('<legend>' + groups[j]['so:name'] + '</legend>');
-                    for (var i = 0; i < parameters.length; i++) {
-                        if (groups[j]['so:name'] == parameters[i]['group']) {
-                            form_html.push(produce_one_parameter_form(parameters[i], false, null, false));
-                            parameters_added.push(parameters[i]['param']);
+                    for (var ei = 0; ei < parameters.length; ei++) {
+                        if (groups[j]['so:name'] == parameters[ei]['group']) {
+                            form_html.push(produce_one_parameter_form(parameters[ei], false, null, false));
+                            parameters_added.push(parameters[ei]['param']);
                         }
                     }
                     form_html.push('</fieldset>');
@@ -636,10 +642,10 @@ function produce_form(div, parameters, groups, refreshed) {
                     form_html.push('<legend><a href="#' + random_id + '"  data-toggle="collapse">' + groups[j]['so:name'] + '</a></legend>');
 
                     form_html.push('<div id="' + random_id + '"  class="collapse">');
-                    for (var i = 0; i < parameters.length; i++) {
-                        if (groups[j]['so:name'] == parameters[i]['group']) {
-                            form_html.push(produce_one_parameter_form(parameters[i], false, null, false));
-                            parameters_added.push(parameters[i]['param']);
+                    for (var fi = 0; fi < parameters.length; fi++) {
+                        if (groups[j]['so:name'] == parameters[fi]['group']) {
+                            form_html.push(produce_one_parameter_form(parameters[fi], false, null, false));
+                            parameters_added.push(parameters[fi]['param']);
                         }
                     }
                     form_html.push('</div>');
@@ -901,17 +907,23 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             var each_table_obj = {};
             var table_id = param.replace(/ /g, "_");
             var display_style = '';
+
+            console.log('refreshed'+refreshed);
             if (repeatable) {
                 display_style = ' style="display:none;"';
-                // if (!refreshed) {
+                if (!refreshed) {
+                    console.log('refreshed'+refreshed);
                 table_id = param.replace(/ /g, "_") + '-' + counter;
-                // }
+                }
             }
+            console.log('table id'+table_id);
             var current_table_value = [];
 
             each_table_obj['table_id'] = table_id;
             each_table_obj['cHeadings'] = cHeading;
-            datatable_param_list.push(each_table_obj);
+            // if (!refreshed) {
+                datatable_param_list.push(each_table_obj);
+            // }
             form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
 
@@ -929,7 +941,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             if (parameter['current_value'] != undefined) {
                 current_table_value = parameter['current_value'];
                 if (parameter['current_value'].length > 0 && table_id !== 'PL_Upload') {
-                    form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter));
+                    form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));
                 }
             }
             form_html.push('</table>');
@@ -1426,10 +1438,10 @@ function table_thead_formatter(cHeadings) {
     return thead_html.join(' ');
 }
 
-function table_body_formatter(cHeadings, tbody_values, real_param, repeatable, counter) {
+function table_body_formatter(cHeadings, tbody_values, real_param, repeatable, counter, refreshed) {
     var tbody_html = [];
     tbody_html.push('<tbody>');
-    if (repeatable) {
+    if (repeatable && !refreshed) {
         real_param = real_param + '-' + counter;
     }
     for (var i = 0; i < tbody_values.length; i++) {
