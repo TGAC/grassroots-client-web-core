@@ -571,7 +571,6 @@ function produce_form(div, parameters, groups, refreshed) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
                             if (parameters[i]['current_value'] !== null) {
                                 this_group_repeat_no = parameters[i]['current_value'].length;
-                                console.log('repeated: ' + this_group_repeat_no);
                             }
                             break;
                         }
@@ -589,15 +588,11 @@ function produce_form(div, parameters, groups, refreshed) {
                                 this_parameter['so:name'] = parameters[i]['so:name'];
                                 this_parameter['current_value'] = parameters[i]['current_value'][r];
                                 this_parameter['default_value'] = parameters[i]['default_value'][r];
-                                console.log('repeated current_value: ' + this_parameter['current_value']);
                                 if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
                                     this_parameter['store'] = parameters[i]['store'];
                                     this_parameter['param'] = parameters[i]['param'] + '-' + r;
-                                    // this_parameter['param'] = parameters[i]['param'];
-                                        console.log('repeated param after: ' + this_parameter['param']);
                                 }else {
                                     this_parameter['param'] = parameters[i]['param'];
-                                    console.log('repeated param no change: ' + this_parameter['param']);
                                 }
                                 //     console.log('repeated param before: '+parameters[i]['param']);
                                 //     this_parameter['param'] = parameters[i]['param'] + '-' + r;
