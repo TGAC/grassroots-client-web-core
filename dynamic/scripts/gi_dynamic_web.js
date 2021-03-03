@@ -583,6 +583,9 @@ function produce_form(div, parameters, groups, refreshed) {
                                 var this_parameter = {};
                                 this_parameter['group'] = parameters[i]['group'];
                                 this_parameter['grassroots_type'] = parameters[i]['grassroots_type'];
+                                if (parameters[i]['grassroots_type'] === "params:string_array") {
+                                    this_parameter['grassroots_type'] = "xsd:string";
+                                }
                                 this_parameter['level'] = parameters[i]['level'];
                                 this_parameter['so:description'] = parameters[i]['so:description'];
                                 this_parameter['so:name'] = parameters[i]['so:name'];
@@ -591,15 +594,10 @@ function produce_form(div, parameters, groups, refreshed) {
                                 if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
                                     this_parameter['store'] = parameters[i]['store'];
                                     this_parameter['param'] = parameters[i]['param'] + '-' + r;
-                                }else {
+                                } else {
                                     this_parameter['param'] = parameters[i]['param'];
                                 }
-                                //     console.log('repeated param before: '+parameters[i]['param']);
-                                //     this_parameter['param'] = parameters[i]['param'] + '-' + r;
-                                //     console.log('repeated param after: ' + this_parameter['param']);
-                                // } else {
-                                // this_parameter['param'] = parameters[i]['param'];
-                                // }
+
                                 form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
                                 parameters_added.push(parameters[i]['param']);
                                 this_group_parameters.push(this_parameter);
@@ -903,21 +901,21 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             var table_id = param.replace(/ /g, "_");
             var display_style = '';
 
-            console.log('refreshed'+refreshed);
+            console.log('refreshed' + refreshed);
             if (repeatable) {
                 display_style = ' style="display:none;"';
                 if (!refreshed) {
-                    console.log('refreshed'+refreshed);
-                table_id = param.replace(/ /g, "_") + '-' + counter;
+                    console.log('refreshed' + refreshed);
+                    table_id = param.replace(/ /g, "_") + '-' + counter;
                 }
             }
-            console.log('table id'+table_id);
+            console.log('table id' + table_id);
             var current_table_value = [];
 
             each_table_obj['table_id'] = table_id;
             each_table_obj['cHeadings'] = cHeading;
             // if (!refreshed) {
-                datatable_param_list.push(each_table_obj);
+            datatable_param_list.push(each_table_obj);
             // }
             form_html.push('<hr/><div class="form-group ' + level + '" style="margin: 20px 0px;">');
             form_html.push('<label title="' + description + '">' + display_name + '</label><br/>');
