@@ -194,14 +194,15 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
-                title: "Popup Info",
+                title: "Treatment Factors",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
                     var treatment = '';
                     if (full['treatment_factors'] !== undefined && type_param !== 'AllFieldTrials') {
-                        treatment = '<li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span></li>'
+                        treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
                     }
-                    return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
+                    // return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
+                    return treatment;
                 }
             }
             // ,
