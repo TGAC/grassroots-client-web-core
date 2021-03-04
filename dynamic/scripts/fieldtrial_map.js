@@ -85,7 +85,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
     }
     produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
 
-    displayFTLocations(filtered_data_with_location);
+    displayFTLocations(filtered_data_with_location, type_param);
 
     create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
 }
@@ -284,16 +284,7 @@ function produceFieldtrialTable(data, type_param) {
             }
 
 
-            // var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
-            // var search_data = [];
-            // for (i = 0; i < searchData.length; i++) {
-            //     if (searchData[i]['address']['address'] != undefined) {
-            //         if (searchData[i]['address']['address']['location']['centre'] != undefined) {
-            //             search_data.push(searchData[i]);
-            //         }
-            //     }
-            // }
-            // displayFTLocations(search_data);
+
         });
     } else {
         jQuery('#resultTable').on('search.dt', function () {
@@ -307,7 +298,7 @@ function produceFieldtrialTable(data, type_param) {
                     }
                 }
             }
-            displayFTLocations(search_data);
+            displayFTLocations(search_data, type_param);
         });
 
     }
@@ -528,7 +519,7 @@ function removePointers() {
 //     });
 
 
-function displayFTLocations(array) {
+function displayFTLocations(array, type_param) {
     for (i = 0; i < array.length; i++) {
         var la = '';
         var lo = '';
@@ -569,10 +560,12 @@ function displayFTLocations(array) {
         // ;
         var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
-        if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
-            let geo_json = JSON.parse(array[i]['shape_data']);
-            var shape_layer = L.geoJson(geo_json);
-            markersGroup2.addLayer(shape_layer);
+        if (type_param !== 'AllFieldTrials') {
+            if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
+                let geo_json = JSON.parse(array[i]['shape_data']);
+                var shape_layer = L.geoJson(geo_json);
+                markersGroup2.addLayer(shape_layer);
+            }
         }
     }
     map.addLayer(markersGroup2);
@@ -882,7 +875,7 @@ function format_plot_rows(plot, replicate_bool) {
         rowsInfoarray.push('<td id="' + plotId + '_' + r + '"></td>');
         if (treatments !== null && treatments !== [] && treatments !== undefined) {
             rowsInfoarray.push('<td>' + format_plot_treatment(treatments) + '</td>');
-        }else{
+        } else {
             rowsInfoarray.push('<td></td>');
         }
         rowsInfoarray.push('<tr>');

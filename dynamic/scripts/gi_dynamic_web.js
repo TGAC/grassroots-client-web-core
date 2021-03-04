@@ -1547,7 +1547,8 @@ function table_add_rows_csv(table_id_drop, csv) {
         row_index++;
     }
     t.draw(false);
-    $('#' + table_id + 'dropstatus').html('Processing done.');
+    $('#' + table_id + 'dropstatus').html('<span style="color:red;">Processing done.</span>');
+    alert('Excel Processing done, the table will not display the content due to the size.');
 
 }
 
@@ -3033,7 +3034,10 @@ function handleXlsxFileSelect(evt) {
 
             if (selected_service_name === 'field_trial-submit_plots') {
                 plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {raw: false});
-                $('#PL_Uploaddropstatus').html('Processing done.');
+                var filename = f.name;
+                $('#PL_Uploaddropstatus').html('<span style="color:#18bc9c;">Excel file: <b><i>'+filename+'</i></b> Processing done, ready to submit.</span>');
+                alert('Excel file: '+filename+' Processing done, the table will not display the content due to the size.');
+                $('#PL_Upload_wrapper').hide();
                 console.log(JSON.stringify(plots));
             } else {
                 var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
