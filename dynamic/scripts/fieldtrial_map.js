@@ -86,8 +86,9 @@ function startFieldTrialGIS(jsonArray, type_param) {
     produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
 
     displayFTLocations(filtered_data_with_location, type_param);
-
-    create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
+    if (type_param !== 'AllFieldTrials') {
+        create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
+    }
 }
 
 function produceFieldtrialTable(data, type_param) {
@@ -191,7 +192,7 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
                     var treatment = '';
-                    if (full['treatment_factors'] !== undefined) {
+                    if (full['treatment_factors'] !== undefined && type_param !== 'AllFieldTrials') {
                         treatment = '<li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span></li>'
                     }
                     return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
@@ -252,6 +253,7 @@ function produceFieldtrialTable(data, type_param) {
     });
 
     if (type_param === 'AllFieldTrials') {
+        yrtable.column( 10 ).visible( false );
         console.log("server search here");
         jQuery('#resultTable').on('search.dt', function () {
             removePointers();
@@ -376,7 +378,11 @@ function create_study_modal_html(array) {
         plotsModalInfo[studyId] = create_study_info_html(studyJson);
 
         if (studyJson['treatment_factors'] !== undefined) {
-            plotsModalInfo[studyId + 'treatment'] = generate_treatments_html(studyJson);
+            if (studyJson['treatment_factors'] !== null) {
+                if (studyJson['treatment_factors'].length !== 0) {
+                    plotsModalInfo[studyId + 'treatment'] = generate_treatments_html(studyJson);
+                }
+            }
         }
     }
 
@@ -560,13 +566,13 @@ function displayFTLocations(array, type_param) {
         // ;
         var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
-        if (type_param !== 'AllFieldTrials') {
+        // if (type_param !== 'AllFieldTrials') {
             if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
                 let geo_json = JSON.parse(array[i]['shape_data']);
                 var shape_layer = L.geoJson(geo_json);
                 markersGroup2.addLayer(shape_layer);
             }
-        }
+        // }
     }
     map.addLayer(markersGroup2);
 
