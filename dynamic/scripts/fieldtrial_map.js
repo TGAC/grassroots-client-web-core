@@ -112,13 +112,19 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Field Trial",
                 "render": function (data, type, full, meta) {
-                    return SafePrint(full['parent_field_trial']['so:name']);
+                    var ft_name = SafePrint(full['parent_field_trial']['so:name']);
+                    if (full['parent_field_trial'] !== undefined){
+                        var ftId = full['parent_field_trial']['_id']['$oid'];
+                        ft_name = '<a href="fieldtrial_dynamic.html?id=' + ftId + '&type=Grassroots:FieldTrial" target="_blank">' + full['so:name'] + '</a>';
+                    }
+                    return ft_name;
                 }
             },
             {
                 title: "Study",
                 "render": function (data, type, full, meta) {
-                    return full['so:name'];
+                    var studyId = full['_id']['$oid'];
+                    return '<a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">' + full['so:name'] + '</a>';
                 }
             },
             {
@@ -197,18 +203,19 @@ function produceFieldtrialTable(data, type_param) {
                     }
                     return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
                 }
-            },
-            {
-                title: "Links",
-                "render": function (data, type, full, meta) {
-                    var studyId = full['_id']['$oid'];
-                    var fieldtrial_link = '';
-                    if (full["parent_field_trial_id"] !== undefined) {
-                        fieldtrial_link = '<li><a href="fieldtrial_dynamic.html?id=' + full["parent_field_trial_id"] + '&type=Grassroots:FieldTrial" target="_blank">Field Trial</a></li>'
-                    }
-                    return '<ul><li><a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">Study</a></li>' + fieldtrial_link + '</ul>';
-                }
             }
+            // ,
+            // {
+            //     title: "Links",
+            //     "render": function (data, type, full, meta) {
+            //         var studyId = full['_id']['$oid'];
+            //         var fieldtrial_link = '';
+            //         if (full["parent_field_trial_id"] !== undefined) {
+            //             fieldtrial_link = '<li><a href="fieldtrial_dynamic.html?id=' + full["parent_field_trial_id"] + '&type=Grassroots:FieldTrial" target="_blank">Field Trial</a></li>'
+            //         }
+            //         return '<ul><li><a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">Study</a></li>' + fieldtrial_link + '</ul>';
+            //     }
+            // }
 
         ]
 
@@ -251,6 +258,10 @@ function produceFieldtrialTable(data, type_param) {
             $(window).scrollTop($('#map').offset().top - 90);
         }
     });
+
+    // if (type_param === 'Grassroots:Study'){
+    //     yrtable.column( 11 ).visible( false );
+    // }
 
     if (type_param === 'AllFieldTrials') {
         yrtable.column( 10 ).visible( false );
