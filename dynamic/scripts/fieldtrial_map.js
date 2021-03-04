@@ -115,7 +115,7 @@ function produceFieldtrialTable(data, type_param) {
                     var ft_name = SafePrint(full['parent_field_trial']['so:name']);
                     if (full['parent_field_trial'] !== undefined){
                         var ftId = full['parent_field_trial']['_id']['$oid'];
-                        ft_name = '<a href="fieldtrial_dynamic.html?id=' + ftId + '&type=Grassroots:FieldTrial" target="_blank">' + full['so:name'] + '</a>';
+                        ft_name = '<a href="fieldtrial_dynamic.html?id=' + ftId + '&type=Grassroots:FieldTrial" target="_blank">' + full['parent_field_trial']['so:name'] + '</a>';
                     }
                     return ft_name;
                 }
