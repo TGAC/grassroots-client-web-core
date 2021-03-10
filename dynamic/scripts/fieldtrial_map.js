@@ -113,7 +113,7 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Field Trial",
                 "render": function (data, type, full, meta) {
                     var ft_name = SafePrint(full['parent_field_trial']['so:name']);
-                    if (full['parent_field_trial'] !== undefined){
+                    if (full['parent_field_trial'] !== undefined) {
                         var ftId = full['parent_field_trial']['_id']['$oid'];
                         ft_name = '<a href="fieldtrial_dynamic.html?id=' + ftId + '&type=Grassroots:FieldTrial" target="_blank">' + full['parent_field_trial']['so:name'] + '</a>';
                     }
@@ -198,8 +198,10 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
                     var treatment = '';
-                    if (full['treatment_factors'] !== undefined && type_param !== 'AllFieldTrials') {
-                        treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
+                    if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param !== 'AllFieldTrials') {
+                        if (full['treatment_factors'].length > 0) {
+                            treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
+                        }
                     }
                     // return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
                     return treatment;
@@ -265,7 +267,7 @@ function produceFieldtrialTable(data, type_param) {
     // }
 
     if (type_param === 'AllFieldTrials') {
-        yrtable.column( 10 ).visible( false );
+        yrtable.column(10).visible(false);
         console.log("server search here");
         jQuery('#resultTable').on('search.dt', function () {
             removePointers();
@@ -296,7 +298,6 @@ function produceFieldtrialTable(data, type_param) {
                     console.info("req " + "status " + status + " error " + error);
                 });
             }
-
 
 
         });
@@ -579,11 +580,11 @@ function displayFTLocations(array, type_param) {
         var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
         // if (type_param !== 'AllFieldTrials') {
-            if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
-                let geo_json = JSON.parse(array[i]['shape_data']);
-                var shape_layer = L.geoJson(geo_json);
-                markersGroup2.addLayer(shape_layer);
-            }
+        if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
+            let geo_json = JSON.parse(array[i]['shape_data']);
+            var shape_layer = L.geoJson(geo_json);
+            markersGroup2.addLayer(shape_layer);
+        }
         // }
     }
     map.addLayer(markersGroup2);
