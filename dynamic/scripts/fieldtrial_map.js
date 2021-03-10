@@ -1213,29 +1213,31 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
 
 function generate_treatments_html(experimental_area_json) {
     var htmlarray = [];
-    if (experimental_area_json['treatment_factors'] !== undefined) {
-        var treatment_factors = [];
-        treatment_factors = experimental_area_json['treatment_factors'];
+    if (experimental_area_json['treatment_factors'] !== undefined && experimental_area_json['treatment_factors'] !== null) {
+        if (experimental_area_json['treatment_factors'].length > 0) {
+            var treatment_factors = [];
+            treatment_factors = experimental_area_json['treatment_factors'];
 
-        htmlarray.push('<table class="table"><thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>');
-        for (j = 0; j < treatment_factors.length; j++) {
-            var treatment = treatment_factors[j];
-            var ontology = treatment['treatment']['so:sameAs'];
+            htmlarray.push('<table class="table"><thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>');
+            for (j = 0; j < treatment_factors.length; j++) {
+                var treatment = treatment_factors[j];
+                var ontology = treatment['treatment']['so:sameAs'];
 
-            htmlarray.push('<tr>');
-            htmlarray.push('<td>' + treatment['treatment']['so:name'] + '</td>');
-            htmlarray.push('<td><a class="newstyle_link" target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">' + ontology + '</a></td>');
-            htmlarray.push('<td>' + treatment['treatment']['so:description'] + '</td>');
+                htmlarray.push('<tr>');
+                htmlarray.push('<td>' + treatment['treatment']['so:name'] + '</td>');
+                htmlarray.push('<td><a class="newstyle_link" target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">' + ontology + '</a></td>');
+                htmlarray.push('<td>' + treatment['treatment']['so:description'] + '</td>');
 
-            htmlarray.push('<td>');
-            for (i = 0; i < treatment['values'].length; i++) {
-                var this_value = treatment['values'][i];
-                htmlarray.push(this_value['Label'] + ': ' + this_value['Value'] + '<br/>');
+                htmlarray.push('<td>');
+                for (i = 0; i < treatment['values'].length; i++) {
+                    var this_value = treatment['values'][i];
+                    htmlarray.push(this_value['Label'] + ': ' + this_value['Value'] + '<br/>');
+                }
+                htmlarray.push('</td>');
+                htmlarray.push('</tr>');
             }
-            htmlarray.push('</td>');
-            htmlarray.push('</tr>');
+            htmlarray.push('</tbody></table>');
         }
-        htmlarray.push('</tbody></table>');
     }
     return htmlarray.join(' ');
 
