@@ -1836,20 +1836,22 @@ function construct_parameters(form) {
             var this_table = $('#' + datatableId).DataTable();
             this_table_array = this_table.$('input, select').serializeArray();
             var row_length = this_table.rows().count();
-            for (var rowsi = 0; rowsi < row_length; rowsi++) {
-                var row_object = {};
-                for (var ttai = 0; ttai < this_table_array.length; ttai++) {
-                    var name = this_table_array[ttai]['name'].split('^');
-                    var column_name = name[3];
-                    if (name[2] == rowsi) {
-                        row_object[column_name] = this_table_array[ttai]['value'];
-                    }
+            if (row_length > 0) {
+                for (var rowsi = 0; rowsi < row_length; rowsi++) {
+                    var row_object = {};
+                    for (var ttai = 0; ttai < this_table_array.length; ttai++) {
+                        var name = this_table_array[ttai]['name'].split('^');
+                        var column_name = name[3];
+                        if (name[2] == rowsi) {
+                            row_object[column_name] = this_table_array[ttai]['value'];
+                        }
 
+                    }
+                    current_value_array.push(row_object);
+                    // console.log(JSON.stringify(current_value_array));
                 }
-                current_value_array.push(row_object);
-                // console.log(JSON.stringify(current_value_array));
             }
-            // console.log(JSON.stringify(current_value_array));
+
             parameter['current_value'] = current_value_array;
             parameters.push(parameter);
 
@@ -1908,17 +1910,31 @@ function process_repeatable_parameters(input_parameters) {
             let new_parameter = {};
             new_parameter['param'] = repeat_param;
             let current_value = [];
+
             for (var pt = 0; pt < input_parameters.length; pt++) {
+                let table_bool = false;
+                if (repeat_paramater['grassroots_type'] === 'params:json_array' || repeat_paramater['grassroots_type'] === 'params:tabular') {
+                    table_bool = true;
+                }
                 let input_parameter = input_parameters[pt];
                 let input_param_name = input_parameter['param'];
-                if (repeat_paramater['grassroots_type'] === 'params:json_array' || repeat_paramater['grassroots_type'] === 'params:tabular') {
+                if (table_bool) {
                     let input_param_name_table = input_parameter['param'].split('-');
                     input_param_name = input_param_name_table[0];
                 }
 
                 // console.log(input_param_name);
                 if (input_param_name === repeat_param) {
-                    current_value.push(input_parameter['current_value']);
+                    console.log(input_parameter['current_value']);
+
+                    if (table_bool) {
+                        if (input_parameter['current_value'].length >0) {
+                            current_value.push(input_parameter['current_value']);
+                        }
+                    }else{
+                        current_value.push(input_parameter['current_value']);
+                    }
+
                     remove_indices.push(pt);
                     // input_parameters.splice(pt, 1);
                 }
@@ -3035,8 +3051,8 @@ function handleXlsxFileSelect(evt) {
             if (selected_service_name === 'field_trial-submit_plots') {
                 plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {raw: false});
                 var filename = f.name;
-                $('#PL_Uploaddropstatus').html('<span style="color:#18bc9c;">Excel file: <b><i>'+filename+'</i></b> Processing done, ready to submit.</span>');
-                alert('Excel file: '+filename+' Processing done, the table will not display the content due to the size.');
+                $('#PL_Uploaddropstatus').html('<span style="color:#18bc9c;">Excel file: <b><i>' + filename + '</i></b> Processing done, ready to submit.</span>');
+                alert('Excel file: ' + filename + ' Processing done, the table will not display the content due to the size.');
                 $('#PL_Upload_wrapper').hide();
                 console.log(JSON.stringify(plots));
             } else {
