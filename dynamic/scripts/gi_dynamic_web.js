@@ -30,8 +30,8 @@ const grassroots_search = 'search';
 function get_all_services_as_table() {
     var search_measured_variables_json = {
         "@type": "grassroots_service",
-        "so:name": "Search Measured Variables",
-        "so:description": "Search field trial measured variables",
+        "so:name": "Search Measured Phenotype Variables",
+        "so:description": "Search field trial measured phenotype variables",
         "so:alternateName": "field_trial-search_measured_variables",
         "provider": {
             "@type": "so:Organization",
@@ -264,13 +264,13 @@ function populateService(service_altname) {
     $('#simpleAdvanceWrapper').show();
     selected_service_name = service_altname;
     if (selected_service_name === 'field_trial-search_measured_variables') {
-        $('#title').html('Search Measured Variables');
-        $('#description').html('Search field trial measured variables - abbreviations for crop phenotypes (including measurements and units) following Crop Ontology');
+        $('#title').html('Search Measured Phenotype Variables');
+        $('#description').html('Search field trial measured phenotype variables - abbreviations for crop phenotypes (including measurements and units) following Crop Ontology');
         $('#moreinfo').html('For more information and help, go to the <a href="https://grassroots.tools/docs/user/services/field_trial/search_measured_variables.md" target="_blank">user documentation</a>');
         var form_html = [];
 
         // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
-        form_html.push('<label title="Search the field trial data">Search measured variables in the box below <i class="fas fa-arrow-right"></i>' +
+        form_html.push('<label title="Search the field trial data">Search measured phenotype variables in the box below <i class="fas fa-arrow-right"></i>' +
             ' Click (Ctrl click to select multi-rows) result rows to copy it to clipboard <i class="fas fa-arrow-right"></i>' +
             ' Paste into your field trial spread sheet or export as excel.</label>');
 
