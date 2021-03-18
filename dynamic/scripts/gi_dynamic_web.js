@@ -265,8 +265,13 @@ function populateService(service_altname) {
     selected_service_name = service_altname;
     if (selected_service_name === 'field_trial-search_measured_variables') {
         $('#title').html('Search Measured Phenotype Variables');
-        $('#description').html('Search field trial measured phenotype variables - abbreviations for crop phenotypes (including measurements and units) following Crop Ontology');
-        $('#moreinfo').html('For more information and help, go to the <a href="https://grassroots.tools/docs/user/services/field_trial/search_measured_variables.md" target="_blank">user documentation</a>');
+        $('#description').html('<p>As you start to type in the search box, Measured Phenotype Variables will be returned that match your query.</p>' +
+            '<p>It is good practice to include these terms to describe your phenotype data wherever possible as the Variable Name is unique, and this reduces ambiguity or confusion when describing your phenotype measurements or measurement method. The Measured Phenotype Variables suggested by this service come mainly from <a  target="_blank" href="https://www.cropontology.org/ontology/CO_321/Wheat">Wheat Crop Ontology</a>' +
+            ' but specialised variables can be added to the system. Please contact us if that is necessary.</p>' +
+            '<p>This search system allows you to click on a row to copy the Variable Name, which can then be pasted as a column header in your spreadsheet, or any other documentation or publications.' +
+            'To find variables available, start by typing the search phrase into the search box, results will appear below as a table. Select the row and press the copy button, the variable name of the row will be copied to the clipboard for you to' +
+            'paste into the plots page.</p>');
+        $('#moreinfo').html('For more information and help, go to the <a target="_blank" href="https://grassroots.tools/docs/user/services/field_trial/search_measured_variables.md" target="_blank">user documentation</a>');
         var form_html = [];
 
         // form_html.push('<p>Start searching by entering query into the search box and then click each result row to copy the variable name to you clipboard to paste into your field trail spreadsheet.</p>');
