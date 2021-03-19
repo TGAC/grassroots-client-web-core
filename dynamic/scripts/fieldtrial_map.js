@@ -112,7 +112,7 @@ function produceFieldtrialTable(data, type_param) {
                             let pi_name = full['parent_program']['principal_investigator']['so:name'];
                             if (full['parent_program']['principal_investigator']['so:email'] !== undefined) {
                                 let pi_email = full['parent_program']['principal_investigator']['so:email'];
-                                result = result + ' <a href="mailto:' + pi_email + '">' + pi_name + '</a>';
+                                result = result + ' <a href="mailto:' + pi_email + '" target="_blank">' + pi_name + '</a>';
                             } else {
                                 result = result + ' ' + pi_name;
                             }
@@ -136,7 +136,28 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Study",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
-                    return '<a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">' + full['so:name'] + '</a>';
+                    let study_result = '<a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">' + full['so:name'] + '</a>';
+
+                    if (full['curator'] !== undefined) {
+                        let curator_name = full['curator']['so:name'];
+                        if (full['curator']['so:email'] !== undefined) {
+                            let curator_email = full['curator']['so:email'];
+                            study_result = study_result + '<br/>Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+                        } else {
+                            study_result = study_result + '<br/>Curator: ' + curator_name;
+                        }
+
+                    }
+                    if (full['contact'] !== undefined) {
+                        let contact_name = full['contact']['so:name'];
+                        if (full['contact']['so:email'] !== undefined) {
+                            let contact_email = full['contact']['so:email'];
+                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+                        } else {
+                            study_result = study_result + '<br/>Contact: ' + contact_name;
+                        }
+                    }
+                    return study_result;
                 }
             },
             {
