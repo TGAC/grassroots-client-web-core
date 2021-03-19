@@ -102,8 +102,20 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     let result = '';
                     if (full['parent_program'] !== undefined) {
-                        if (SafePrint(full['parent_program']['so:name']) != undefined) {
-                            result = SafePrint(full['parent_program']['so:name']);
+                        if (full['parent_program']['so:image'] !== undefined) {
+                            result = result + ' <img src="' + full['parent_program']['so:image'] + '" height="32px;"/><br/> ';
+                        }
+                        if (full['parent_program']['so:name'] !== undefined) {
+                            result = result + ' ' + SafePrint(full['parent_program']['so:name']) + '<br/>';
+                        }
+                        if (full['parent_program']['principal_investigator'] !== undefined) {
+                            let pi_name = full['parent_program']['principal_investigator']['so:name'];
+                            if (full['parent_program']['principal_investigator']['so:email'] !== undefined) {
+                                let pi_email = full['parent_program']['principal_investigator']['so:email'];
+                                result = result + ' <a href="mailto:' + pi_email + '">' + pi_name + '</a>';
+                            } else {
+                                result = result + ' ' + pi_name;
+                            }
                         }
                     }
                     return result;
