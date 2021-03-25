@@ -297,20 +297,22 @@
                 map.on('locationfound', onLocationFound);
 
                 function onLocationError(e) {
-                    alert(e.message);
+                    console.log(e.message);
                 }
 
                 map.on('locationerror', onLocationError);
             }
 
             function locate() {
-                map.locate({setView: true, maxZoom: 16});
+                // map.locate({setView: true, maxZoom: 16});
+                map.locate();
+                console.log("updated location");
             }
 
 
             function update_map_location() {
+                map.locate({setView: true, maxZoom: 16});
                 setInterval(locate, 2000);
-                console.log("updated location");
             }
 
         </script>
