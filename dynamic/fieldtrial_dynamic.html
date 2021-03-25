@@ -306,13 +306,13 @@
             function locate() {
                 // map.locate({setView: true, maxZoom: 16});
                 map.locate();
-                console.log("updated location");
+                // console.log("updated location");
             }
 
 
             function update_map_location() {
                 map.locate({setView: true, maxZoom: 16});
-                setInterval(locate, 2000);
+                setInterval(locate, 1000);
             }
 
         </script>
