@@ -174,10 +174,10 @@
         <div id="result"><img src="images/ajax-loader.gif"/></div>
 
         <div id="map"></div>
-        <div id="map_buttons" style="position: absolute; top: 170px;display:none;">
+        <div id="map_buttons" style="position: absolute; top: 200px;display:none;">
             <div class="input-group">
                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" onclick="map.locate({setView: true, maxZoom: 16});">My Location
+                    <button type="button" class="btn btn-default" onclick="update_map_location();">My Location
                     </button>
                </span>
             </div>
@@ -301,6 +301,16 @@
                 }
 
                 map.on('locationerror', onLocationError);
+            }
+
+            function locate() {
+                map.locate({setView: true, maxZoom: 16});
+            }
+
+
+            function update_map_location() {
+                setInterval(locate, 2000);
+                console.log("updated location");
             }
 
         </script>

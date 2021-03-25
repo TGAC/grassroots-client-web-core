@@ -114,7 +114,7 @@ function produceFieldtrialTable(data, type_param) {
                                 let pi_email = full['parent_program']['principal_investigator']['so:email'];
                                 result = result + ' <a href="mailto:' + pi_email + '" target="_blank">' + pi_name + '</a>';
                             } else {
-                                result = result + ' ' + pi_name;
+                                result = result + ' ' + SafePrint(pi_name);
                             }
                         }
                     }
