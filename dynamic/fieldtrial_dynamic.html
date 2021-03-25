@@ -148,6 +148,28 @@
     #resultTable td, th {
         text-align: center;
     }
+
+    @media (max-width: 767px) {
+        section h2 {
+            font-size: 1em;
+            margin: 0;
+        }
+
+        #map_buttons {
+            position: absolute;
+            top: 150px;
+            border: 1px solid;
+            display: none;
+        }
+    }
+
+    @media (min-width: 767px) {
+        #map_buttons {
+            position: absolute;
+            top: 200px;
+            display: none;
+        }
+    }
 </style>
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
@@ -174,9 +196,9 @@
         <div id="result"><img src="images/ajax-loader.gif"/></div>
 
         <div id="map"></div>
-        <div id="map_buttons" style="position: absolute; top: 200px;display:none;">
+        <div id="map_buttons">
             <div class="input-group">
-               <span class="input-group-btn">
+               <span class="input-group-btn" id="locationButton">
                     <button type="button" class="btn btn-default" onclick="update_map_location();">My Location
                     </button>
                </span>
@@ -250,6 +272,9 @@
                 }
             });
 
+            var location_layer_marker = new L.MarkerClusterGroup({});
+            var location_layer_circle = new L.MarkerClusterGroup({});
+
             function start_map(ft_json, type_param) {
                 $('#simpleAdvanceWrapper').hide();
                 $('#status').html('');
@@ -257,8 +282,6 @@
                 $('#tableWrapper').html('<table id="resultTable"></table>');
                 // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
                 markersGroup2 = new L.MarkerClusterGroup({});
-                var location_layer_marker = new L.MarkerClusterGroup({});
-                var location_layer_circle = new L.MarkerClusterGroup({});
                 // markersGroup_current_location = new L.MarkerClusterGroup({});
                 map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
@@ -303,6 +326,8 @@
                 map.on('locationerror', onLocationError);
             }
 
+            let locateIntervalId;
+
             function locate() {
                 // map.locate({setView: true, maxZoom: 16});
                 map.locate();
@@ -312,7 +337,15 @@
 
             function update_map_location() {
                 map.locate({setView: true, maxZoom: 16});
-                setInterval(locate, 1000);
+                locateIntervalId = setInterval(locate, 1000);
+                $('#locationButton').html('<button type="button" class="btn btn-default" onclick="stop_update_map_location();">Stop Location</button>');
+            }
+
+            function stop_update_map_location() {
+                clearInterval(locateIntervalId);
+                $('#locationButton').html('<button type="button" class="btn btn-default" onclick="update_map_location();">My Location</button>');
+                map.removeLayer(location_layer_marker);
+                map.removeLayer(location_layer_circle);
             }
 
         </script>
