@@ -615,6 +615,13 @@ function displayFTLocations(array, type_param) {
             let geo_json = JSON.parse(array[i]['shape_data']);
             var shape_layer = L.geoJson(geo_json);
             markersGroup2.addLayer(shape_layer);
+            var layerGroup = L.geoJson(geo_json, {
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup('Plot No.: '+feature.properties['Plot_No']);
+                    // layer.bindPopup('<p>Plot No.:</p>');
+                }
+            });
+            markersGroup2.addLayer(layerGroup);
         }
         // }
     }
