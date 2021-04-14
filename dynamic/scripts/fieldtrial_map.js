@@ -228,21 +228,21 @@ function produceFieldtrialTable(data, type_param) {
                     var studyId = full['_id']['$oid'];
                     var study_result = '';
 
-                    if (full['curator'] !== undefined) {
+                    if (full['curator'] !== undefined && full['curator'] !== null ) {
                         let curator_name = full['curator']['so:name'];
                         if (full['curator']['so:email'] !== undefined) {
                             let curator_email = full['curator']['so:email'];
-                            study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+                            study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + SafePrint(curator_name) + '</a>';
                         } else {
                             study_result = study_result + 'Curator: ' + curator_name;
                         }
 
                     }
-                    if (full['contact'] !== undefined) {
+                    if (full['contact'] !== undefined && full['contact'] !== null) {
                         let contact_name = full['contact']['so:name'];
                         if (full['contact']['so:email'] !== undefined) {
                             let contact_email = full['contact']['so:email'];
-                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + SafePrint(contact_name) + '</a>';
                         } else {
                             study_result = study_result + '<br/>Contact: ' + contact_name;
                         }
@@ -253,10 +253,10 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Download",
                 "render": function (data, type, full, meta) {
-                    var studyId = full['_id']['$oid'];
                     var download = '';
-                    if (full['frictionless_data_package_url'] !== undefined) {
-                        var link = full['frictionless_data_package_url'];
+                    if (full['so:contentUrl'] !== undefined) {
+                        var link = full['so:contentUrl'];
+                        console.log(link);
                         download = '<a  class="newstyle_link" target="_blank" href="' + link + '">Frictionless Data Package</a>'
                     }
                     return download;
