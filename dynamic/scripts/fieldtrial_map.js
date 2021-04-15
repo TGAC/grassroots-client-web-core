@@ -289,7 +289,7 @@ function produceFieldtrialTable(data, type_param) {
                 lalo = [la, lo];
             }
 
-            let shape_data = JSON.parse(json['shape_data']);
+            let shape_data = json['shape_data'];
             let coord = shape_data.features[0].geometry.coordinates;
             let zoom = 18;
             if (coord[0][0].length === 2) {
@@ -624,7 +624,7 @@ function displayFTLocations(array, type_param) {
         addFTPointer(la, lo, popup_note);
         // if (type_param !== 'AllFieldTrials') {
         if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
-            let geo_json = JSON.parse(array[i]['shape_data']);
+            let geo_json = array[i]['shape_data'];
             var shape_layer = L.geoJson(geo_json);
             markersGroup2.addLayer(shape_layer);
             var layerGroup = L.geoJson(geo_json, {
